@@ -1,8 +1,10 @@
-# 奇数底数幂次方盘的稳定性
+# 奇数底数幂次方盘的稳定性 · 已有结果的 Lean 形式化
 
 令 $d(n)$ 为边长 $n$ 的标准 Lights Out 方盘的零空间维数。按键图案在二元域上相加，边界外视为零。因此 $d(n)$ 是描述全部不改变灯态的按键图案所需的独立比特数。取空盘 $d(0)=0$。
 
 Boyles 在公开猜想笔记中写下了三个量词不同的问题。对不能被 21 整除的奇数 $a$，他猜测 $d(a^k-1)$ 总等于 $d(a-1)$。随后他猜想对每个奇数 $a$ 总会最终稳定，并推测第二个指数足以作为所有底数的起点。[作者原笔记，第 222–232 行](https://github.com/wmboyles/LightsOut-Math/blob/c730dfafc50c1e745d643654938d37851de8c06d/tex/conjectures/summary/conjectures.tex#L222-L232)
+
+作者后来的公开非默认分支已经解决上述问题。其 AI 稿还证明了对任意有限组奇素因子逐个截断指数的更一般结论，给出底数 57 的全部数值，并为每个指定指数 $K\ge3$ 构造恰在 $K$ 稳定的底数。本目录给出可机检的另一种下降和跳变构造。[在先稿，定理和例子](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/ai_gen/multiprime_stabilization/multiprime_stabilization.tex) · [AI 文稿说明](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/ai_gen/README.md)
 
 ## 所有奇数底数的精确约化
 
@@ -47,5 +49,4 @@ $$
 
 Brouwer 的表早已将 171 列为能产生非零零空间的最小整除下标之一。57 本身未列在小于 171 的完整小例中。结合下标倍数的性质，已有数据足以得出第一次跳变的定性结论。Muñoz 的次数九因子记录也已经给出周期 513。这里逐一核验这两个已有线索，对同一底数给出了全部指数的精确零空间维数及所有奇数底数的稳定性证明。[Brouwer 的表](https://aeb.win.tue.nl/ca/madness/mad1.html) · [Muñoz 的周期与因子表](https://www.mat.ucm.es/~vmunozve/lights-out.pdf)
 
-Zaidenberg–Zagier 的搭档图定理表明，该图的每个连通分支有限。这里需要控制的是两个坐标的阶可同时遍历同一底数的任意幂次时，哪些分支能给出曲线点。上述下降给出统一的显式界 $2^e-1$。本次亦用作者名、原问题标签、$57,171,513$、边长 185192、odd powers、stabilization 和 periodic binary harmonic functions 检索 arXiv、网页及 GitHub 代码与讨论。原标签的代码结果指向作者自己的猜想；公开 AI 仓库的 binary harmonic 讨论命中素数窗口问题。两次附加的 GitHub 全局代码查询返回服务错误。所查公开材料中未找到所有奇数底数精确约化的在先证明，私有仓库和未索引材料不在可核对范围。[搭档图定理 3.11](https://webdoc.sub.gwdg.de/ebook/serien/e/mpi_mathematik/2006/14.pdf#page=22) · [作者问题原文](https://github.com/wmboyles/LightsOut-Math/blob/c730dfafc50c1e745d643654938d37851de8c06d/tex/conjectures/summary/conjectures.tex#L222-L232)
-
+Zaidenberg–Zagier 证明了搭档图的各连通分支有限。Boyles 仓库中的有限支撑稳定定理，以及底数 57 与任意晚稳定两个结果，都已有完整的公开证明。旧版查重漏掉了非默认分支，此处更正。我们的全称量词、实际网格与有限算术均由 Lean 检查。[搭档图定理 3.11](https://webdoc.sub.gwdg.de/ebook/serien/e/mpi_mathematik/2006/14.pdf#page=22) · [作者仓库的直接先例](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/ai_gen/multiprime_stabilization/multiprime_stabilization.tex)

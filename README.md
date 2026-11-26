@@ -29,10 +29,6 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 
 **大 Nim 堆与公平博弈。** Beideman、Bowen、Müyesser 的问题 3 问，哪些固定局面与足够大的 Nim 堆作选择复合后会达到最长对局给出的 Grundy 上界。答案是每个有限局面。若其最长对局长为 $d$，适用于这个深度全部局面的最小堆阈值恰为 $\lfloor d^2/4\rfloor$。每个深度都有达到此界的游戏。对分支数有统一上界的一整套规则，存在对全部局面通用的堆阈值，恰当所有局面的深度也有统一上界。[证明与原文量词](problems/SelectiveCompound/) · [独立 ZIP](packages/SelectiveCompound.zip?raw=1) · [期刊问题 3](https://math.colgate.edu/~integers/ug4/ug4.pdf#page=18)
 
-**Lights Out 方盘的二维零空间。** 对 Boyles 点名的每个边长 $n=2\cdot3^k-1$（$k\ge1$），恰有四个按键图案会保持原灯态不变，完整证明猜想 5.1 要求的无穷性。首行头两个按键与这四种图案一一对应。[数学证明与复现](problems/LightsGrid/) · [独立 ZIP](packages/LightsGrid.zip?raw=1) · [原猜想，第 8 页](https://arxiv.org/pdf/2201.03452#page=8)
-
-**奇数底数的方盘稳定性。** 对每个奇数 $a$，真实方盘零空间维数 $d(a^k-1)$ 最终保持常数。对 $a=57$，前三个指数的维数依次为 0、36、252，此后一直为 252。更一般地，任何正指数都能成为某个奇数底数出现严格跳变的位置。[一般定理与完整反例](problems/LightsGrid/OddPowers.md) · [独立 ZIP](packages/LightsGrid.zip?raw=1)
-
 **非回溯游走的顶点首次命中时间。** 对 Breen 等第 4 问，按平稳分布选择起点时，非回溯游走到达每个固定目标的平均步数都严格小于普通游走。领域为有限无向简单图、最小度至少二且相应期望有限。对目标再取平均得到原文的 Kemeny 常数严格不等式。[证明与精确差值](problems/NonbacktrackingKemeny/) · [独立 ZIP](packages/NonbacktrackingKemeny.zip?raw=1) · [作者第 4 问](https://arxiv.org/html/2510.06650v1#S5)
 
 ## 论文开放问题的部分进展
@@ -47,6 +43,10 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 | [Fazekas 等 · 二元词中的 Abel 平方](problems/FMMSFourLetterMinimum/) | 含四个 $a$ 和 $B\ge4$ 个 $b$ 时，不同 Abel 平方因子的最小数恰是 $1+\lfloor(B+2)/4\rfloor$。取等构造来自原文，此处证明任意排列的下界 | [独立 ZIP](packages/FMMSFourLetterMinimum.zip?raw=1) |
 | [Cao 等 · 图奇偶网络的完美消去序](problems/Multipartite/) | 对所有完全多部图，精确求出最少补多少个全邻接顶点，以及在原顶点之间最少补多少条边。两个最优值相等 | [独立 ZIP](packages/Multipartite.zip?raw=1) |
 | [Dębski 等 · 无限贪心 Barrycade 的遗漏数](problems/GreedyBarrycade/) | 每个非首行的永久遗漏数介于 $1$ 与 $r-1$ 之间；任意有限组行的位移最终共享一个周期。还证明第四行起若每行漏掉首项减一，则全部非首行都只有一个遗漏 | [独立 ZIP](packages/GreedyBarrycade.zip?raw=1) |
+
+## 已有数学证明的 Lean 复验
+
+Boyles 的公开分支已给出 $n=2\cdot3^k-1$ 的二维零空间、所有奇数底数最终稳定、底数 57 的完整数列及任意晚稳定的证明，其中多项收录在作者标为 AI 生成的文稿中。此前索引漏收该分支，现将这些项目列为形式化复验。[在先的作者稿](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/finite_fields/finite_fields.tex#L1128-L1154) · [在先的 AI 稿](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/ai_gen/multiprime_stabilization/multiprime_stabilization.tex) · [Lean 代码及复验步骤](problems/LightsGrid/) · [独立 ZIP](packages/LightsGrid.zip?raw=1)
 
 打开题目目录或解压相应 ZIP，在其中按 README 的命令运行。文件末尾的 `#print axioms` 输出可核对主定理的公理依赖。各题说明记录了检索日期和范围，公开优先权仍可能受未索引材料影响。
 

@@ -1,10 +1,14 @@
-# Lights Out 有无穷多种边长的方盘恰有二维零空间
+# Lights Out 方盘已有结果的 Lean 形式化
 
 对每个正整数 $k$，边长 $n=2\cdot3^k-1$ 的标准 *Lights Out* 方盘恰有四种按灯后保持原灯态的按键图案，包括完全不按。也就是说，其按键矩阵在二元域 $\mathbb F_2$ 上的零空间维数恰为 2。前四个边长是 $5,17,53,161$。这证明了 William Boyles 的猜想 5.1，也给出了他在同一段落提出的具体无穷子族。[原论文，第 8 页](https://arxiv.org/pdf/2201.03452#page=8) · [作者猜想笔记](https://github.com/wmboyles/LightsOut-Math/blob/c730dfafc50c1e745d643654938d37851de8c06d/tex/conjectures/summary/conjectures.tex#L239)
 
 作者另问，奇数底数的幂次方盘是否最终稳定。对每个奇数底数已证明最终稳定，在底数 57 上否定了两种提前稳定的推测，还能在每个指定指数构造严格跳变。[一般定理、反例及既有周期记录](OddPowers.md)
 
 一次按键翻转本格及上、下、左、右存在的邻格。给定任意可解初态，只要找到一个解，就可以把它与四种零空间图案分别作异或，得到全部四个解。实际求解时，在这族方盘上指定首行最左两个按键的取值，就唯一指定了一种零空间图案。[实际五格翻转和首行两位的线性同构](LightsGrid.lean)
+
+## 数学优先权
+
+Boyles 的公开非默认分支已给出整个二维零空间族的证明和更一般的素数幂结论。该分支的 AI 稿也已证明奇数幂最终稳定，给出底数 57 的全部数值，并构造任意指定的最终稳定指数。这些数学结论的公开优先权属于在先稿。本包的独立贡献是从五格按键规则到一般结论的 Lean 内核复验。[原作者的素数幂推论](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/finite_fields/finite_fields.tex#L1128-L1154) · [在先的奇数幂稿](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/ai_gen/multiprime_stabilization/multiprime_stabilization.tex) · [作者对 AI 文稿的说明](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/ai_gen/README.md)
 
 ## 四种图案
 
@@ -24,7 +28,7 @@ $$\gcd(F_N(X),F_N(X+1))=X(X+1).$$
 
 Sutner 的工作及 Muñoz 的定理 1 已把一般方盘的零空间维数写成路径多项式最大公因式的次数。Hunziker、Machiavelo、Park 研究了有限域上的路径多项式和网格可逆性。Zaidenberg 的定理 0.2 给出二元谱曲线的单位根参数表示。这里在该曲线上逐层排除了新的三次幂阶坐标，并在形式证明中从真实五格翻转重新推导了到方盘的联系。[Muñoz 的定理 1 与 3](https://www.mat.ucm.es/~vmunozve/lights-out.pdf) · [Hunziker 等](https://doi.org/10.1016/j.tcs.2004.03.031) · [Zaidenberg 的谱曲线](https://webdoc.sub.gwdg.de/ebook/serien/e/mpi_mathematik/2006/14.pdf#page=3)
 
-截至 2026-11-27，检索使用论文名、题号、arXiv 编号、nullity two、three-power torsion、partner orders 以及幂次族的不同写法。作者公开仓库把上述公式列作猜想。GitHub 中另一个公开数学项目实现了普通 Lights Out 消去算法。其目录未给出三次幂族结果。另检查了公开 GitHub 讨论、TrureTuring、可索引的 MathDB 资料和 Hexagon 站内检索。所查资料中未找到这个猜想的在先完整证明。Boyles 已在同一论文定理 4.2 证明“零度为二必有 $n\equiv-1\bmod6$”；本条解决的是第 5 节提出的无穷性。[作者原文](https://arxiv.org/pdf/2201.03452#page=7) · [公开算法记录](https://github.com/CylicAmp/CylicAmp/blob/2a955686cf4ee4fbd83567fae0c6af2af7a49237/math/theorems/lights_out_gf2_gf37.py) · [OpenAlex 预印本记录](https://openalex.org/W4225106851)
+Boyles 2022 年预印本第 5 节把这族边长列作猜想。2026 年 8 月 5 日，作者在 OEIS 也写下了非 Wieferich 素数幂的公式。2026 年 11 月 27 日复查时，作者 GitHub 的非默认分支已有上述完整作者稿。先前版本依赖默认分支的旧问题清单，低估了先例，此处更正。[OEIS A159257](https://oeis.org/A159257) · [已解决与已撤问题的作者清单](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/conjectures/conjectures.tex#L161-L207)
 
 ## 复验
 
