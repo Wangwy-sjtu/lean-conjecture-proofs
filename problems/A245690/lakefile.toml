@@ -1,6 +1,9 @@
 name = "a245690"
 version = "1.0.0"
 
+[[lean_lib]]
+name = "A245690"
+
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"

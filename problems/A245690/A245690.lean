@@ -22,7 +22,8 @@ def before : ℕ → ℕ
   | 0 => 1
   | k+1 => if Nat.Prime k then before k * k else before k
 
-private theorem larger_prime_absent (q : ℕ) (hq : Nat.Prime q) (k : ℕ) (hk : k ≤ q) :
+/-- A prime at least as large as the strict prefix bound is absent. -/
+theorem larger_prime_absent (q : ℕ) (hq : Nat.Prime q) (k : ℕ) (hk : k ≤ q) :
     ¬q ∣ before k := by
   induction k with
   | zero => exact hq.not_dvd_one
@@ -48,7 +49,8 @@ private theorem prefix_dvd (n k : ℕ) (h : ∀ q : Fin k, Nat.Prime q.val → q
       exact cop.symm.mul_dvd_of_dvd_of_dvd old (h ⟨k, by omega⟩ hp)
     · exact old
 
-private theorem prime_in_prefix (q : ℕ) (hq : Nat.Prime q) (k : ℕ) (hk : q < k) :
+/-- Every prime below the bound divides the strict prime prefix. -/
+theorem prime_in_prefix (q : ℕ) (hq : Nat.Prime q) (k : ℕ) (hk : q < k) :
     q ∣ before k := by
   induction k with
   | zero => omega
@@ -63,7 +65,7 @@ private theorem prime_in_prefix (q : ℕ) (hq : Nat.Prime q) (k : ℕ) (hk : q <
       · exact dvd_mul_of_dvd_left old _
       · exact old
 
-private theorem before_pos (k : ℕ) : 0 < before k := by
+theorem before_pos (k : ℕ) : 0 < before k := by
   induction k with
   | zero => decide
   | succ k ih =>
