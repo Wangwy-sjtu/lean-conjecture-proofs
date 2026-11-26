@@ -15,6 +15,12 @@
 | [A121285 · 对称凸 permutomino 的枚举](problems/A121285/) | 从已知组合计数闭式证明 Mathar 的四项递推，覆盖所有 $n\ge3$ | [独立 ZIP](packages/A121285.zip?raw=1) |
 | [A088226 · 最近平方数的下标勘误](problems/A088226/) | 原注记在每个正平方数加 1 的下标处失效，从三项递推证明修正后的距离公式 | [独立 ZIP](packages/A088226.zip?raw=1) |
 
+## 论文开放问题的部分进展
+
+| 论文问题 | 已经 Lean 验证的结论 | 下载 |
+| --- | --- | --- |
+| [Dębski 等 · 无限贪心 Barrycade 的遗漏数](problems/GreedyBarrycade/) | 第 $r$ 行永久遗漏的正整数至多有 $r-1$ 个。作者猜想从第二行起每行恰遗漏一个，该等式仍开放 | [独立 ZIP](packages/GreedyBarrycade.zip?raw=1) |
+
 打开题目目录或解压相应 ZIP，在其中按 README 的命令运行。文件末尾的 `#print axioms` 输出可核对主定理的公理依赖。各题说明记录了检索日期和范围，公开优先权仍可能受未索引材料影响。
 
 [逐题查重记录，包括 arXiv、GitHub 和公开 AI 证明库](PRIOR_ART.md)

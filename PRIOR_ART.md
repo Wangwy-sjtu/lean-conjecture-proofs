@@ -15,6 +15,10 @@
 | A121285 的四项递推 | Disanto 与 Rinaldi 给出闭式和生成函数，jOEIS 已实现闭式。[原论文](https://dmtcs.episciences.org/articles/3638/download) · [jOEIS](https://github.com/archmageirvine/joeis/blob/master/src/irvine/oeis/a121/A121285.java) | 以已发表的闭式为起点，证明 Mathar 后来写下的递推。 |
 | A088226 的下标勘误 | OEIS 同页有等价分块公式与零基程序。另一公开项目把 A088226 列入候选清单并保存了原条目。该项目的证明目录中未检出这道题的解答。[作者程序](https://github.com/oeis/oeisdata/blob/75e849f306e5850b3ea1a26e65577cd9dbcb2dc6/seq/A088/A088226.seq#L5-L10) · [候选清单](https://github.com/joaquimmj/oeis-conjectures/blob/71d80d2caef1/conjectures/crawl/old_targets.json) | 从原递推证明修正公式，给出原文字面命题的无穷反例。此项属于勘误。 |
 
+## 论文开放问题的部分进展
+
+**无限贪心 Barrycade 的遗漏数。** Dębski 等人猜想从第二行起每一行都恰好遗漏一个正整数。Patel 的项目已认证第五行，TrureTuring 给出从有限前缀推出完整尾部的判据，报告已逐行处理前 200 行。另一个形式反驳针对原文猜想 2(2) 的起始下标。此次证明的是对任意行成立的有限性与线性上界，以及各行足够晚的位置上实际项值的上界。按作者名、题名、OEIS 编号、遗漏数与行号的同义词查找 arXiv、GitHub 和公开 AI 记录，未定位到相同的任意行定理。[原文 §3.1](https://arxiv.org/html/2609.18476v2#S3.SS1) · [第五行证明](https://github.com/thatnealpatel/proofs/issues/96) · [前 200 行的工作记录](https://github.com/the-omega-institute/trureturing/issues/8494) · [对猜想 2(2) 的在先反驳](https://www.trureturing.org/research/debski-barrycade-omitted-element-refutation/)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)
