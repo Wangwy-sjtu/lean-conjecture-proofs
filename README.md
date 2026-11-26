@@ -35,6 +35,7 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
 | --- | --- | --- |
+| [Devriendt 与 Garcia · 2-sparse 图的电阻曲率](problems/SparseResistance/) | 当每条边至少有一个度数至多 2 的端点时，允许全顶点非负电阻曲率的连通图恰为路径、环和 $K_{2,3}$。Lean 验证生成树刻画下的无桥分类，其余情形引用原文命题 3.7 | [独立 ZIP](packages/SparseResistance.zip?raw=1) |
 | [Busoni 等 · 稳定子 Rényi 熵的单侧优化](problems/OneSidedSchmidt/) | 固定一侧的 Schmidt 基及标号后，另一侧所有局部酉中的最小值由计算基对齐态达到。适用于循环 Weyl 算符、所有局部维数和每个整数阶 $m\ge2$。论文的双侧问题仍开放 | [独立 ZIP](packages/OneSidedSchmidt.zip?raw=1) |
 | [Antis 等 · 十二元和积问题](problems/TwelveIntegerSets/) | 十二元正有理数集若至多产生 41 个两两和，任意正有理几何级数最多包含其中 6 点，且能取等。十一元极值构型在两种基数均不超过 41 时的十二元扩展也唯一。原猜想 $SP(12)=41$ 的整体下界仍待证明 | [独立 ZIP](packages/TwelveIntegerSets.zip?raw=1) |
 | [Inoue–Inazu · 后缀减法游戏的语言类别](problems/VisiblyPushdownSubtraction/) | 对问题 4.1，若允许删除的后缀构成可见下推语言，则必胜词与必败词也都是同一可见字母分类下的可见下推语言。Lean 从实际游戏构造识别这两个语言的 MSO 句子 | [独立 ZIP](packages/VisiblyPushdownSubtraction.zip?raw=1) |

@@ -1,0 +1,7 @@
+'SparseResistance.omissions_of_RN' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SparseResistance.branch_excess_le_cycle_rank' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SparseResistance.edges_add_leaves_le_vertices_add_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SparseResistance.rn_of_degree_le_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SparseResistance.rn_of_K23Shape' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SparseResistance.rn_iff_degree_le_two_or_K23' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SparseResistance.squareFree_rn_iff_degree_le_two' depends on axioms: [propext, Classical.choice, Quot.sound]
