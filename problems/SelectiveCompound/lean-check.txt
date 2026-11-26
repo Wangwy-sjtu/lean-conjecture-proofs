@@ -3,3 +3,12 @@
 'SelectiveCompound.Game.fixed_position_threshold' depends on axioms: [propext, Classical.choice, Quot.sound]
 'SelectiveCompound.Game.uniform_cutoff_iff_bounded_depth' depends on axioms: [propext, Classical.choice, Quot.sound]
 'SelectiveCompound.no_uniform_cutoff_for_takeOne' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SelectiveCompound.QuadraticFamily.stack_cutoff_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SelectiveCompound.QuadraticFamily.even_depth_exact_square' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SelectiveCompound.QuadraticFamily.odd_depth_exact_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SelectiveCompound.Game.prefix_rectangle' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SelectiveCompound.Game.large_heap_grundy_optimal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SelectiveCompound.QuadraticFamily.exact_witness_at_every_depth' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'SelectiveCompound.QuadraticFamily.universal_cutoff_iff' depends on axioms: [propext, Classical.choice, Quot.sound]

@@ -27,7 +27,7 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 
 **Levin 的 Band or Bump 猜想。** 对任意牌型数、每类张数和全部合法阈值，第一次因超上限而停止的概率随抽牌时刻对数凹。在非退化情形、至少两类牌时，正支集精确为 $[u+1,(m-1)u+\ell]$。证明还给出相应牌手计数的超对数凹性。[一般数学证明](problems/BandOrBump/README-all.md) · [Lean 代码](problems/BandOrBump/BandOrBumpAll.lean) · [独立 ZIP](packages/BandOrBump.zip?raw=1) · [原猜想](https://arxiv.org/pdf/2407.08062#page=7)
 
-**大 Nim 堆与公平博弈。** Beideman、Bowen、Müyesser 的问题 3 问，哪些固定局面与足够大的 Nim 堆作选择复合后会达到最长对局给出的 Grundy 上界。答案是每个有限局面。若其最长对局长为 $d$，堆大小 $k\ge\binom d2$ 已足够。对分支数有统一上界的一整套规则，存在对全部局面通用的堆阈值，恰当所有局面的深度也有统一上界。[证明与原文量词](problems/SelectiveCompound/) · [独立 ZIP](packages/SelectiveCompound.zip?raw=1) · [期刊问题 3](https://math.colgate.edu/~integers/ug4/ug4.pdf#page=18)
+**大 Nim 堆与公平博弈。** Beideman、Bowen、Müyesser 的问题 3 问，哪些固定局面与足够大的 Nim 堆作选择复合后会达到最长对局给出的 Grundy 上界。答案是每个有限局面。若其最长对局长为 $d$，适用于这个深度全部局面的最小堆阈值恰为 $\lfloor d^2/4\rfloor$。每个深度都有达到此界的游戏。对分支数有统一上界的一整套规则，存在对全部局面通用的堆阈值，恰当所有局面的深度也有统一上界。[证明与原文量词](problems/SelectiveCompound/) · [独立 ZIP](packages/SelectiveCompound.zip?raw=1) · [期刊问题 3](https://math.colgate.edu/~integers/ug4/ug4.pdf#page=18)
 
 **Lights Out 方盘的二维零空间。** 对 Boyles 点名的每个边长 $n=2\cdot3^k-1$（$k\ge1$），恰有四个按键图案会保持原灯态不变，完整证明猜想 5.1 要求的无穷性。首行头两个按键与这四种图案一一对应。[数学证明与复现](problems/LightsGrid/) · [独立 ZIP](packages/LightsGrid.zip?raw=1) · [原猜想，第 8 页](https://arxiv.org/pdf/2201.03452#page=8)
 
