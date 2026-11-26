@@ -240,7 +240,7 @@ private theorem inventory_avoids (ps : Parts) (c : ℕ) (h : c ∉ ps.map Prod.f
   have hh := List.eq_of_mem_replicate hc
   exact h (List.mem_map.mpr ⟨p, hp, hh.symm⟩)
 
-private theorem inventory_clean (b : ℕ) (ps : Parts) (v : Valid b ps) :
+theorem inventory_clean (b : ℕ) (ps : Parts) (v : Valid b ps) :
     0 ∉ inventory ps ∧ 1 ∉ inventory ps := by
   constructor <;> apply inventory_avoids <;> intro h
   all_goals
@@ -361,7 +361,7 @@ distinct twins, whose relative names do not affect adjacency or the order test. 
 def admits (a b : ℕ) (ps : Parts) : Prop :=
   ∃ w : Word, w.Perm (shape a b ps) ∧ PCO w
 
-private theorem shape_01 (a b : ℕ) (ps : Parts) (v : Valid b ps) :
+theorem shape_01 (a b : ℕ) (ps : Parts) (v : Valid b ps) :
     (shape a b ps).count 0 = a ∧ (shape a b ps).count 1 = b := by
   obtain ⟨h0,h1⟩ := inventory_clean b ps v
   simp [shape, List.count_replicate, List.count_eq_zero.mpr h0, List.count_eq_zero.mpr h1]
@@ -372,6 +372,62 @@ private theorem extras_shape (a b : ℕ) (ps : Parts) (v : Valid b ps) :
   have e0 := without_eq_self 0 (inventory ps) h0
   have e1 := without_eq_self 1 (inventory ps) h1
   simpa [extras,shape,without] using (show without 0 (without 1 (inventory ps)) = inventory ps by rw [e1,e0])
+
+/-- For each pivot, the entire later-neighbor list has consecutive distinct
+part labels. This implies the component-wise order required in the paper. -/
+def StrongColorOrder (w : Word) : Prop :=
+  ∀ pre v tail, w = pre ++ v :: tail → (tail.filter (fun z => z != v)).IsChain (· ≠ ·)
+
+/-- The construction also gives a specified last label when all separators
+are needed. This permits a fixed-vertex edge completion by extending a path. -/
+theorem strong_color_construction (a b : ℕ) (ps : Parts) (ba : b ≤ a) (v : Valid b ps)
+    (hb : b ≤ (inventory ps).length+1) :
+    ∃ w, w.Perm (shape a b ps) ∧ StrongColorOrder w ∧
+      ((inventory ps).length+1=b → ∃ pre, w=pre++[1]) := by
+  obtain ⟨rows, ok, size, counts⟩ := pack b ps v
+  let gap := b-rows.length
+  let pad : List Word := List.replicate gap []
+  let rows' := rows ++ pad
+  have hg : gap=0 ∨ gap=1 := by dsimp [gap]; omega
+  have pp : pad = [] ∨ pad = [[]] := by
+    rcases hg with h | h <;> simp [pad,h]
+  have hp : pad.flatten = [] := by rcases pp with h | h <;> simp [h]
+  have lengthRows : rows'.length=b := by simp [rows',pad,gap]; omega
+  have safe : Safe (core rows') := by
+    apply core_safe
+    · intro r hr
+      rcases List.mem_append.mp hr with h | h
+      · exact (ok r h).2
+      · rcases pp with h0 | h1
+        · simp [h0] at h
+        · simp [h1] at h
+          simp [h]
+    · exact interior_nonempty rows (fun r hr => (ok r hr).1) pad pp
+  let w := List.replicate (a-b) 0 ++ core rows'
+  have last : (inventory ps).length+1=b → ∃ pre, w=pre++[1] := by
+    intro tight
+    have one : gap=1 := by dsimp [gap]; omega
+    have padOne : pad=[[]] := by simp [pad,one]
+    refine ⟨List.replicate (a-b) 0 ++ core rows ++ [0], ?_⟩
+    simp [w,rows',padOne,core,List.append_assoc]
+  refine ⟨w, List.perm_iff_count.mpr ?_, prepend_zeros _ _ safe, last⟩
+  intro j
+  have ctr := core_count rows' j
+  simp only [rows', List.flatten_append, hp, List.append_nil, counts] at ctr
+  change (List.replicate (a-b) 0 ++ core rows').count j = _
+  rw [List.count_append, ctr]
+  simp only [shape, List.count_append, List.count_replicate]
+  change (if 0 == j then a-b else 0) + ((inventory ps).count j +
+      (if j=0 then rows'.length else 0) + (if j=1 then rows'.length else 0)) = _
+  rw [lengthRows]
+  by_cases j0 : j=0
+  · subst j
+    simp
+    omega
+  · by_cases j1 : j=1
+    · subst j
+      simp [Nat.add_comm]
+    · simp [j0,j1,Ne.symm j0,Ne.symm j1]
 
 /-- A complete multipartite graph admits a perfect cancellation ordering
 precisely when all parts other than the two largest provide b−1 separators. -/
@@ -390,44 +446,8 @@ theorem classification (a b : ℕ) (ps : Parts) (ba : b ≤ a) (v : Valid b ps) 
     rw [c0, c1, Nat.min_eq_right ba, pe.length_eq, extras_shape a b ps v] at bound
     exact bound
   · intro hb
-    obtain ⟨rows, ok, size, counts⟩ := pack b ps v
-    let gap := b-rows.length
-    let pad : List Word := List.replicate gap []
-    let rows' := rows ++ pad
-    have hg : gap=0 ∨ gap=1 := by dsimp [gap]; omega
-    have pp : pad = [] ∨ pad = [[]] := by
-      rcases hg with h | h <;> simp [pad,h]
-    have hp : pad.flatten = [] := by rcases pp with h | h <;> simp [h]
-    have lengthRows : rows'.length=b := by simp [rows',pad,gap]; omega
-    have safe : Safe (core rows') := by
-      apply core_safe
-      · intro r hr
-        rcases List.mem_append.mp hr with h | h
-        · exact (ok r h).2
-        · rcases pp with h0 | h1
-          · simp [h0] at h
-          · simp [h1] at h
-            simp [h]
-      · exact interior_nonempty rows (fun r hr => (ok r hr).1) pad pp
-    let w := List.replicate (a-b) 0 ++ core rows'
-    refine ⟨w, List.perm_iff_count.mpr ?_, strong_pco _ (prepend_zeros _ _ safe)⟩
-    intro j
-    have ctr := core_count rows' j
-    simp only [rows', List.flatten_append, hp, List.append_nil, counts] at ctr
-    change (List.replicate (a-b) 0 ++ core rows').count j = _
-    rw [List.count_append, ctr]
-    simp only [shape, List.count_append, List.count_replicate]
-    change (if 0 == j then a-b else 0) + ((inventory ps).count j +
-        (if j=0 then rows'.length else 0) + (if j=1 then rows'.length else 0)) = _
-    rw [lengthRows]
-    by_cases j0 : j=0
-    · subst j
-      simp
-      omega
-    · by_cases j1 : j=1
-      · subst j
-        simp [Nat.add_comm]
-      · simp [j0,j1,Ne.symm j0,Ne.symm j1]
+    obtain ⟨w,perm,hs,_⟩ := strong_color_construction a b ps ba v hb
+    exact ⟨w,perm,strong_pco _ hs⟩
 
 /-- Add k fresh singleton parts. Original extra labels are shifted by k. -/
 def extend (k : ℕ) (ps : Parts) : Parts :=
@@ -507,6 +527,7 @@ theorem complete_bipartite (a b k : ℕ) (ba : b ≤ a) (bpos : 1 ≤ b) :
     admits a b (extend k []) ↔ b-1 ≤ k := by
   simpa [inventory] using universal_completion a b k [] ba bpos (by simp [Valid])
 
+#print axioms strong_color_construction
 #print axioms classification
 #print axioms universal_completion
 #print axioms least_universal
@@ -629,7 +650,7 @@ theorem graphOrdering_iff {V : Type} (color : V → ℕ) (order : List V) (hd : 
 
 #print axioms graphOrdering_iff
 
-private theorem lift_order {V : Type} (color : V → ℕ) {l r : Word} (p : l.Perm r)
+theorem lift_order {V : Type} (color : V → ℕ) {l r : Word} (p : l.Perm r)
     (xs : List V) (eq : xs.map color = l) :
     ∃ ys, xs.Perm ys ∧ ys.map color = r := by
   induction p generalizing xs with

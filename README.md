@@ -20,7 +20,7 @@
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
 | --- | --- | --- |
 | [Fazekas 等 · 二元词中的 Abel 平方](problems/FMMSFourLetterMinimum/) | 含四个 $a$ 和 $B\ge4$ 个 $b$ 时，不同 Abel 平方因子的最小数恰是 $1+\lfloor(B+2)/4\rfloor$。取等构造来自原文，此处证明任意排列的下界 | [独立 ZIP](packages/FMMSFourLetterMinimum.zip?raw=1) |
-| [Cao 等 · 图奇偶网络的完美消去序](problems/Multipartite/) | 对任意完全多部图精确求出需要补多少个全邻接顶点。任意图的最小补点问题仍开放 | [独立 ZIP](packages/Multipartite.zip?raw=1) |
+| [Cao 等 · 图奇偶网络的完美消去序](problems/Multipartite/) | 对所有完全多部图，精确求出最少补多少个全邻接顶点，以及在原顶点之间最少补多少条边。两个最优值相等 | [独立 ZIP](packages/Multipartite.zip?raw=1) |
 | [Dębski 等 · 无限贪心 Barrycade 的遗漏数](problems/GreedyBarrycade/) | 每个非首行都确实有遗漏。第 $r\ge2$ 行的永久遗漏数介于 $1$ 与 $r-1$ 之间。其是否恒等于 1 仍开放 | [独立 ZIP](packages/GreedyBarrycade.zip?raw=1) |
 
 打开题目目录或解压相应 ZIP，在其中按 README 的命令运行。文件末尾的 `#print axioms` 输出可核对主定理的公理依赖。各题说明记录了检索日期和范围，公开优先权仍可能受未索引材料影响。
