@@ -1,4 +1,7 @@
-# 三种牌型的 Band or Bump 停止概率是对数凹的
+# 三种和四种牌型的 Band or Bump 停时猜想
+
+四牌型包括标准 52 张牌。对任意每类张数和任意允许阈值，两种游戏的首次 bump 概率均对数凹。下面给出三牌型证明。四牌型的支集、证明和逐时刻标准牌概率另有完整推导。[四牌型的数学证明与 Lean](README-four.md)
+
 
 Bruce Levin 在《The Game of Band or Bump》的 Remark 2 提出猜想。将一副有 $m$ 种牌型、每种 $s$ 张的牌洗匀后逐张抽取。当每类累计数都位于 $[\ell,u]$ 时出现 band，当某类累计数首次达到 $u+1$ 时出现 bump，两者中先发生的事件结束游戏。记 $N$ 为停止时刻，$p_n=\Pr(N=n,\mathrm{bump})$。Levin 已证明 band 一侧的联合概率对数凹，并在论文第 7 页根据数值结果猜想 bump 一侧也对数凹。 [arXiv 论文与版本记录](https://arxiv.org/abs/2407.08062) · [第 7 页，Remark 2](https://arxiv.org/pdf/2407.08062#page=7) · [哥伦比亚大学技术报告 B-256](https://www.columbia.edu/~bl6/appendices/Tech%20Report%20B-256%20The%20Game%20of%20Band%20or%20Bump.pdf)
 
@@ -59,7 +62,9 @@ GitHub 全局代码检索中，与论文编号匹配的文件包括 arXiv 索引
 本目录已锁定版本。从该目录执行
 
 ```sh
-lake exe cache get Mathlib.Data.Nat.Choose.Basic Mathlib.Data.Fintype.Sum Mathlib.Data.Fintype.Powerset Mathlib.Data.Finset.Sum Mathlib.Data.Finset.Prod Mathlib.Algebra.BigOperators.NatAntidiagonal Mathlib.Algebra.BigOperators.Ring.Finset Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring
+lake exe cache get Mathlib.Data.Nat.Choose.Basic Mathlib.Data.Fintype.Sum Mathlib.Data.Fintype.Powerset Mathlib.Data.Finset.Sum Mathlib.Data.Finset.Prod Mathlib.Algebra.BigOperators.NatAntidiagonal Mathlib.Algebra.BigOperators.Ring.Finset Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring Mathlib.Data.Fintype.Prod Mathlib.Algebra.Polynomial.Derivative Mathlib.Algebra.Polynomial.BigOperators Mathlib.Tactic.LinearCombination
 lake env lean -DwarningAsError=true BandOrBump.lean
+lake env lean -DwarningAsError=true BandOrBumpFour.lean
 python3 check_game.py
+python3 check_four_game.py
 ```

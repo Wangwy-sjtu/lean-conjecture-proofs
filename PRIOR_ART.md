@@ -39,6 +39,8 @@
 
 **完全二部图与辅助线。** 原作者在介绍部分讨论用辅助线降低深度。将题名、CNOT、clean/borrowed ancillas、additional qubits、parity synthesis 与 complete bipartite、计数下界组合检索后，未找到任意多条可复原零辅助线与独立借用线都保持同一精确门数的证明。该扩展允许两种线混用，并沿用相同的目标边定义。[作者稿](https://yiren.lu/assets/pdf/parity-network.pdf) · [奇偶网络综合模型](https://arxiv.org/abs/1712.01859)
 
+**Band or Bump 的四牌型情形。** Levin 原文 Table 1 已计算标准 52 张牌的一组分布。对所有 $1\le\ell\le u<s$，未指定的三类牌给出系数差 $F^3-G^3$。新证明分两段将其局部三项归约到超几何矩形，涵盖任意每类张数和两道阈值。已发表的矩形定理在此另作 Lean 形式化。沿题名、作者、四花色、三次多项式差和等价停时事件查 arXiv、GitHub、TrureTuring 与 MathDB 的公开索引，找到原文表格与摘要镜像，未找到相同的全参数证明。[原论文](https://arxiv.org/pdf/2407.08062) · [在先矩形定理](https://doi.org/10.1080/07474946.2024.2379901) · [四牌型证明与精确算例](problems/BandOrBump/README-four.md)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)
