@@ -20,7 +20,7 @@
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
 | --- | --- | --- |
 | [Cao 等 · 无三角形图的最优 CNOT 网络](problems/GraphicParity/) | 连通无三角形图能达到完美门数当且仅当它是树。单环情形恰需 $2m$ 道门，$K_{2,p}$ 恰需 $3p+2$ 道门 | [独立 ZIP](packages/GraphicParity.zip?raw=1) |
-| [Alofi–Dukes · 随机沙堆的缺额多项式](problems/SandpileK3n/) | 对吸收点在三点侧的所有 $K_{3,n}$，证明常返配置按总缺额计数的系数对数凹且单峰 | [独立 ZIP](packages/SandpileK3n.zip?raw=1) |
+| [Alofi–Dukes · 随机沙堆的缺额多项式](problems/SandpileK3n/) | 对所有 $K_{3,n}$ 和任意吸收点，证明常返配置按总缺额计数的系数对数凹且单峰，并给出两种吸收点位置各自的计数公式 | [独立 ZIP](packages/SandpileK3n.zip?raw=1) |
 | [Fazekas 等 · 二元词中的 Abel 平方](problems/FMMSFourLetterMinimum/) | 含四个 $a$ 和 $B\ge4$ 个 $b$ 时，不同 Abel 平方因子的最小数恰是 $1+\lfloor(B+2)/4\rfloor$。取等构造来自原文，此处证明任意排列的下界 | [独立 ZIP](packages/FMMSFourLetterMinimum.zip?raw=1) |
 | [Cao 等 · 图奇偶网络的完美消去序](problems/Multipartite/) | 对所有完全多部图，精确求出最少补多少个全邻接顶点，以及在原顶点之间最少补多少条边。两个最优值相等 | [独立 ZIP](packages/Multipartite.zip?raw=1) |
 | [Dębski 等 · 无限贪心 Barrycade 的遗漏数](problems/GreedyBarrycade/) | 每个非首行的永久遗漏数介于 $1$ 与 $r-1$ 之间；任意有限组行的位移最终共享一个周期。还证明第四行起若每行漏掉首项减一，则全部非首行都只有一个遗漏 | [独立 ZIP](packages/GreedyBarrycade.zip?raw=1) |

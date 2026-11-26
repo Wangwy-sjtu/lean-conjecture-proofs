@@ -732,3 +732,583 @@ theorem alofi_dukes_configurations (n : ℕ) (hn : 2≤n) :
 #print axioms alofi_dukes_configurations
 
 end ThreeSandpile
+
+namespace ThreeSandpile
+namespace Transposed
+
+private def shifted (n : ℕ) : ℕ → ℚ
+  | 0 => 0
+  | i+1 => binWeight n i
+
+private theorem shifted_nonneg (n k : ℕ) : 0≤shifted n k := by
+  cases k with
+  | zero => exact le_rfl
+  | succ i => exact weight_nonneg n i
+
+private theorem shifted_zero (n k : ℕ) (hk : k≤n) : shifted n k=0 := by
+  cases k with
+  | zero => rfl
+  | succ i => simp [shifted,binWeight,show ¬n≤i by omega]
+
+private def rat (n k : ℕ) := shifted n k / tri n k
+private def cseq (n k : ℕ) := tri n k - 3*shifted n k
+private def fac (n k : ℕ) := 1-3*rat n k
+
+private theorem rat_nonneg (n k : ℕ) : 0≤rat n k :=
+  div_nonneg (shifted_nonneg ..) (tri_nonneg ..)
+
+private theorem rat_double (n k : ℕ) (hk : k<2*n) : 2*rat n k≤rat n (k+1) := by
+  by_cases h : k≤n
+  · simpa [rat,shifted_zero n k h] using rat_nonneg n (k+1)
+  · let j := k-(n+1)
+    have ej : k=n+j+1 := by dsimp [j];omega
+    have upper := upper_marked n (j+1)
+    push_cast at upper
+    rw [show (n:ℤ)+(j+1)=n+j+1 by omega] at upper
+    have m : ((j:ℚ)+1)*tri n ((n:ℤ)+j+1+1) ≤ (n-j)*tri n ((n:ℤ)+j+1) := by
+      linarith [tri_nonneg n ((n:ℤ)+j+1),tri_nonneg n ((n:ℤ)+j+1+1)]
+    have w := weight_step n j (by omega)
+    have p : (0:ℚ)<j+1 := by positivity
+    have cross : 2*binWeight n (n+j)*tri n ((n:ℤ)+j+1+1) ≤
+        binWeight n (n+j+1)*tri n ((n:ℤ)+j+1) := by
+      apply le_of_mul_le_mul_left (a := (j:ℚ)+1) _ p
+      have m' := mul_le_mul_of_nonneg_left m (mul_nonneg (by decide : (0:ℚ)≤2) (weight_nonneg n (n+j)))
+      have eq := congrArg (fun t : ℚ => t*tri n ((n:ℤ)+j+1)) w
+      dsimp at eq
+      nlinarith only [m',eq]
+    rw [ej]
+    unfold rat
+    rw [← mul_div_assoc,div_le_div_iff₀ (tri_pos n _ (by omega) (by omega))
+      (tri_pos n _ (by omega) (by omega))]
+    simp only [shifted,Nat.cast_add,Nat.cast_one]
+    exact cross
+
+private theorem cseq_eq (n k : ℕ) (hk : k≤2*n) : cseq n k=tri n k * fac n k := by
+  have ht := tri_pos n k (by omega) (by omega)
+  unfold cseq fac rat
+  field_simp
+
+private theorem rat_mono (n i j : ℕ) (ij : i≤j) (hj : j≤2*n) : rat n i≤rat n j := by
+  induction j with
+  | zero => rw [show i=0 by omega]
+  | succ j ih =>
+    by_cases eq : i=j+1
+    · rw [eq]
+    · linarith [rat_double n j (by omega),rat_nonneg n j,ih (by omega) (by omega)]
+
+private theorem cseq_prefix (n h : ℕ) (hh : h≤2*n) (hd : 0<cseq n h) :
+    ∀ i≤h, 0<cseq n i := by
+  intro i hi
+  rw [cseq_eq n h hh] at hd
+  rw [cseq_eq n i (by omega)]
+  have ff : 0 < fac n h := pos_of_mul_pos_right hd (tri_nonneg n h)
+  apply mul_pos (tri_pos n i (by omega) (by omega))
+  have hs := rat_mono n i h hi hh
+  unfold fac at *
+  linarith
+
+private theorem cseq_lc (n k : ℕ) (hk : k+2≤2*n) (h : 0<cseq n (k+2)) :
+    LC (cseq n) k := by
+  have ps := cseq_prefix n (k+2) hk h
+  have ff (i : ℕ) (hi : i≤k+2) : 0<fac n i := by
+    have d := ps i hi
+    rwa [cseq_eq n i (by omega),mul_pos_iff_of_pos_left (tri_pos n i (by omega) (by omega))] at d
+  have d := rat_double n (k+1) (by omega)
+  have c : fac n k + fac n (k+2)≤2*fac n (k+1) := by
+    unfold fac
+    linarith [rat_nonneg n k]
+  have fLC := nonneg_concave_lc _ _ _ (ff k (by omega)).le (ff (k+2) le_rfl).le c
+  have triLC := tri_cross n ((k:ℤ)+1) ((k:ℤ)+1) le_rfl
+  rw [show (k:ℤ)+1-1=k by omega] at triLC
+  have tr : tri n (k:ℤ)*tri n ((k+2:ℕ):ℤ)≤tri n ((k+1:ℕ):ℤ)^2 := by
+    simpa [pow_two] using triLC
+  have comb := mul_le_mul tr fLC (mul_nonneg (ff k (by omega)).le (ff _ le_rfl).le) (sq_nonneg _)
+  unfold LC
+  rw [cseq_eq n k (by omega), cseq_eq n (k+1) (by omega), cseq_eq n (k+2) hk]
+  linarith only [comb]
+
+private theorem tri_upper (n k : ℕ) (hk : n≤k) : tri n ((k:ℤ)+1)≤tri n k := by
+  have q := tri_cross n (2*(n:ℤ)-k) k (by omega)
+  rw [show 2*(n:ℤ)-k-1=2*n-(k+1) by omega,tri_symm,tri_symm] at q
+  nlinarith [tri_nonneg n (k:ℤ),tri_nonneg n ((k:ℤ)+1)]
+
+private theorem shifted_increasing (n k : ℕ) (hk : k+1≤n+1+(2*n)/3) :
+    shifted n k≤shifted n (k+1) := by
+  by_cases h : k≤n
+  · rw [shifted_zero n k h]
+    exact shifted_nonneg n _
+  · let j := k-(n+1)
+    have ej : k=n+j+1 := by dsimp [j];omega
+    have w := weight_step n j (by omega)
+    have coef : (j:ℚ)+1≤2*(n-j) := by
+      have nat : j+1 ≤ 2*(n-j) := by omega
+      rw [← Nat.cast_sub (by omega : j≤n)]
+      exact_mod_cast nat
+    rw [ej]
+    change binWeight n (n+j)≤binWeight n (n+j+1)
+    apply le_of_mul_le_mul_left (a:=(j:ℚ)+1) _ (by positivity)
+    rw [w]
+    exact mul_le_mul_of_nonneg_right coef (weight_nonneg ..)
+
+private theorem shifted_words (n k : ℕ) :
+    shifted n k=total n (fun w => atom (n+1+occupied w : ℕ) k) := by
+  cases k with
+  | zero =>
+    have zero (w : Word) : atom (n+1+occupied w : ℕ) 0=0 := if_neg (by omega)
+    simp only [shifted,Nat.cast_zero,zero,total_zero]
+  | succ k =>
+    rw [shifted,weight_words]
+    congr 1
+    funext w
+    simp only [atom]
+    split_ifs <;> first | rfl | omega
+
+private def turn : Gap → Gap
+  | .zero => .one
+  | .one => .two
+  | .two => .zero
+
+private def rotate (w : Word) := w.map turn
+
+private theorem rotation_stats (w : Word) :
+    occupied w+occupied (rotate w)+occupied (rotate (rotate w))=2*w.length := by
+  induction w with
+  | nil => rfl
+  | cons q w ih =>
+    cases q <;> simp only [rotate,List.map_cons,turn,occupied,List.length_cons] at * <;> omega
+
+private theorem total_rotate (n : ℕ) (f : Word → ℚ) :
+    total n (fun w => f (rotate w))=total n f := by
+  induction n generalizing f with
+  | zero => rfl
+  | succ n ih =>
+    rw [total_succ,total_succ]
+    change total n (fun w => f (.one::rotate w))+total n (fun w => f (.two::rotate w))+
+      total n (fun w => f (.zero::rotate w))=_
+    rw [ih (fun w => f (.one::w)),ih (fun w => f (.two::w)),ih (fun w => f (.zero::w))]
+    ring
+
+private theorem total_compare (n : ℕ) (f g : Word→ℚ) (h : ∀ w, w.length=n → f w≤g w) :
+    total n f≤total n g := by
+  have e (ws : List Word) (all : ∀ w∈ws, w.length=n) : (ws.map f).sum≤(ws.map g).sum := by
+    induction ws with
+    | nil => simp
+    | cons w ws ih =>
+      simp only [List.map_cons,List.sum_cons]
+      exact add_le_add (h w (all _ (List.mem_cons_self ..)))
+        (ih (fun v hv => all v (List.mem_cons_of_mem _ hv)))
+  exact e _ (fun w hw => (mem_words ..).1 hw)
+
+private theorem total_add (n : ℕ) (f g : Word→ℚ) :
+    total n (fun w => f w+g w) = total n f + total n g := by
+  unfold total
+  induction words n with
+  | nil => simp
+  | cons w ws ih => simp only [List.map_cons,List.sum_cons];linarith
+
+private theorem accum_total (q : Word→ℕ) (n k : ℕ) :
+    accum (fun i : ℕ => total n (fun w => atom (q w) i)) k=
+    total n (fun w => if q w≤k then 1 else 0) := by
+  simpa only [total,prefix_atom] using (accum_list (words n) (fun w i => atom (q w) (i:ℕ)) k)
+
+private theorem accum3 (f g : ℕ→ℚ) (k : ℕ) :
+    accum (fun i => f i-3*g i) k = accum f k-3*accum g k := by
+  induction k with
+  | zero => rfl
+  | succ k ih => simp only [accum,ih];ring
+
+private def first (n : ℕ) := accum (cseq n)
+
+/-- In each orbit under cyclic relabelling of the three digits, at least one
+word has at most floor(2n/3) occupied positions. -/
+private theorem first_tail (n k : ℕ) (hk : n+1+(2*n)/3≤k) : first n k≤0 := by
+  let g : Word→ℚ := fun w => if n+1+occupied w≤k then 1 else 0
+  have point (w : Word) (hn : w.length=n) : 1≤g w+g (rotate w)+g (rotate (rotate w)) := by
+    have stats := rotation_stats w
+    dsimp [g]
+    split_ifs <;> norm_num
+    omega
+  have comp := total_compare n _ _ point
+  rw [total_add,total_add,total_rotate n g,total_rotate n (fun w => g (rotate w)),total_rotate n g] at comp
+  have unit := total_compare n (fun w => if mass w≤k then 1 else 0) (fun _ => 1)
+    (fun w _ => by dsimp; split <;> norm_num)
+  change accum (fun i => tri n (i:ℤ)-3*shifted n i) k≤0
+  have a : (fun i : ℕ => tri n (i:ℤ))=fun i : ℕ => total n (fun w => atom (mass w) i) :=
+    funext (fun i => tri_words n i)
+  have b : shifted n=fun i : ℕ => total n (fun w => atom (n+1+occupied w : ℕ) i) :=
+    funext (shifted_words n)
+  rw [accum3,a,b]
+  rw [accum_total mass,accum_total (fun w => n+1+occupied w)]
+  change _ - 3*total n g≤0
+  linarith
+
+private theorem first_prefix (n k : ℕ) (hk : k≤2*n) (h : 0<first n k) :
+    ∀ i≤k, 0<first n i := by
+  induction k with
+  | zero => simpa using h
+  | succ k ih =>
+    have prev : 0<first n k := by
+      by_cases c : 0<cseq n (k+1)
+      · exact accum_pos k (fun j hj => cseq_prefix n (k+1) hk c j (by omega))
+      · change 0<first n k+cseq n (k+1) at h
+        linarith
+    intro i hi
+    by_cases e : i=k+1
+    · rwa [e]
+    · exact ih (by omega) prev i (by omega)
+
+private theorem first_lc (n k : ℕ) (hk : k+2≤2*n) (h : 0<first n (k+2)) :
+    LC (first n) k := by
+  by_cases c : 0<cseq n (k+2)
+  · have prefix' := cseq_prefix n (k+2) hk c
+    exact accum_lc k prefix' (fun i hi => cseq_lc n i (by omega) (prefix' _ (by omega)))
+  · have cut : k+2<n+1+(2*n)/3 := by
+      by_contra! e
+      linarith [first_tail n (k+2) e]
+    have lower : n≤k+1 := by
+      by_contra! e
+      have z := shifted_zero n (k+2) (by omega)
+      simp only [cseq,z,mul_zero,sub_zero] at c
+      exact c (tri_pos n _ (by omega) (by omega))
+    have a := tri_upper n (k+1) lower
+    have b := shifted_increasing n (k+1) cut.le
+    have down : cseq n (k+2)≤cseq n (k+1) := by
+      simp only [cseq,Nat.cast_add,Nat.cast_ofNat,Nat.cast_one] at *
+      rw [show (k:ℤ)+2=k+1+1 by omega]
+      linarith
+    apply nonneg_concave_lc _ _ _ (first_prefix n _ hk h k (by omega)).le h.le
+    change first n k+(first n k+cseq n (k+1)+cseq n (k+2))≤2*(first n k+cseq n (k+1))
+    linarith
+
+def coefficients (n : ℕ) := accum (accum (first n))
+
+private theorem coefficient_lc (n k : ℕ) (hk : k+2≤2*n)
+    (hu : 0≤coefficients n k) (hw : 0≤coefficients n (k+2)) : LC (coefficients n) k := by
+  by_cases h : 0<first n (k+2)
+  · have ps := first_prefix n _ hk h
+    have local' (i : ℕ) (hi : i≤k) := first_lc n i (by omega) (ps (i+2) (by omega))
+    apply accum_lc
+    · intro i hi
+      exact accum_pos i (fun j hj => ps j (by omega))
+    · intro i hi
+      exact accum_lc i (fun j hj => ps j (by omega)) (fun j hj => local' j (by omega))
+  · apply nonneg_concave_lc _ _ _ hu hw
+    unfold coefficients
+    simp only [accum]
+    linarith
+
+private def slots : Gap → ℕ
+  | .zero => 2
+  | .one => 1
+  | .two => 0
+
+private def active : Word → ℕ
+  | [] => 0
+  | .two::w => active w
+  | _::w => active w+1
+
+private def capacity : Word → ℕ
+  | [] => 0
+  | q::w => capacity w+slots q
+
+private theorem capFacts (w : Word) :
+    active w+twos w=w.length ∧ capacity w+mass w=2*w.length ∧
+    active w≤capacity w ∧ capacity w≤2*active w := by
+  induction w with
+  | nil => decide
+  | cons q w ih => cases q <;> simp [active,capacity,slots,mass,twos] <;> omega
+
+/-- For each nonsink on the large side, three independent flags specify
+outgoing edges to the opposite vertices. Its lack q leaves at most 2−q outgoing
+edges. The indices count the contributions to the three opposite indegrees. -/
+inductive Rows : Word → ℕ → ℕ → ℕ → Prop where
+  | nil : Rows [] 0 0 0
+  | cons {w : Word} {i j l : ℕ} (q : Gap) (a b c : Bool)
+      (space : a.toNat+b.toNat+c.toNat≤slots q) (rest : Rows w i j l) :
+      Rows (q::w) (i+a.toNat) (j+b.toNat) (l+c.toNat)
+
+private theorem rowBounds {w : Word} {i j l : ℕ} (h : Rows w i j l) :
+    i≤active w ∧ j≤active w ∧ l≤active w ∧ i+j+l≤capacity w := by
+  induction h with
+  | nil => decide
+  | cons q a b c _ _ ih =>
+    cases q <;> cases a <;> cases b <;> cases c <;>
+      simp_all [slots,active,capacity,Bool.toNat] <;> omega
+
+set_option maxHeartbeats 500000 in
+private theorem reduceRow (t C q x y z : ℕ) (ht : t≤C) (hC : C≤2*t) (qb : q=1 ∨ q=2)
+    (hx : x≤t+1) (hy : y≤t+1) (hz : z≤t+1) (h : x+y+z≤C+q) :
+    ∃ a b c : Bool, a.toNat+b.toNat+c.toNat≤q ∧ a.toNat≤x ∧ b.toNat≤y ∧ c.toNat≤z ∧
+      x-a.toNat≤t ∧ y-b.toNat≤t ∧ z-c.toNat≤t ∧ x-a.toNat+(y-b.toNat)+(z-c.toNat)≤C := by
+  rcases qb with rfl|rfl <;> simp [Bool.exists_bool] <;> omega
+
+private theorem fillRows (w : Word) (x y z : ℕ) (hx : x≤active w) (hy : y≤active w)
+    (hz : z≤active w) (hs : x+y+z≤capacity w) : Rows w x y z := by
+  induction w generalizing x y z with
+  | nil =>
+    change x≤0 at hx
+    change y≤0 at hy
+    change z≤0 at hz
+    simpa [show x=0 by omega,show y=0 by omega,show z=0 by omega] using Rows.nil
+  | cons q w ih =>
+    have step (q : Gap) (qb : slots q=1 ∨ slots q=2) (x y z : ℕ)
+        (hx : x≤active w+1) (hy : y≤active w+1) (hz : z≤active w+1)
+        (hs : x+y+z≤capacity w+slots q) : Rows (q::w) x y z := by
+      have f := capFacts w
+      obtain ⟨a,b,c,st,ax,by',cz,hx',hy',hz',hs'⟩ :=
+        reduceRow _ _ _ _ _ _ f.2.2.1 f.2.2.2 qb hx hy hz hs
+      have o := Rows.cons q a b c st (ih _ _ _ hx' hy' hz' hs')
+      rwa [Nat.sub_add_cancel ax,Nat.sub_add_cancel by',Nat.sub_add_cancel cz] at o
+    cases q with
+    | zero => exact step _ (Or.inr rfl) x y z hx hy hz hs
+    | one => exact step _ (Or.inl rfl) x y z hx hy hz hs
+    | two => exact Rows.cons .two false false false (by decide) (ih x y z hx hy hz hs)
+
+/-- Orient all edges of K_(N+1),3, with the sink on the N+1 side. The word
+lists the N nonsink left lacks. Each right vertex has its own independent sink
+edge flag as well as its ordinary incoming edges counted by Rows. -/
+def Compatible (w : Word) (x y z : ℕ) : Prop :=
+  ∃ i j l, Rows w i j l ∧ ∃ a b c : Bool,
+    x+1≤i+a.toNat ∧ y+1≤j+b.toNat ∧ z+1≤l+c.toNat
+
+theorem compatible_iff (w : Word) (x y z : ℕ) :
+    Compatible w x y z ↔ x≤active w ∧ y≤active w ∧ z≤active w ∧ x+y+z≤capacity w := by
+  constructor
+  · rintro ⟨i,j,l,h,a,b,c,hx,hy,hz⟩
+    have f := rowBounds h
+    cases a <;> cases b <;> cases c <;> simp [Bool.toNat] at * <;> omega
+  · rintro ⟨hx,hy,hz,hs⟩
+    exact ⟨x,y,z,fillRows w x y z hx hy hz hs,true,true,true,le_rfl,le_rfl,le_rfl⟩
+
+private noncomputable def rightPairs (s R k : ℕ) : List (ℕ×ℕ) :=
+  (pairChoices s R k).toList.map (fun y => (y,k-y-R))
+
+private theorem mem_rightPairs (s R k y z : ℕ) :
+    (y,z)∈rightPairs s R k ↔ y<s ∧ z<s ∧ y+z+R=k := by
+  simp only [rightPairs,List.mem_map,Finset.mem_toList,Prod.mk.injEq]
+  constructor
+  · rintro ⟨y',hy',rfl,rfl⟩
+    obtain ⟨hy,z',hz',he⟩ := (pairChoices_spec ..).1 hy'
+    omega
+  · rintro ⟨hy,hz,he⟩
+    exact ⟨y,(pairChoices_spec ..).2 ⟨hy,z,hz,he⟩,rfl,by omega⟩
+
+private def tagged {α β : Type} (xs : List α) (f : α→List β) :=
+  xs.flatMap (fun x => (f x).map (fun y => (x,y)))
+
+private theorem mem_tagged {α β : Type} (xs : List α) (f : α→List β) (x : α) (y : β) :
+    (x,y)∈tagged xs f ↔ x∈xs ∧ y∈f x := by simp [tagged]
+
+private theorem tagged_nodup {α β : Type} (xs : List α) (f : α→List β)
+    (hx : xs.Nodup) (hf : ∀ x, (f x).Nodup) : (tagged xs f).Nodup := by
+  apply List.nodup_flatMap.2
+  constructor
+  · intro x _
+    exact List.Nodup.map (fun _ _ h => congrArg Prod.snd h) (hf x)
+  · apply hx.imp
+    intro a b hab c hac hbc
+    obtain ⟨i,_,hi⟩ := List.mem_map.1 hac
+    obtain ⟨j,_,hj⟩ := List.mem_map.1 hbc
+    exact hab (congrArg Prod.fst (hi.trans hj.symm))
+
+private noncomputable def rightTriples (k : ℕ) (w : Word) : List (ℕ×ℕ×ℕ) :=
+  tagged (List.range (active w+1)) (fun x => rightPairs (active w+1) (mass w+x) k)
+
+private theorem mem_rightTriples (k : ℕ) (w : Word) (x y z : ℕ) :
+    (x,y,z)∈rightTriples k w ↔ x≤active w ∧ y≤active w ∧ z≤active w ∧ x+y+z+mass w=k := by
+  rw [rightTriples,mem_tagged,List.mem_range,mem_rightPairs]
+  omega
+
+/-- All labelled compatible configurations of total lack k on K_(N+1),3. -/
+noncomputable def recurrentConfigs (N k : ℕ) : List (Word×ℕ×ℕ×ℕ) :=
+  if k≤2*N then tagged (words N) (rightTriples k) else []
+
+theorem mem_recurrentConfigs (N k : ℕ) (w : Word) (x y z : ℕ) :
+    (w,x,y,z)∈recurrentConfigs N k ↔
+    w.length=N ∧ Compatible w x y z ∧ x+y+z+mass w=k := by
+  have f := capFacts w
+  by_cases hk : k≤2*N
+  · rw [recurrentConfigs,if_pos hk,mem_tagged,mem_words,mem_rightTriples,compatible_iff]
+    omega
+  · simp only [recurrentConfigs,if_neg hk,List.not_mem_nil,false_iff,compatible_iff,not_and]
+    omega
+
+theorem recurrentConfigs_nodup (N k : ℕ) : (recurrentConfigs N k).Nodup := by
+  rw [recurrentConfigs]
+  split
+  · apply tagged_nodup _ _ (words_nodup N)
+    intro w
+    apply tagged_nodup _ _ List.nodup_range
+    intro x
+    exact List.Nodup.map (fun _ _ h => congrArg Prod.fst h) (Finset.nodup_toList _)
+  · simp
+
+private def wordCount (k : ℕ) (w : Word) :=
+  ((List.range (active w+1)).map (fun x => (pairChoices (active w+1) (mass w+x) k).card)).sum
+
+def lackCount (N k : ℕ) : ℕ :=
+  if k≤2*N then ((words N).map (wordCount k)).sum else 0
+
+theorem length_recurrentConfigs (N k : ℕ) : (recurrentConfigs N k).length=lackCount N k := by
+  by_cases hk : k≤2*N <;> simp [recurrentConfigs,lackCount,hk,rightTriples,rightPairs,tagged]
+  rfl
+
+private def ramp (d k : ℕ) : ℚ := (k+1-d : ℕ)
+private def triangle (d : ℕ) := accum (ramp d)
+
+private theorem triangle_step (d k : ℕ) : triangle d k-triangle (d+1) k=ramp d k := by
+  induction k with
+  | zero => cases d <;> simp [triangle,accum,ramp]
+  | succ k ih =>
+    change (triangle d k + ramp d (k+1)) - (triangle (d+1) k + ramp (d+1) (k+1))=ramp d (k+1)
+    have eq : ramp (d+1) (k+1)=ramp d k := by
+      unfold ramp
+      congr 1
+      omega
+    linarith
+
+private theorem triangle_zero (d k : ℕ) (hk : k<d) : triangle d k=0 := by
+  have zero (i : ℕ) (hi : i<d) : ramp d i=0 := by simp [ramp,show i+1-d=0 by omega]
+  induction k with
+  | zero => exact zero 0 hk
+  | succ k ih =>
+    change triangle d k + ramp d (k+1)=0
+    rw [ih (by omega),zero _ hk,add_zero]
+
+private theorem sum_ramp (s d k : ℕ) :
+    ((List.range s).map (fun x => ramp (d+x) k)).sum=triangle d k-triangle (d+s) k := by
+  induction s with
+  | zero => simp
+  | succ s ih =>
+    rw [List.range_succ,List.map_append,List.sum_append,ih]
+    simp only [List.map_cons,List.map_nil,List.sum_cons,List.sum_nil,add_zero,Nat.add_succ]
+    linarith [triangle_step (d+s) k]
+
+private theorem pair_formula (s R k : ℕ) (hk : k<R+2*s) :
+    ((pairChoices s R k).card : ℚ)=ramp R k-2*ramp (R+s) k := by
+  rw [pairChoices,Nat.card_Ico]
+  have e : min s (k+1-R) - (k+1-(R+s)) + 2*(k+1-(R+s))=k+1-R := by omega
+  exact eq_sub_of_add_eq (by unfold ramp;exact_mod_cast e)
+
+private theorem word_formula (N k : ℕ) (w : Word) (hw : w∈words N) (hk : k≤2*N) :
+    (wordCount k w : ℚ)=triangle (mass w) k-3*triangle (N+1+occupied w) k := by
+  let s := active w+1
+  let R := mass w
+  have len := (mem_words ..).1 hw
+  have facts := capFacts w
+  have stats := statistics w
+  have eq : R+s=N+1+occupied w := by dsimp [R,s];omega
+  have bound : k<R+s+s := by dsimp [R,s];omega
+  have e (x : ℕ) (_mem : x∈List.range s) :
+      ((pairChoices s (R+x) k).card : ℚ)=ramp (R+x) k-2*ramp (R+s+x) k := by
+    rw [pair_formula _ _ _ (by omega),show R+x+s=R+s+x by omega]
+  change (((List.range s).map (fun x => (pairChoices s (R+x) k).card)).sum : ℚ)=_
+  rw [list_count (List.range s) _ _ _ e,sum_ramp,sum_ramp,triangle_zero _ _ bound,eq]
+  ring
+
+private theorem triple_sub (f g : ℕ → ℚ) (k : ℕ) :
+    accum (accum (accum (fun i => f i-3*g i))) k =
+    accum (accum (accum f)) k - 3*accum (accum (accum g)) k := by
+  have a : accum (fun i => f i-3*g i)=fun i => accum f i-3*accum g i := funext (accum3 f g)
+  have b : accum (fun i => accum f i-3*accum g i)=
+    fun i => accum (accum f) i-3*accum (accum g) i := funext (accum3 _ _)
+  rw [a,b,accum3]
+
+private theorem triple_total (N : ℕ) (q : Word→ℕ) (k : ℕ) :
+    accum (accum (accum (fun i : ℕ => total N (fun w => atom (q w) i)))) k =
+    total N (fun w => triangle (q w) k) := by
+  have e := funext (double_total N q)
+  rw [e]
+  exact accum_list (words N) (fun w => ramp (q w)) k
+
+private theorem coefficient_words (N k : ℕ) :
+    coefficients N k=total N (fun w => triangle (mass w) k)-
+      3*total N (fun w => triangle (N+1+occupied w) k) := by
+  let f : ℕ→ℚ := fun i => total N (fun w => atom (mass w) i)
+  let g : ℕ→ℚ := fun i => total N (fun w => atom (N+1+occupied w : ℕ) i)
+  have e : cseq N=fun i => f i-3*g i := by
+    funext i
+    simp only [cseq,tri_words,shifted_words,f,g]
+  rw [coefficients,first,e,triple_sub,triple_total N mass,triple_total N (fun w => N+1+occupied w)]
+
+private theorem list_three {α : Type} (ws : List α) (f : α → ℕ) (u v : α → ℚ)
+    (h : ∀ w∈ws, (f w : ℚ)=u w-3*v w) :
+    ((ws.map f).sum : ℚ) = (ws.map u).sum-3*(ws.map v).sum := by
+  induction ws with
+  | nil => simp
+  | cons w ws ih =>
+    have first' := h w (List.mem_cons_self ..)
+    have rest := ih (fun a ha => h a (List.mem_cons_of_mem _ ha))
+    simp only [List.map_cons,List.sum_cons,Nat.cast_add]
+    linarith
+
+theorem coefficient_count (N k : ℕ) (hk : k≤2*N) : (lackCount N k : ℚ)=coefficients N k := by
+  rw [lackCount,if_pos hk,coefficient_words]
+  exact list_three _ _ _ _ (fun w hw => word_formula N k w hw hk)
+
+theorem lackCount_pos (N k : ℕ) (hk : k≤2*N) : 0<lackCount N k := by
+  let w := List.replicate N Gap.zero
+  have len : w.length=N := List.length_replicate ..
+  obtain ⟨tw,ma⟩ := zero_stats N
+  change twos w=0 at tw
+  change mass w=0 at ma
+  have facts := capFacts w
+  rw [← length_recurrentConfigs,List.length_pos_iff_exists_mem]
+  refine ⟨(w,min k N,k-min k N,0),(mem_recurrentConfigs ..).2 ⟨len,?_,by omega⟩⟩
+  rw [compatible_iff]
+  omega
+
+/-- With the sink on the side of N+1 vertices, the coefficients are log-concave. -/
+theorem alofi_dukes_log_concave (N k : ℕ) (hk : k+2≤2*N) :
+    lackCount N k * lackCount N (k+2)≤(lackCount N (k+1))^2 := by
+  have a := coefficient_count N k (by omega)
+  have b := coefficient_count N (k+1) (by omega)
+  have c := coefficient_count N (k+2) hk
+  have result := coefficient_lc N k hk (a ▸ Nat.cast_nonneg _) (c ▸ Nat.cast_nonneg _)
+  unfold LC at result
+  rw [← a,← b,← c] at result
+  exact_mod_cast result
+
+theorem alofi_dukes_unimodal (N : ℕ) : UnimodalOn (lackCount N) (2*N) :=
+  unimodal_of_lc _ _ (lackCount_pos N) (alofi_dukes_log_concave N)
+
+/-- Alofi–Dukes Conjecture 13(i,ii) on K_(N+1),3 directly for the lists
+characterized by all labelled stable configurations and all edge orientations. -/
+theorem alofi_dukes_configurations (N : ℕ) :
+    (∀ k, k+2≤2*N →
+      (recurrentConfigs N k).length * (recurrentConfigs N (k+2)).length ≤
+      (recurrentConfigs N (k+1)).length^2) ∧
+    UnimodalOn (fun k => (recurrentConfigs N k).length) (2*N) := by
+  simp only [length_recurrentConfigs]
+  exact ⟨alofi_dukes_log_concave N,alofi_dukes_unimodal N⟩
+
+#print axioms compatible_iff
+#print axioms mem_recurrentConfigs
+#print axioms recurrentConfigs_nodup
+#print axioms length_recurrentConfigs
+#print axioms coefficient_count
+#print axioms alofi_dukes_configurations
+
+end Transposed
+
+/-- Counts on the same unrooted K₃,ₙ. A true flag puts the sink in the part
+of size three. A false flag puts it in the part of size n. -/
+noncomputable def countBySink (n : ℕ) (sinkOnThree : Bool) (k : ℕ) : ℕ :=
+  if sinkOnThree then (recurrentConfigs n k).length else (Transposed.recurrentConfigs (n-1) k).length
+
+/-- Both parts of Conjecture 13 for either placement of the sink on K₃,ₙ. -/
+theorem three_vertex_part (n : ℕ) (hn : 2≤n) (sinkOnThree : Bool) :
+    (∀ k, k+2≤2*n-2 →
+      countBySink n sinkOnThree k * countBySink n sinkOnThree (k+2) ≤
+      (countBySink n sinkOnThree (k+1))^2) ∧
+    UnimodalOn (countBySink n sinkOnThree) (2*n-2) := by
+  cases sinkOnThree with
+  | false =>
+    have bound : 2*(n-1)=2*n-2 := by omega
+    simpa only [countBySink,Bool.false_eq_true,if_false,bound] using
+      Transposed.alofi_dukes_configurations (n-1)
+  | true => simpa only [countBySink,if_true] using alofi_dukes_configurations n hn
+
+#print axioms three_vertex_part
+
+end ThreeSandpile

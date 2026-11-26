@@ -1,14 +1,39 @@
-# 完全二部图 $K_{3,n}$ 的随机沙堆缺额多项式
+# 两种吸收点位置下 $K_{3,n}$ 随机沙堆的缺额多项式
 
-**定理。** 对每个 $n\ge2$，取完全二部图 $K_{3,n}$，令吸收点位于三个顶点的一侧。按总缺额 $k$ 统计随机常返稳定配置，所得系数 $L_0,\ldots,L_{2n-2}$ 全部为正，满足
+**定理。** 任取 $n\ge2$，在完全二部图 $K_{3,n}$ 中任意指定一个吸收点。令 $L_k$ 为总缺额 $k$ 的带标号随机常返稳定配置数。其支撑恰为 $0\le k\le 2n-2$，且
 
-$$L_{k+1}^2\ge L_kL_{k+2}\qquad(0\le k\le 2n-4).$$
+$$L_{k+1}^2\ge L_k L_{k+2}\qquad (0\le k\le 2n-4).$$
 
-因此这些系数存在一个峰值，峰前不降、峰后不升。Alofi 和 Dukes 在 *Discrete Mathematics* 348 (2025), 114323 的猜想 13(i)、(ii) 对所有 $K_{m,n}$ 提出这两条性质。他们证明了 $m=2$ 和 $n=2$，并给出 $m+n\le8$ 的计算表。这里证明 $m=3$ 的整行，包括超出该表的全部 $n\ge6$。更大的 $m$ 和交换吸收点所在一侧后的 $K_{n,3}$ 仍需分别研究。[期刊论文](https://doi.org/10.1016/j.disc.2024.114323) · [原文猜想 13 与表 2](https://arxiv.org/html/2411.02667v1#S3)
+因此系数序列单峰。Alofi 和 Dukes 在 *Discrete Mathematics* 348 (2025), 114323 的猜想 13(i)、(ii) 对一般完全二部图提出这两种性质。他们证明了 $K_{2,n}$、$K_{m,2}$ 并计算了 $m+n\le8$ 的例子。文中约定吸收点在第一个下标对应的一侧。这里同时证明 $L_{3,n}$ 和 $L_{n,3}$ 的全部次数。因此，结合原论文，只要有一侧至多三个顶点且两侧至少各有两个顶点，两种猜想均成立。两侧至少各有四个顶点的情形仍在上述结果范围之外。[期刊论文](https://doi.org/10.1016/j.disc.2024.114323) · [猜想和原数值表](https://arxiv.org/html/2411.02667v1)
 
-## 模型和计数公式
+例如同一个无根图 $K_{3,6}$ 有两种不同的统计分布。表中的下标沿用原论文约定。
 
-一个稳定配置给每个非吸收顶点 $v$ 分配 $c(v)\in\{0,\ldots,d(v)-1\}$ 颗沙粒，其中 $d(v)$ 是顶点度数。缺额为 $d(v)-1-c(v)$，即相对于可以稳定容纳的最多沙粒数，还差几颗。Chan、Marckert 和 Selig 的定理 3.2 给出从随机动力学到定向图的桥梁。配置随机常返当且仅当各边存在一种定向，使每个非吸收顶点的入度至少为其缺额加一。形式化从 Alofi–Dukes 命题 4 重述的这条已发表等价刻画开始。[定向判据](https://arxiv.org/html/2411.02667v1#S1) · [Chan–Marckert–Selig](https://www.labri.fr/perso/marckert/SP.pdf)
+| 总缺额 $k$ | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| $L_{3,6}$，汇在三顶点侧 | 1 | 8 | 36 | 114 | 282 | 576 | 1009 | 1544 | 2049 | 2284 | 2060 |
+| $L_{6,3}$，汇在六顶点侧 | 1 | 8 | 36 | 115 | 290 | 612 | 1123 | 1823 | 2607 | 3240 | 3483 |
+
+## 两个精确公式
+
+顶点 $v$ 的缺额是 $d(v)-1-c(v)$，其中 $d(v)$ 是度数，$c(v)$ 是稳定配置中的沙粒数。总缺额对全部非吸收顶点求和。Chan、Marckert 和 Selig 的定理 3.2 证明，稳定配置在随机沙堆动力学中常返，恰好等价于图的边可以定向，使每个非吸收顶点的入度至少为其缺额加一。Lean 形式化由原论文命题 4 重述的该定向刻画出发。[原始定向定理](https://www.labri.fr/perso/marckert/SP.pdf) · [论文命题 4](https://arxiv.org/html/2411.02667v1)
+
+记 $[F(x)]_{\le d}$ 为将 $F$ 在原点展开后保留到 $d$ 次。汇在三顶点侧时有
+
+$$L_{3,n}(x)=\left[\frac{(1+x+x^2)^n-2x^n(1+2x)^n}{(1-x)^2}\right]_{\le 2n-2}.$$
+
+汇在 $n$ 顶点侧时，设 $N=n-1$。新的公式为
+
+$$L_{n,3}(x)=\left[\frac{(1+x+x^2)^N-3x^{N+1}(1+2x)^N}{(1-x)^3}\right]_{\le 2N}.$$
+
+第一式的构造是把与汇相对的 $n$ 个度三顶点的缺额记成三进制字。对每个字，再数同汇同侧的两个缺额。第二式中，同汇同侧的 $N$ 个非汇顶点度数为三，设它们的缺额组成字 $w$，字的总和为 $R$，其中 2 的个数为 $z$，非零位数为 $t$，故 $R=t+z$。对侧三个顶点的缺额记为 $u,v,h$。完整的相容性判据为
+
+$$\max(u,v,h)\le N-z,\qquad u+v+h\le 2N-R.$$
+
+每个字母 $q$ 对应的非汇顶点最多向外提供 $2-q$ 条边，同一对侧顶点与它之间只有一条边。这说明单列容量为 $N-z$，总容量为 $2N-R$。反过来，把要求分配到每一行即可构造定向。若该行容量为一，三列中至多一列必须在本行取一条边才满足余下单列上界。容量为二时至多两列必须取边。再从有正需求的列补足使余下总需求不超限所需的边数。形式证明 `fillRows` 对字逐行归纳，每步只需检查三个布尔方向，吸收点的三条边可以全部指向对侧。`Compatible` 同时允许了吸收点各边的两种方向。
+
+固定总缺额 $k\le2N$。不设单列上界时，需要数 $u+v+h=k-R$ 的非负解。单列越界始于 $u=N+1-z$，相应的总缺额平移量为 $R+N+1-z=N+1+t$。两列同时越界至少需要 $R+2(N+1-z)\ge2N+2$，超出支撑。因此只需从无界的三元计数中减去三份单列越界计数。对字求和，$R$ 的生成多项式为 $(1+x+x^2)^N$，而 $t$ 的生成多项式为 $(1+2x)^N$，得到第二式。取全零字便可实现 $0$ 至 $2N$ 的任一次数。
+
+## 三点侧吸收时的计数细节
 
 用 $u,v$ 表示左侧两个非吸收顶点的缺额，右侧 $n$ 个带标号顶点的缺额排成字 $w\in\{0,1,2\}^n$。记 $z$ 为字中 2 的个数，$t$ 为非零位数，$R=t+z$ 为右侧总缺额。存在兼容定向当且仅当
 
@@ -26,7 +51,7 @@ $$ L_k=\sum_{i=0}^k(k-i+1)(A_i-2B_i),\qquad 0\le k\le D.$$
 
 等价地，$L_{3,n}(x)$ 等于 $\big((1+x+x^2)^n-2x^n(1+2x)^n\big)/(1-x)^2$ 在 $x=0$ 处幂级数展开至 $D$ 次的截断。每个次数都在支撑内，因为取 $w$ 全为零后，$u,v\in\{0,\dots,n-1\}$ 的和可以达到 $0$ 至 $D$ 的每个整数。
 
-## 对数凹性
+### 三点侧吸收时的系数不等式
 
 三项式系数 $A_k$ 在 $0\le k\le2n$ 上为正、对称且对数凹。对数凹性可逐次与 $(1,1,1)$ 卷积证明。给和为 $s$ 的字标记一个零，再把标记改成 1。原字至少有 $n-s$ 个零，所得字至多有 $s+1$ 个 1，故 $(n-s)A_s\le(s+1)A_{s+1}$。由对称性，取 $k=n+j$ 得 $(j+1)A_{k+1}\le(n-j)A_k$。另一方面，二项式递推给出 $(j+1)B_{k+1}=2(n-j)B_k$。
 
@@ -34,30 +59,33 @@ $$ L_k=\sum_{i=0}^k(k-i+1)(A_i-2B_i),\qquad 0\le k\le D.$$
 
 若 $C_{k+2}>0$，从零到 $k+2$ 的 $C_i$ 全部为正且对数凹。正的对数凹序列取前缀和后仍对数凹，计数公式中连续取两次前缀和，得到 $L_{k+1}^2\ge L_kL_{k+2}$。若 $C_{k+2}\le0$，计数公式直接给出 $L_{k+2}-2L_{k+1}+L_k=C_{k+2}\le0$。此时算术平均数与几何平均数不等式给出同一结论。由于整段 $L_k$ 都为正，一旦系数开始下降，之后便不可能重新上升，于是得到单峰性。
 
-## 核验
+## 换汇后，三次求和的对数凹性
 
-`SandpileK3n.lean` 使用 Lean 4.24.0 和 mathlib v4.24.0。解压后可在本目录按文末的命令复验。
+记 $A_i=[x^i](1+x+x^2)^N$，$B_i=[x^i]x^{N+1}(1+2x)^N$，$C_i=A_i-3B_i$，并记 $H_i=\sum_{r\le i} C_r$。第二个计数公式说明 $L_{n,3}$ 的系数是 $C$ 连续取三次前缀和，亦即 $H$ 连续取两次前缀和。
 
-| Lean 声明 | 核验内容 |
-| --- | --- |
-| `compatible_iff` | 完整逐边定向与三个不等式双向等价 |
-| `mem_recurrentConfigs`、`recurrentConfigs_nodup` | 枚举恰好包含总缺额为 $k$ 的全部兼容配置，且每个只出现一次 |
-| `length_recurrentConfigs`、`coefficient_count` | 此枚举的长度等于显式计数，并等于差序列的二重前缀和 |
-| `lackCount_pos` | $0,\ldots,2n-2$ 均有配置 |
-| `alofi_dukes_configurations` | 直接对该配置列表的长度证明全部对数凹不等式和单峰性 |
+$A$ 的正系数在 $[0,2N]$ 上对称且对数凹。在和为 $s$ 的字里标记一个零并改成 1，可得 $(N-s)A_s\le(s+1)A_{s+1}$。将该不等式关于 $N$ 反射，再配合 $B$ 的二项递推，得到 $B_{i+1}/A_{i+1}\ge 2B_i/A_i$。于是 $C_i>0$ 的位置形成前缀。在这个前缀上，$1-3B_i/A_i$ 正且离散凹，故其与 $A_i$ 的乘积 $C_i$ 对数凹。
 
-[lean-check.txt](lean-check.txt) 是七项声明的 Lean 公理报告，仅列出 `propext`、`Classical.choice`、`Quot.sound`。另可用 Python 3.10 及以上运行 `python3 check_examples.py`。它对 $n=2,\ldots,6$ 逐一考虑每条边的定向以及兼容配置，用集合去重，再与系数公式独立比较。$n=5$ 时峰值为 $610$，最后一项降至 $585$，与论文表 2 一致。下一个规模 $n=6$ 给出
+第三次前缀和需要额外的符号控制。将每个字的字母同时作循环替换 $0\to1\to2\to0$。一个字及其两次换色所得的三个字中，非零位置数之和恒为 $2N$，其中至少一个字有至多 $\lfloor2N/3\rfloor$ 个非零位。因为循环换色保持全体字，所以至少三分之一的字处于这个范围。因此
 
-$$ 1,8,36,114,282,576,1009,1544,2049,2284,2060. $$
+$$ H_i\le0\quad\text{一旦}\quad i\ge N+1+\lfloor2N/3\rfloor.$$
 
-## 在先结果核查
+反之，在 $H$ 仍为正、$C$ 已转为非正的范围中，指标已经越过 $A$ 的对称中心，却尚未越过上述界。此时 $A$ 不增，$B$ 仍不减，因此 $C$ 不增，进而 $H$ 离散凹。结合 $C$ 正前缀上对数凹序列的一次求和结论，可知 $H$ 在其整个正前缀上对数凹。若 $H_{k+2}>0$，再连续求和两次仍对数凹。若 $H_{k+2}\le0$，后两次前缀和给出 $L_{k+2}-2L_{k+1}+L_k=H_{k+2}\le0$，由各项非负同样得到 $L_{k+1}^2\ge L_k L_{k+2}$。
 
-截至 2026 年 11 月 27 日，按论文题名、作者、编号 `2411.02667`、`lacking polynomial`、`stochastically recurrent`、`log-concave`、带标号 $K_{3,n}$、低阶系数、三项式及二项式公式检索期刊、arXiv、GitHub 代码和 Issues、TrureTuring。以下结果与本题最接近。检索覆盖公开可索引的记录，优先权仍可随新增材料修正。
+第一个公式只需对 $A_i-2[x^i]x^n(1+2x)^n$ 连续求和两次，直接用其正前缀的对数凹性以及其余次数的二阶差分符号即可。两个方向都由系数全正和局部对数凹性推出单峰。
 
-- Selig 和 Zhu 的定理 2.1 给出一般完全二部图的常返性子集判据，定理 2.2 进一步缩小需要检查的不等式。他们将包含吸收点的这一侧记作 $m+1$ 个顶点。该文可作为本文兼容性分析的既有起点，研究重点为常返性判定、燃烧算法与 Ferrers 图。[Selig–Zhu 原文](https://arxiv.org/html/2409.11811v1#S2)
-- TrureTuring 已回答 Alofi–Dukes 的**问题 6**，即常返配置占所有稳定配置的比例是否超过一半。对其代码库检索 `lacking polynomial` 命中论文资料和这项比例证明。本文所证的猜想 13 关乎各缺额层之间的系数关系。[TrureTuring 问题 6 的记录](https://github.com/the-omega-institute/trureturing/blob/f715de7e90b4cb54961c6b14f514428f8e73fb88/Blueprint/D5/S3/StatisticalMechanics/Sandpiles/StochasticSandpileBipartiteHalf.md)
-- GitHub 全站代码检索 `"lacking polynomial" "log-concavity"` 的相关命中转载了原论文摘要。在 `1337isnot1337/solved-conjectures` 的代码和 Issues 中，以题名关键词、作者名及 arXiv 编号检索亦未找到这个无限族的证明。[摘要转载](https://github.com/ehijano/rss_fetch/blob/2820b6d225aac11cdc3f9e8f0136ff031869cee9/rss_data/math.CO/2024-11-06_math.CO.xml) · [公开问题库](https://github.com/1337isnot1337/solved-conjectures)
-- Giansiracusa、Rincón、Schleis 和 Ulirsch 的定理 B 给出离散多拟阵的对数凹计数，其中每个向量 $\alpha$ 的权重含 $1/\prod_i\alpha_i!$。缺额多项式要求每个配置恰计一次；本证明直接处理这种普通计数。[定理 B](https://arxiv.org/html/2407.05808v1#S0)
+## 形式核验与独立枚举
+
+`SandpileK3n.lean` 的统一入口为 `ThreeSandpile.three_vertex_part`。其布尔参数选择吸收点在哪一侧。两个分支的 `mem_recurrentConfigs` 证明列表成员逐项等价于原逐边定向条件，`recurrentConfigs_nodup` 证明每个带标号配置恰好计数一次，`coefficient_count` 将枚举长度连接至显式系数公式。底层马尔可夫过程与定向判据之间的桥梁采用上文引用的已发表定理。
+
+`lean-check.txt` 记录 14 个声明的公理，均为 Lean/mathlib 通常使用的 `propext`、`Classical.choice` 和 `Quot.sound`。`check_transposed.py` 使用 Python 3.10 以上的标准库，遍历 $K_{m,3}$ 在 $2\le m\le6$ 的边方向和兼容配置，以集合去重，与三次前缀和公式逐项比较。对于 $m=2,3,4,5$ 也复现原论文表 2，$m=6$ 的结果列于上表。
+
+## 在先工作
+
+截至 2026 年 11 月 27 日，以原论文、两种吸收点位置、`Conjecture 13`、缺额多项式及其反序的 level polynomial、三项式与二项式系数公式等组合检索了期刊、arXiv、GitHub Code/Issues、TrureTuring 与 Hexagon 的可检索页面。未发现处理三顶点侧两种吸收点位置下全部系数的同一结论。该检索不能覆盖未发表或尚未索引的证明。
+
+- Selig 和 Zhu 的一般完全二部图结果给出常返性判据、燃烧算法、Ferrers 图双射。其定理 2.1 的子集不等式也可用于理解本文的单列和总容量判据。[Selig–Zhu](https://arxiv.org/html/2409.11811v1)
+- TrureTuring 解决了 Alofi–Dukes 的问题 6，即常返配置的总数是否超过全部稳定配置的一半。其已公开定理关乎所有缺额层的总和。按原论文编号和题名在 `1337isnot1337/solved-conjectures` 的代码和 Issues 中检索，未发现猜想 13 的证明。[TrureTuring 的问题 6](https://www.trureturing.org/research/alofi-2024-stochastic-sandpile-bipartite-half/) · [GitHub 问题库](https://github.com/1337isnot1337/solved-conjectures)
+- Giansiracusa 等的多拟阵定理 B 以 $1/\prod_i\alpha_i!$ 加权格点。缺额多项式要求每个配置权重为一。另一项幺模矩阵结果证明线性系统解的纤维计数对数凹；本问题的系数按配置去重，同一个配置可对应多种相容定向，直接计数定向纤维会给出不同的值。[带权多拟阵定理](https://arxiv.org/html/2407.05808v1) · [幺模矩阵纤维计数](https://arxiv.org/html/2609.39917v2)
 
 ## 在独立下载包中运行
 
@@ -66,6 +94,8 @@ $$ 1,8,36,114,282,576,1009,1544,2049,2284,2060. $$
 ```sh
 lake exe cache get Mathlib.Data.Nat.Choose.Basic Mathlib.Algebra.BigOperators.Ring.List Mathlib.Data.List.Nodup Mathlib.Order.Interval.Finset.Nat Mathlib.Tactic.Linarith Mathlib.Tactic.LinearCombination Mathlib.Tactic.Ring Mathlib.Tactic.Positivity.Basic Mathlib.Tactic.FieldSimp
 lake env lean -DwarningAsError=true SandpileK3n.lean
+python3 check_examples.py
+python3 check_transposed.py
 ```
 
 另核查 TrureTuring 网站的已解目录快照。同一论文号在该目录中对应随机常返配置是否占半数的问题 6。[已解目录的固定快照](https://github.com/the-omega-institute/trureturing-pages/blob/5665185be1a26a75882c20f89683256c9a4bbfd3/site/assets/open-math/problem-resolutions.json)
