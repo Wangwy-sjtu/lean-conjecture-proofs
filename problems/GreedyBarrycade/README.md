@@ -123,3 +123,61 @@ lake exe cache get Mathlib.Data.Fintype.Pigeonhole Mathlib.Data.Fintype.Pi
 lake build GreedyBarrycadeStructure
 lake env lean -DwarningAsError=true GreedyBarrycadePeriod.lean
 ```
+
+## 一个有限前缀何时足以证明整行只漏一个数
+
+Dębski 等人对贪心无限 quasi-barrycade 提出两项猜想。其一是第二行起每行恰好遗漏一个正整数。另一项把最小遗漏与本行首项联系起来。论文紧邻猜想的文字和作者的 OEIS 条目都以第四行为起点，编号猜想 2(2) 印作从第三行开始。第三行首项为 4，遗漏为 2。下文的条件一律从第四行开始。[原论文第 3.1 节](https://arxiv.org/html/2609.18476v2#S3.SS1) · [作者的 OEIS A399907](https://oeis.org/A399907) · [公开的第三行反例](https://www.trureturing.org/research/debski-barrycade-omitted-element-refutation/)
+
+设 $H_r$ 为第 $r$ 行永久遗漏的正整数集，$d_r=|H_r|$，$Q_r=\sum_{t\in H_r}t$，$C_r=\max_{i<r}Q_i$，空集的最大值、元素和均取零。沿用论文从 1 开始的行号。前三份成果中已经得到，$H_r$ 有限，且从第二行起都非空。
+
+**局部定理。** 若 $h\in H_r$ 且 $h>C_r$，则 $H_r=\{h\}$。等价地，对第 $r\ge2$ 行，以下两件事同时成立或同时不成立。
+
+- 存在一个有限前缀，包含 $1,2,\ldots,C_r$ 中的每个整数。
+- 第 $r$ 行只漏一个数，且该数大于 $C_r$。
+
+若此前各非首行的唯一遗漏均已知，$C_r$ 就是这些遗漏中的最大值。看到本行用完 $1$ 至 $C_r$ 后即可断定整条无限行的遗漏数为一。这个判据也适用于此前有多重遗漏的情形，此时须保留定义里的前行遗漏和。
+
+**两项猜想间的蕴涵。** 若能在每个非首行各指定一个永久遗漏，并使这些指定值严格递增，那么每行的所有遗漏就只有这个指定值。另一方面，贪心规则使原表的首项随行号严格递增。结合第二、三行分别遗漏 1 和 2，可以推出，只要第四行起每行确实漏掉“本行首项减 1”，第一项一般猜想就成立。这一条件甚至不要求预先证明“首项减 1”是最小遗漏。该蕴涵以一般行号在 Lean 中证明，从第四行起的前件仍待证明。
+
+### 证明
+
+令 $S(n)$ 为当前行前 $n$ 项之和，$T_p=p(p+1)/2$，$p=n+d_r$。由前一份结构定理，充分晚时
+
+$$
+\max H_r\le T_p-S(n)\le Q_r.
+$$
+
+对所有前行同时使用同一结论可知，充分大的前行前缀和，都属于某个区间 $[T_j-C_r,T_j]$。如果 $h>C_r$ 永久遗漏，那么下面的步骤迫使本行在充分晚时每次选取的项都至多为 $p+1$。
+
+正整数 $1,\ldots,p+1$ 共有 $n+d_r+1$ 个，已用集合与永久遗漏集合合计只有 $n+d_r$ 个，因此至少还有一个候选 $x$ 既未用过，也非永久遗漏。充分晚时，所有不永久遗漏且不大于 $Q_r$ 的数都已出现，故 $Q_r<x\le p+1$。由上式及 $h>C_r$，
+
+$$
+T_p<S(n)+x<T_{p+1}-C_r.
+$$
+
+此候选落在所有前行的两个三角数区间之间，贪心规则必选择一个不超过 $x$ 的项。
+
+于是当 $n$ 足够大时，此前用过的每个数均不超过 $n+d_r$。有限个早期例外可一起吸收到起点中。永久遗漏集合也包含于 $[1,n+d_r]$。两个集合互不相交，基数和恰为 $n+d_r$，所以两者并集就是这个区间，得到精确等式 $S(n)+Q_r=T_p$。
+
+若还有另一个永久遗漏 $t\ne h$，则 $Q_r\ge h+t$。对于充分大的 $n$，候选 $t$ 得到的前缀和满足
+
+$$
+T_{p-1}<S(n)+t=T_p-(Q_r-t)<T_p-C_r.
+$$
+
+候选 $t$ 也合法。实际各项最终超过任何给定常数，故此时贪心规则必定选取至多为 $t$ 的数，矛盾。局部定理由此成立。若一个有限前缀包含 $1,\ldots,C_r$，本行的非空遗漏集中必有 $h>C_r$，于是可应用局部定理。反过来，若只漏 $h>C_r$，区间内每个数都在有限位置出现，取这些位置的最大值即可。
+
+最后作行号归纳。若较早各行的唯一遗漏是已指定且严格递增的数，那么当前指定遗漏大于所有前行的遗漏和，局部定理恰可再次应用。为了证明关于首项的蕴涵，源码还直接从原贪心规则核验了前两条非首行的早期状态及无限尾部，作为这一归纳的起点。
+
+### 先例与形式核验
+
+已公开的 AI 工作给出了另一种有限证书，要求核对一个可闭合到有序尾部的具体状态，并报告了前 200 行的结果。另有公开的第五行 Lean 证明和论文印刷下标的反例。按论文题名、序列编号及 `previous omitted values`、`finite prefix`、`strictly increasing omissions`、`omitted mass` 检索原文、作者条目、GitHub 及公开 AI 讨论，未定位到这里的前缀覆盖判据或两条一般猜想之间的蕴涵。检索范围允许独立核查，不能排除未被索引的证明。[前 200 行的证书](https://github.com/the-omega-institute/trureturing/issues/8494) · [第五行的形式证明](https://github.com/thatnealpatel/proofs/issues/96)
+
+`GreedyBarrycadeUniqueness.lean` 只依赖基础与结构两份文件。`singleton_of_omission_above_previous`、`finite_prefix_iff_unique_above`、`all_singletons_of_increasing_omissions` 和 `uniqueness_of_corrected_first_entry_relation` 分别对应局部定理、有限证书、递增见证归纳和经修正的两猜想蕴涵。所有主定理均使用 Lean 和 mathlib 4.24.0 严格编译，公理核查列出 `propext`、`Classical.choice`、`Quot.sound`。
+
+从本目录复验上述条件定理。
+
+```sh
+lake build GreedyBarrycadeStructure
+lake env lean -DwarningAsError=true GreedyBarrycadeUniqueness.lean
+```
