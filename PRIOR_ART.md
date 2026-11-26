@@ -29,6 +29,8 @@
 
 **图奇偶网络主猜想。** 继续检查 GitHub 的跨论文引用，TrureTuring 在处理 Huang 等人的反射对称对角酉问题时已经给出了偶向量张成和线路数守恒的同一论证，发布包已注明具体步骤。该文没有给图奇偶网络的反例。七顶点 $K_{1,3,3}$ 的 21 道门及其无消去序证明是另一个可独立核对的结论。按题名、论文号、三部图、perpane、counterexample、seven vertices、perfect cancellation ordering 在 arXiv、网页、GitHub 代码及 Issues、可索引 AI 站点检索。GitHub 有原文 TeX 镜像和上述跨论文引用。OpenAlex 列出的两项引用研究矩阵合成及相位项排列。另检索作者 (C2) 的原句及“unused control”与图奇偶网络的组合，未检出说明该图的每个完美网络均需全部控制线路的在先证明。在这些来源未检出相同反例。另核对图论中独立的三角形弱饱和与拓扑引理，归属 Cohen Antonir 等人。[主猜想原文](https://yiren.lu/assets/pdf/parity-network.pdf#page=13) · [TrureTuring 计数论证第 4 步](https://github.com/the-omega-institute/trureturing/issues/24527) · [原文镜像](https://github.com/AlexenderSokolov/cross-theory-formal-database/blob/3b9207c03d9dc146f393f68bcb683bbc4583979a/editable-corpus/sources/184944/source0.tex) · [引用论文一](https://arxiv.org/abs/2608.03825) · [引用论文二](https://arxiv.org/abs/2608.27592) · [三角形弱饱和](https://arxiv.org/abs/2507.05697)
 
+**斐波那契砖长的极值高度。** 原文第 4 节明确提出对特定递增序列求最大行数，并点名素数、斐波那契数。此前论文主要处理连续整数砖长。公开 AI 证明涉及该文的无限贪心表以及具体行证书。按原题名、Fibonacci barrycade、cyclic interval sums、指定 Fibonacci 间距的 modular Golomb ruler、disjoint proper prefix sums 等检索论文与公开源码、议题及讨论，未定位到相同的全阶结果。斐波那契数制有限自动机是已有方法，特定圆排列及其全阶互异性证书详见独立目录。[原问题](https://arxiv.org/html/2609.18476v2#S4) · [连续整数砖长的后续工作](https://arxiv.org/abs/2609.24373) · [同论文的公开 AI 工作](https://github.com/the-omega-institute/trureturing/issues/8494)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)

@@ -19,6 +19,10 @@
 
 Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现全部边奇偶并恢复输入，当且仅当它有完美消去序。**七顶点图 $K_{1,3,3}$ 直接反驳逆向蕴涵。** 其 15 条边用 21 道门依次实现，全部线路恢复，而 5040 种顶点排列均不满足消去条件。同一张图的每一个完美网络还都必须使用全部七根线路作控制，回答了作者的问题 (C2)。证明包也给出无三角形图的完整分类、两类精确门数和一般的生成树必要条件。[逐门反例与数学证明](problems/GraphicParity/COUNTEREXAMPLE.md) · [Lean 与运行方法](problems/GraphicParity/) · [独立 ZIP](packages/GraphicParity.zip?raw=1) · [原作者稿猜想 18](https://yiren.lu/assets/pdf/parity-network.pdf#page=13)
 
+## 论文点名的极值问题
+
+对斐波那契砖长 $1,2,3,5,\ldots$，前 $n$ 项能排成多少行，使不同行的非空真前缀和互异？对所有正整数 $n$，最大高度恰为 $n$，仅在 $n=3,4,5$ 时为 $n-1$。当 $n\ge9$，同一个圆排列模板的所有轮换都可同时取用。这完整给出 Dębski 等人第 4 节所问的斐波那契情形。[数学说明与 Lean 文件](problems/FibonacciBarrycadeHeight/) · [独立 ZIP](packages/FibonacciBarrycadeHeight.zip?raw=1) · [原论文](https://arxiv.org/html/2609.18476v2#S4)
+
 ## 论文开放问题的部分进展
 
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
