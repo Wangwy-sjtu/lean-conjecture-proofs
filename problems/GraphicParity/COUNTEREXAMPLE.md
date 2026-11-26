@@ -40,6 +40,16 @@ In a perfect cancellation ordering, for a vertex $v$ and each connected componen
 
 Take the first vertex $v$ from $A\cup B$ in any proposed ordering. All three vertices of the opposite part are later neighbors of $v$. They are pairwise nonadjacent. The only other possible later neighbor is the apex 0. Three pairwise nonadjacent vertices need at least two separators to appear consecutively along a path. The one available apex cannot provide them. This contradiction rules out every ordering. [Definition in §2.2](https://arxiv.org/html/2509.10070v1#S2.SS2)
 
+## Every wire must act as a control
+
+The same graph also answers the authors’ separate question (C2) negatively. **Every perfect network for this graph uses every wire as a control.** This quantifies over all possible programs. The specific 21-gate program in the table also has properties (C1) and (C3): every term has support of size one or two, and every wire always contains its own input in its support. [Questions (C1)–(C3), page 13](https://yiren.lu/assets/pdf/parity-network.pdf#page=13)
+
+Suppose wire $v$ never controls a gate in a perfect program, and let $d$ be its degree. Its input variable stays on wire $v$ alone. All $d$ incident edges must therefore be produced on this wire, which must also be restored. Remove its target gates from the program. Other wires run exactly as before and cover every edge of $G-v$. Add two gates that compute and immediately uncompute one edge between $v$ and $G-v$. This gives a closed network for a connected graph on the original seven wires with $15-d+1$ edges. The connected lower bound shows that at most $d+1$ of the original gates targeted $v$. All $d+1$ are required: the first $d$ list its incident edge parities in some order, and the last one restores $v$.
+
+If $v$ is a nonapex vertex, two consecutive incident parities on its wire have the form $v+x$ and $v+y$. The control then carries $x+y$. Every even support in a perfect network is a requested edge, so $x$ and $y$ must be adjacent. The four neighbors of $v$ would consequently have a Hamiltonian path. They induce the star with three leaves, which has none.
+
+If $v$ is the apex, its six incident pairs and restoration take seven gates. Removing them and adding one compute/uncompute pair leaves at most $21-7+2=16$ gates. The augmented graph is $K_{3,3}$ with a pendant edge, a connected triangle-free graph with 7 vertices and 10 edges. Its lower bound from this package is $10+7=17$, a contradiction. [Universal Lean proof for (C2)](CaoControlWire.lean) · [Triangle-free lower bound](GraphicParity.lean)
+
 ## Verification
 
 The Lean theorem `CaoCounterexample.counterexample` combines connectedness, the length and coverage of the concrete circuit, exact restoration and the absence of an ordering. `edge_iff` identifies the edge-support and vertex-color presentations on the same seven vertices. `Multipartite.graphOrdering` uses reachability after deletion of the pivot, and `Multipartite.named_vertices` handles arbitrary permutations of the named vertices. `by decide` reduces the finite gate certificate in the kernel. The proofs report only `propext`, `Classical.choice` and `Quot.sound`. An independent Python program also enumerates all $7!=5040$ vertex orders. [Lean certificate](CaoCounterexample.lean) · [Independent checker](check_small.py)

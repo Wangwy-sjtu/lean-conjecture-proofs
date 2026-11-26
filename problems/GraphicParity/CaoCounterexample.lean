@@ -46,6 +46,12 @@ theorem network : Network edges circuit := by
     exact (by decide : ∀ j : Wire, run initial circuit j = initial j) i
   · exact (by decide : ∀ e ∈ edges, e ∈ outputs initial circuit)
 
+/-- Along the exhibited program each wire keeps its own input in its support,
+and every intermediate support is either a singleton or an edge-sized pair. -/
+theorem certificate_states :
+    ∀ s ∈ circuit.scanl applyGate initial, ∀ x : Wire,
+      x ∈ s x ∧ ((s x).card=1 ∨ (s x).card=2) := by decide
+
 theorem counts : edges.card=15 ∧ Fintype.card Wire=7 ∧ circuit.length=21 := by decide
 
 /-- No permutation of all seven named vertices satisfies the component-based
@@ -77,6 +83,7 @@ theorem counterexample :
 
 #print axioms edge_iff
 #print axioms network
+#print axioms certificate_states
 #print axioms no_perfect_cancellation
 #print axioms counterexample
 

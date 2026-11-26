@@ -12,6 +12,12 @@
 
 `CaoCounterexample.counterexample` 在同一组七个顶点上把逐门证书和无消去序定理连成一个命题。`edge_iff` 对照了两种图表示的邻接关系。Python 另行穷举全部 5040 个排列，通过者为零。[反例的 Lean 代码](CaoCounterexample.lean) · [独立复核代码](check_small.py)
 
+## 同一张图还否定了问题 (C2)
+
+**任意一个实现 $K_{1,3,3}$ 的完美网络，都必须让七根线路各至少担任一次控制。** 若某根线路 $v$ 从不控制任何门，输入 $x_v$ 便只会出现在本线路上。设其度数为 $d$，它需依次生成全部 $d$ 条关联边并最终复原。删去以 $v$ 为目标的门，再用两道门计算和撤销一条连接 $v$ 的边，仍能得到一个连通图的网络。用该图的一般门数下界反推，原电路至多有 $d+1$ 个门以 $v$ 为目标，刚好只容得下这 $d$ 条边和一次复原。
+
+若 $v$ 不是中心，其相继输出的两条边 $vx,vy$ 所使用的控制项必为 $xy$。完美性迫使这个偶输出是图边，因此 $v$ 的四个邻居必须能排为一条路。但它们构成有三个叶的星。在中心点的情形，删去七道门、再添两道门，便用至多 16 道门实现了挂一条叶边的 $K_{3,3}$。这个图无三角形，有 7 点 10 边，已证至少需要 17 道门。两种情形均矛盾。原来的 21 门证书自身同时满足问题 (C1)、(C3) 所述的性质。后两问在一般图上的存在性仍待研究。[问题原文](https://yiren.lu/assets/pdf/parity-network.pdf#page=13) · [任意电路的 Lean 证明](CaoControlWire.lean)
+
 ## 无三角形图的精确结果
 
 1. **连通无三角形图有完美网络，当且仅当它是一棵树。** 有环时，任意网络至少用 $m+n$ 个门。树是弦图，已知有完美消去序。结合原论文定理 1.4，这就验证了作者的核心猜想在全部连通无三角形图上的情形。[原文定理 1.4](https://arxiv.org/html/2509.10070v1#S1)
@@ -49,9 +55,10 @@ TrureTuring 在研究另一类对角酉电路时，已经公开了「奇＋奇�
 本目录已锁定版本。从该目录执行
 
 ```sh
-lake exe cache get Mathlib.Data.Finset.SymmDiff Mathlib.Data.Finset.Powerset Mathlib.Data.Finset.Card Mathlib.Data.Fintype.Card Mathlib.Order.Bounds.Defs Mathlib.Data.List.Chain Mathlib.Data.List.Nodup
-lake build GraphicParity Multipartite
+lake exe cache get Mathlib.Data.Finset.SymmDiff Mathlib.Data.Finset.Powerset Mathlib.Data.Finset.Card Mathlib.Data.Fintype.Card Mathlib.Order.Bounds.Defs Mathlib.Data.List.Chain Mathlib.Data.List.Nodup Mathlib.Data.List.Permutation
+lake build CaoCounterexample
 lake env lean -DwarningAsError=true GraphicParity.lean
 lake env lean -DwarningAsError=true CaoCounterexample.lean
+lake env lean -DwarningAsError=true CaoControlWire.lean
 python3 check_small.py
 ```

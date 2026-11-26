@@ -34,7 +34,7 @@ def run (s : State V) : List (Gate V) → State V
   | [] => s
   | g::t => run (applyGate s g) t
 
-private theorem card_xor (a b : Term V) : (a ∆ b).card % 2 = (a.card + b.card) % 2 := by
+theorem card_xor (a b : Term V) : (a ∆ b).card % 2 = (a.card + b.card) % 2 := by
   have dis : Disjoint (a \ b) (b \ a) := by
     refine Finset.disjoint_left.mpr ?_
     intro x ha hb
@@ -786,5 +786,18 @@ theorem perfect_has_activating_tree [Fintype V] (r : V) (T : Finset (Term V))
   exact ⟨B,sub,by omega,con,make⟩
 
 #print axioms perfect_has_activating_tree
+
+/-- Visit one additional pair and undo that gate before running the given circuit. -/
+theorem insert_single_edge (T : Finset (Term V)) (u v : V) (diff : u≠v)
+    (gs : List (Gate V)) (net : Network T gs) :
+    ∃ hs : List (Gate V), Network (insert (pair v u) T) hs ∧ hs.length=gs.length+2 := by
+  let g : Gate V := ⟨u,v,diff⟩
+  have eq : output initial g=pair v u := rfl
+  refine ⟨g::g::gs,⟨?_,?_⟩,rfl⟩
+  · simpa only [run,cancel_gate] using net.1
+  · intro w hw
+    rcases mem_insert.mp hw with rfl | old
+    · exact eq ▸ List.mem_cons_self
+    · exact List.mem_cons_of_mem _ (List.mem_cons_of_mem _ ((cancel_gate initial g).symm ▸ net.2 w old))
 
 end GraphicParity

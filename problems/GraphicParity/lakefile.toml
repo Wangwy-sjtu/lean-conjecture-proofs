@@ -7,6 +7,9 @@ name = "GraphicParity"
 [[lean_lib]]
 name = "Multipartite"
 
+[[lean_lib]]
+name = "CaoCounterexample"
+
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
