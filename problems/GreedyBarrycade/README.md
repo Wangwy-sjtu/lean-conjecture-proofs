@@ -40,3 +40,40 @@ Michał Dębski 等在《Finite and infinite barrycades》第 3.1 节给出一�
 lake exe cache get Mathlib.Algebra.BigOperators.Intervals Mathlib.Algebra.Order.BigOperators.Group.Finset Mathlib.Order.Interval.Finset.Nat Mathlib.Data.Set.Finite.Lattice Mathlib.Data.Finset.Max Mathlib.Tactic.Linarith Mathlib.Tactic.Ring
 lake env lean -DwarningAsError=true GreedyBarrycade.lean
 ```
+
+## 遗漏数确定前缀和对应的三角数
+
+这份补充继续研究 Dębski 等的贪心无限表。对一个固定行，令 $S_n$ 为前 $n$ 项之和，$H$ 为永久遗漏的正整数集合，$d=|H|$，$T_k=k(k+1)/2$。每一行的 $H$ 已在基础文件中证明有限，非首行还已证明 $H$ 非空。[原论文猜想 2(1)](https://arxiv.org/html/2609.18476v2#S3.SS1)
+
+**精确约束。** 对所有充分大的 $n$ 都有
+
+$$
+\max H\ \le\ T_{n+d}-S_n\ \le\ \sum_{h\in H}h,
+$$
+
+空集的最大值取 0。于是原猜想对单行等价于一个关于整个无限尾部的判据。设这一行恰遗漏 $a$，则从某个 $N$ 起恒有 $S_n=T_{n+1}-a$，第 $k$ 项恒为 $k+1$，这里 $k$ 从 1 计。反过来，一行只要最终满足 $a_r(k)=k+1$，就恰遗漏一个数。若有多项遗漏，上式仍然适用。它还给出各项与平移后位置的双侧有界偏差。一般行是否全部具有这个单位平移尾部仍待证明。
+
+### 三角数的索引为何正好偏移 $d$
+
+基础文件已知对每个 $n$ 可以选取 $w(n)$，使 $S_n\le T_{w(n)}\le S_n+c$。由 $S_n\ge T_n$ 得 $w(n)\ge n$。本行的项互异，所以充分晚时每项大于 $c$，这迫使 $w(n+1)>w(n)$。另一方面，下一项至多 $n+1+B$，而连续跨过两个三角数要增长至少 $2w(n)+3$；$n$ 足够大时不可能。因此 $w(n+1)=w(n)+1$，并有常数 $e$ 使 $w(n)=n+e$。相邻两式相减又给出第 $n+1$ 项与 $n+e+1$ 的差绝对值至多 $c$。
+
+取固定的 $L$ 足够大。对充分大的 $t$，$H$ 中的所有数都不超过 $t$。在前 $t+L$ 项中，每个不超过 $t$ 且不属于 $H$ 的正整数都已出现，否则它将只能在更晚处出现，与刚得到的逐项下界冲突。因此其中恰有 $t-d$ 项来自 $[1,t]$，余下 $L+d$ 项均在 $t$ 与 $t+L+B$ 之间。这给出 $S_{t+L}+\sum H=T_t+(L+d)t+O(1)$。而 $S_{t+L}=T_{t+L+e}+O(1)=T_t+(L+e)t+O(1)$。比较一次项便知 $e=d$。
+
+## 精确误差为何受遗漏值控制
+
+把前 $n$ 个数与 $H$ 合在一起，会得到 $n+d$ 个互异正整数，故 $S_n+\sum H\ge T_{n+d}$。这一侧对所有 $n$ 已经成立。
+
+若 $H$ 非空，取 $m=\max H$。充分晚时下一项大于 $m$，因此 $S_n+m$ 一定被某个先前行的前缀和挡住。由基础文件，先前有限条行的所有前缀和都处在某个三角数下方一个统一的固定距离内。若 $S_n+m>T_{n+d}$，下一可能的三角数至少是 $T_{n+d+1}$。但 $S_n\le T_{n+d}$，所以两数相距至少 $n+d+1-m$，随 $n$ 增长而发散，矛盾。这给出另一侧。当 $H=\{a\}$ 时上下界均等于 $a$。反向判据来自尾部覆盖全部大整数以及开头有限项的计数。
+
+### 形式化与已有证书
+
+`GreedyBarrycadeStructure.lean` 导入同一目录的 `GreedyBarrycade.lean`。`alignment_by_omission_count` 确定三角数索引偏移和项值的双侧偏差，`deficit_bounds` 证明上方精确不等式，`singleton_iff_tail` 证明单值遗漏的双向判据。Lean 和 mathlib 4.24.0 关闭警告容忍后编译通过，审计只列出 `propext`、`Classical.choice`、`Quot.sound`。
+
+公开讨论给出了若干具体行最终稳定的充分证书，并报告验证前 200 行。这里的判断不限于事先找到证书的行，认定任何单值遗漏行都必然最终稳定，同时对任意多值遗漏行给出误差上下界。该结果作为猜想的等价形式和结构性部分进展。[已有前 200 行的计算证书](https://github.com/the-omega-institute/trureturing/issues/8494) · [已公开的第五行 Lean 证明](https://github.com/thatnealpatel/proofs/issues/96)
+
+在本目录运行以下命令复验结构定理。
+
+```sh
+lake build GreedyBarrycade
+lake env lean -DwarningAsError=true GreedyBarrycadeStructure.lean
+```

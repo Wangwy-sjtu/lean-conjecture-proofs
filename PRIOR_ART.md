@@ -21,7 +21,7 @@
 
 **图奇偶网络的完美消去序。** Cao 等人提出给任意图添加最少全邻接顶点的问题，并给出一般充分条件及四边形添一个点的例子。核对作者的两个稿本、DBLP、GitHub 代码与讨论和公开 AI 索引后，未检出本文关于所有完全多部图的最小值公式。检索同时使用 `complete multipartite`、`co-cluster`、`perfect cancellation ordering` 及 `perpane` 等名称。现有关于反射对称对角酉矩阵的 AI 结果涉及另一类电路。[原论文 §4](https://arxiv.org/html/2509.10070v1#S4) · [作者稿本](https://yiren.lu/assets/pdf/parity-network.pdf) · [近似命中的 AI 结果](https://www.trureturing.org/research/huang-kosugi-nishi-matsushita-2024-reflection-diagonal-cnot-lower-bound/)
 
-**无限贪心 Barrycade 的遗漏数。** Dębski 等人猜想从第二行起每一行都恰好遗漏一个正整数。Patel 的项目已认证第五行，TrureTuring 给出从有限前缀推出完整尾部的判据，报告已逐行处理前 200 行。另一个形式反驳针对原文猜想 2(2) 的起始下标。此次证明每个非首行都至少遗漏一项，得到 A399907 的最小遗漏数对每个适用行均有定义。另证永久遗漏数的线性上界、晚期项值的上界及各行前缀和距其上方三角数的有界性。按作者名、题名、OEIS 编号、遗漏数与行号的同义词查找 arXiv、GitHub 和公开 AI 记录，未定位到相同的任意行定理。[原文 §3.1](https://arxiv.org/html/2609.18476v2#S3.SS1) · [第五行证明](https://github.com/thatnealpatel/proofs/issues/96) · [前 200 行的工作记录](https://github.com/the-omega-institute/trureturing/issues/8494) · [对猜想 2(2) 的在先反驳](https://www.trureturing.org/research/debski-barrycade-omitted-element-refutation/)
+**无限贪心 Barrycade 的遗漏数。** Dębski 等人猜想从第二行起每一行都恰好遗漏一个正整数。Patel 的项目已认证第五行，TrureTuring 给出从有限前缀推出完整尾部的判据，报告已逐行处理前 200 行。另一个形式反驳针对原文猜想 2(2) 的起始下标。此次证明每个非首行都至少遗漏一项，得到 A399907 的最小遗漏数对每个适用行均有定义。另证永久遗漏数的线性上界、晚期项值的上界及各行前缀和距其上方三角数的有界性。对任意一行还得到一个逆向结论：该行永久遗漏恰一个正整数，当且仅当其一基第 $n$ 项最终恒为 $n+1$。既有有限证书能确认具体行进入这样的尾部。按作者名、题名、OEIS 编号、遗漏数与行号的同义词查找 arXiv、GitHub 和公开 AI 记录，未定位到相同的任意行定理。[原文 §3.1](https://arxiv.org/html/2609.18476v2#S3.SS1) · [第五行证明](https://github.com/thatnealpatel/proofs/issues/96) · [前 200 行的工作记录](https://github.com/the-omega-institute/trureturing/issues/8494) · [对猜想 2(2) 的在先反驳](https://www.trureturing.org/research/debski-barrycade-omitted-element-refutation/)
 
 ## 核查过的公开 AI 记录
 
