@@ -1,0 +1,3 @@
+'SemiRestricted.EulerianLower.fair_walk_lower' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SemiRestricted.EulerianLower.balanced_deck' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SemiRestricted.EulerianLower.question23' depends on axioms: [propext, Classical.choice, Quot.sound]

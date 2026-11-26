@@ -1,6 +1,12 @@
 name = "semirestricted"
 version = "1.0.0"
 
+[[lean_lib]]
+name = "SemiRestricted"
+
+[[lean_lib]]
+name = "SemiRestrictedLower"
+
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
