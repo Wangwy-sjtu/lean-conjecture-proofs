@@ -38,6 +38,7 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
 | --- | --- | --- |
 | [Spiro、Surya、Zeng · 半受限博弈，第 22 问](problems/SemiRestricted/) | 在任意有限有向图和任意配额下，适应历史的对手超过最佳固定动作的期望收益是 $O_D(\sqrt M)$。给出均匀洗牌策略和显式常数，覆盖原文一般情形 | [独立 ZIP](packages/SemiRestricted.zip?raw=1) |
+| [Boyles · 所有六维方盘的最坏按键数](problems/SixClicks/) | 若方盘零空间为六维，则 $n=12q-1$，最难灯态恰需 $88q^2-24q+1$ 次。构造的灯态全部 64 种解都有相同重量，覆盖整个 $n=12\cdot3^k-1$ 无穷族 | [独立 ZIP](packages/SixClicks.zip?raw=1) |
 | [Boyles · 固定零空间方盘的放大规律](problems/GridScaling/) | 基准盘固定、放大前后零空间维数相等时，最坏按键次数在偶数倍上从一开始就是二次式，在奇数倍上最终也是二次式。给出由活跃格数确定的二次项 | [独立 ZIP](packages/GridScaling.zip?raw=1) |
 | [Liu、Low 与 Yin · 两比特全部实数阶的最大魔性](problems/MUBRealOrder/) | 以 Shen 等已给出的二阶界为输入，推出所有实数 $\alpha\ge2$ 的精确最大熵和对应取等分布。Lean 明列二阶估计为前提，核验 Jensen 推导和实际振幅见证 | [独立 ZIP](packages/MUBRealOrder.zip?raw=1) |
 | [Devriendt 与 Garcia · 2-sparse 图的电阻曲率](problems/SparseResistance/) | 当每条边至少有一个度数至多 2 的端点时，允许全顶点非负电阻曲率的连通图恰为路径、环和 $K_{2,3}$。Lean 验证生成树刻画下的无桥分类，其余情形引用原文命题 3.7 | [独立 ZIP](packages/SparseResistance.zip?raw=1) |

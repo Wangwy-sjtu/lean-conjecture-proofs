@@ -1,0 +1,49 @@
+name = "sixclicks"
+version = "1.0.0"
+
+[[lean_lib]]
+name = "SixClicks"
+
+[[lean_lib]]
+name = "GridFactors"
+
+[[lean_lib]]
+name = "GridGcd"
+
+[[lean_lib]]
+name = "LightsGrid"
+
+[[lean_lib]]
+name = "LightsPolynomial"
+
+[[lean_lib]]
+name = "LightsTorsion"
+
+[[lean_lib]]
+name = "OddGridExamples"
+
+[[lean_lib]]
+name = "OddStabilization"
+
+[[lean_lib]]
+name = "OddTorsion"
+
+[[lean_lib]]
+name = "PressCost"
+
+[[lean_lib]]
+name = "ReflectionLayout"
+
+[[lean_lib]]
+name = "ReflectionTiles"
+
+[[lean_lib]]
+name = "SeedCosts"
+
+[[lean_lib]]
+name = "SixIndex"
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "f897ebcf72cd16f89ab4577d0c826cd14afaafc7"
