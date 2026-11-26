@@ -149,6 +149,28 @@ theorem absolute_three : TwinPeriods 10403441 2600860 1733907 :=
     (by factors [2, 2, 5, 130043])
     (by factors [3, 7, 82567])
 
+-- All three positive directed gaps below lie inside the originally reported search range.
+theorem small_one : TwinPeriods 8401301 1680260 2800434 :=
+  twin_cert _ 2 11 _ _
+    (by factors [2, 2, 5, 5, 29, 2897])
+    (by factors [2, 3, 3, 7, 13, 23, 223])
+    (by factors [2, 2, 5, 29, 2897])
+    (by factors [2, 3, 7, 13, 23, 223])
+
+theorem small_two : TwinPeriods 14935649 1866956 2987130 :=
+  twin_cert _ 3 11 _ _
+    (by factors [2, 2, 2, 2, 2, 7, 13, 23, 223])
+    (by factors [2, 3, 5, 5, 99571])
+    (by factors [2, 2, 7, 13, 23, 223])
+    (by factors [2, 3, 5, 99571])
+
+theorem small_three : TwinPeriods 62729729 7841216 8961390 :=
+  twin_cert _ 3 2 _ _
+    (by factors [2, 2, 2, 2, 2, 2, 2, 2, 2, 17, 7207])
+    (by factors [2, 3, 3, 5, 7, 99571])
+    (by factors [2, 2, 2, 2, 2, 2, 17, 7207])
+    (by factors [2, 3, 3, 5, 99571])
+
 /-- Increasing the smaller prime by 2 increases the decimal period by k. -/
 def DirectedGap (k p : ℕ) : Prop :=
   p.Prime ∧ (p+2).Prime ∧ orderOf (10 : ZMod (p+2)) = orderOf (10 : ZMod p) + k
@@ -189,6 +211,17 @@ theorem absolute_counterexample_below_billion :
     ⟨by decide, absolute_of_periods absolute_three (by decide)⟩
   exact (by decide : ¬ (1733909 = 3715511 ∨ 1733909 = 10403441 ∨ 3715511 = 10403441)) equal
 
+/-- A single triple handles both readings of "difference" even within the reported bound. -/
+theorem directed_counterexample_below_billion :
+    ¬ AtMostTwo (fun p => p+2 < 10^9 ∧ DirectedGap 1120174 p) := by
+  intro h
+  have equal := h 8401301 14935649 62729729
+    ⟨by decide, directed_of_periods small_one (by decide)⟩
+    ⟨by decide, directed_of_periods small_two (by decide)⟩
+    ⟨by decide, directed_of_periods small_three (by decide)⟩
+  exact (by decide : ¬ (8401301 = 14935649 ∨ 8401301 = 62729729 ∨ 14935649 = 62729729)) equal
+
 #print axioms ngoms_claim_false
 #print axioms absolute_counterexample_below_billion
+#print axioms directed_counterexample_below_billion
 end A347225
