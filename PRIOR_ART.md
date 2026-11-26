@@ -82,3 +82,5 @@ Inoue–Inazu 的字串减法游戏问题 2.1 问能否以最长步长或词典�
 **方盘的最坏最少按键次数。** Boyles 已证明零空间维数为四时边长的同余条件，已公开镜像铺盘法和数值表。作者新分支仍把四维按键二次式列为猜想。Sloane 已研究一般重复列码的归一化覆盖半径。此处证明每个四维方盘的具体精确值并实现最坏灯态。[作者更新的问题清单](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/conjectures/conjectures.tex#L432-L457) · [Sloane 1986](https://neilsloane.com/doc/Me129.pdf) · [检查范围与可复验的方盘定理](problems/GridClicks/)
 
 **两比特稳定子 Rényi 熵的实数阶推论。** 原文的两比特二阶极值已有 Shen 等的有理平方和证书。此包把二阶结论作为 Lean 定理显式前提，证明所有实数阶至少二的对应精确最大值，并计算实际 Pauli 期望。作者的二阶证书未在本包重新机检。另核对了公开问题目录的全部 19 个 PR、相关公开 AI 仓库三个分支与已有 Clifford 轨道计算。[原始猜想](https://arxiv.org/pdf/2502.17550#page=4) · [二阶先例](https://arxiv.org/html/2611.08586#A3) · [Lean 覆盖与查重记录](problems/MUBRealOrder/)
+
+**固定零空间方盘的倍数规律。** Sloane 1986 年已证明一般重复列码的归一化覆盖半径随列数的单调性。Boyles 已给出镜像铺盘，把高维方盘的倍数多项式性列为问题。本包在真实方盘上结合二者，证明每个固定基准盘的保维放大族按奇偶最终有二次式，并给出偶数倍精确公式与活跃格系数。[原问题](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/conjectures/conjectures.tex#L432-L457) · [重复列的已知理论](https://neilsloane.com/doc/Me129.pdf) · [方盘定理](problems/GridScaling/)

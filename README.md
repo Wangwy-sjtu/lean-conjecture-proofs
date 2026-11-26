@@ -37,6 +37,7 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
 | --- | --- | --- |
+| [Boyles · 固定零空间方盘的放大规律](problems/GridScaling/) | 基准盘固定、放大前后零空间维数相等时，最坏按键次数在偶数倍上从一开始就是二次式，在奇数倍上最终也是二次式。给出由活跃格数确定的二次项 | [独立 ZIP](packages/GridScaling.zip?raw=1) |
 | [Liu、Low 与 Yin · 两比特全部实数阶的最大魔性](problems/MUBRealOrder/) | 以 Shen 等已给出的二阶界为输入，推出所有实数 $\alpha\ge2$ 的精确最大熵和对应取等分布。Lean 明列二阶估计为前提，核验 Jensen 推导和实际振幅见证 | [独立 ZIP](packages/MUBRealOrder.zip?raw=1) |
 | [Devriendt 与 Garcia · 2-sparse 图的电阻曲率](problems/SparseResistance/) | 当每条边至少有一个度数至多 2 的端点时，允许全顶点非负电阻曲率的连通图恰为路径、环和 $K_{2,3}$。Lean 验证生成树刻画下的无桥分类，其余情形引用原文命题 3.7 | [独立 ZIP](packages/SparseResistance.zip?raw=1) |
 | [Busoni 等 · 稳定子 Rényi 熵的单侧优化](problems/OneSidedSchmidt/) | 固定一侧的 Schmidt 基及标号后，另一侧所有局部酉中的最小值由计算基对齐态达到。适用于循环 Weyl 算符、所有局部维数和每个整数阶 $m\ge2$。论文的双侧问题仍开放 | [独立 ZIP](packages/OneSidedSchmidt.zip?raw=1) |

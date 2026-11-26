@@ -1,0 +1,31 @@
+name = "gridscaling"
+version = "1.0.0"
+
+[[lean_lib]]
+name = "GridScaling"
+
+[[lean_lib]]
+name = "RepeatedCover"
+
+[[lean_lib]]
+name = "ReflectionLayout"
+
+[[lean_lib]]
+name = "ReflectionTiles"
+
+[[lean_lib]]
+name = "PressCost"
+
+[[lean_lib]]
+name = "LightsGrid"
+
+[[lean_lib]]
+name = "LightsPolynomial"
+
+[[lean_lib]]
+name = "LightsTorsion"
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "f897ebcf72cd16f89ab4577d0c826cd14afaafc7"
