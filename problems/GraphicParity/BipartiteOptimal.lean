@@ -144,42 +144,13 @@ theorem complete_bipartite_lower [Fintype V] (A B : Finset V) (dis : Disjoint A 
 
 #print axioms complete_bipartite_lower
 
-/-- Apply a fixed control once to each member of a set of distinct targets.
-The equation records the complete final state and all produced parities. -/
-private theorem fan (c : V) (B : Finset V) (hc : c∉B) (s : State V) :
-    ∃ gs : List (Gate V), gs.length=B.card ∧
-      run s gs=(fun x => if x∈B then s x ∆ s c else s x) ∧
-      ∀ x∈B,s x ∆ s c ∈ outputs s gs := by
-  induction B using Finset.induction_on generalizing s with
-  | empty => exact ⟨[],rfl,by simp [run],by simp⟩
-  | @insert b B fresh ih =>
-    have cb : c≠b := fun e => hc (e ▸ mem_insert_self b B)
-    let g : Gate V := ⟨c,b,cb⟩
-    let u := applyGate s g
-    have uc : u c=s c := by simp [u,applyGate,g,cb]
-    have ub : u b=s b ∆ s c := by simp [u,applyGate,g,output]
-    have same (x : V) (h : x≠b) : u x=s x := by simp [u,applyGate,g,h]
-    obtain ⟨gs,sz,endState,out⟩ := ih (fun h => hc (mem_insert_of_mem h)) u
-    refine ⟨g::gs,by simp [sz,card_insert_of_notMem fresh],?_,?_⟩
-    · change run u gs=_
-      rw [endState]
-      funext x
-      by_cases xb : x=b
-      · subst x; simp [fresh,ub]
-      · simp [xb,same x xb,uc]
-    · intro x hx
-      rcases mem_insert.mp hx with rfl | later
-      · exact List.mem_cons_self
-      · have xb : x≠b := fun eq => fresh (eq ▸ later)
-        exact List.mem_cons_of_mem _ (by simpa [same x xb,uc] using out x later)
-
 private def rowState (h : V) (B : Finset V) (x : V) : Term V :=
   if x∈B then pair h x else {x}
 
 private theorem start_row (h : V) (B : Finset V) (hh : h∉B) :
     ∃ gs : List (Gate V), gs.length=B.card ∧ run initial gs=rowState h B ∧
       ∀ x∈B,pair h x∈outputs initial gs := by
-  obtain ⟨gs,len,state,visited⟩ := fan h B hh initial
+  obtain ⟨gs,len,state,visited⟩ := fanout_exists h B hh initial
   refine ⟨gs,len,?_,?_⟩
   · rw [state]; funext x
     by_cases hx : x∈B <;> simp [rowState,hx,initial,pair,symmDiff_comm]
@@ -188,7 +159,7 @@ private theorem start_row (h : V) (B : Finset V) (hh : h∉B) :
 
 private theorem end_row (h : V) (B : Finset V) (hh : h∉B) :
     ∃ gs : List (Gate V), gs.length=B.card ∧ run (rowState h B) gs=initial := by
-  obtain ⟨gs,len,state,_⟩ := fan h B hh (rowState h B)
+  obtain ⟨gs,len,state,_⟩ := fanout_exists h B hh (rowState h B)
   refine ⟨gs,len,?_⟩
   rw [state]; funext x
   by_cases hx : x∈B <;> simp [rowState,hx,hh,initial,pair,symmDiff_comm]
@@ -211,7 +182,7 @@ private theorem move_row (h k : V) (B : Finset V) (different : h≠k) (hh : h∉
     have xk : x≠k := by rintro rfl; exact hk hx
     rw [other x xk,uK]
     simp [s,rowState,hx,pair,symmDiff_symmDiff_symmDiff_comm,symmDiff_comm]
-  obtain ⟨gs,sz,done,out⟩ := fan k B hk u
+  obtain ⟨gs,sz,done,out⟩ := fanout_exists k B hk u
   let state := run u gs
   have atK : state k = pair h k := by simp [state,done,hk,uK]
   have atH : state h = {h} := by simp [state,done,hh,other h different,s,rowState]

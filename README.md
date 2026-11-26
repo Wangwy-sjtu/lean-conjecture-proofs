@@ -19,6 +19,8 @@
 
 Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现全部边奇偶并恢复输入，当且仅当它有完美消去序。**七顶点图 $K_{1,3,3}$ 直接反驳逆向蕴涵。** 其 15 条边用 21 道门依次实现，全部线路恢复，而 5040 种顶点排列均不满足消去条件。同一张图的每一个完美网络还都必须使用全部七根线路作控制，回答了作者的问题 (C2)。证明包也给出无三角形图的完整分类、单环图的最优门数以及一般的生成树必要条件。对围长至少五的图，任何电路门数 $L$ 均满足 $2L\ge3m+n-1$。对任意完全二部图 $K_{a,b}$（$1\le a\le b$），最优门数恰为 $ab+b+2a-2$，任意增加最终复原的零初值或借用辅助线也保持此值。[逐门反例与数学证明](problems/GraphicParity/COUNTEREXAMPLE.md) · [Lean 与运行方法](problems/GraphicParity/) · [独立 ZIP](packages/GraphicParity.zip?raw=1) · [原作者稿猜想 18](https://yiren.lu/assets/pdf/parity-network.pdf#page=13)
 
+对任意无三角形底图，加一个全邻接顶点得到的图存在完美电路，恰当底图边能分成两片森林。在整个图类上，同一条最优电路还同时满足作者的 (C1) 和 (C3)。所有时刻每根线至多含两个输入，且总含自己的输入。这个判别式也完整区分了哪些 $K_{1,a,b}$ 有完美电路。[一般分类、构造和例子](problems/GraphicParity/README.md#给无三角形图添一个全邻接顶点的完整分类) · [Lean 定理](problems/GraphicParity/ConeForests.lean)
+
 ## 论文明确提出的完整问题
 
 对斐波那契砖长 $1,2,3,5,\ldots$，前 $n$ 项能排成多少行，使不同行的非空真前缀和互异？对所有正整数 $n$，最大高度恰为 $n$，仅在 $n=3,4,5$ 时为 $n-1$。当 $n\ge9$，同一个圆排列模板的所有轮换都可同时取用。这完整给出 Dębski 等人第 4 节所问的斐波那契情形。[数学说明与 Lean 文件](problems/FibonacciBarrycadeHeight/) · [独立 ZIP](packages/FibonacciBarrycadeHeight.zip?raw=1) · [原论文](https://arxiv.org/html/2609.18476v2#S4)

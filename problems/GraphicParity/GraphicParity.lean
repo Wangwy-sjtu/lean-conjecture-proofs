@@ -47,7 +47,7 @@ theorem card_xor (a b : Term V) : (a ∆ b).card % 2 = (a.card + b.card) % 2 := 
   omega
 
 /-- Birth outputs are precisely the newly even targets obtained from two odd wires. -/
-private def births (s : State V) : List (Gate V) → List (Term V)
+def births (s : State V) : List (Gate V) → List (Term V)
   | [] => []
   | g::t => if (s g.target).card % 2 = 1 ∧ (s g.control).card % 2 = 1
             then output s g :: births (applyGate s g) t else births (applyGate s g) t
@@ -267,7 +267,7 @@ theorem odd_output_lower_bound [Fintype V] (r : V) (T : Finset (Term V))
 def Network (T : Finset (Term V)) (gs : List (Gate V)) : Prop :=
   run initial gs = initial ∧ ∀ w∈T, w ∈ outputs initial gs
 
-private def evens (s : State V) (gs : List (Gate V)) :=
+def evens (s : State V) (gs : List (Gate V)) :=
   (outputs s gs).filter (fun w => decide (w.card%2=0))
 
 private theorem length_outputs (s : State V) (gs : List (Gate V)) :
@@ -760,14 +760,17 @@ private theorem activating_edges_connected [Fintype V] (r : V) (T B : Finset (Te
 
 /-- Every connected simple graph attaining the ideal CNOT count has a spanning
 tree whose edges generate every required edge by successive triangle completions. -/
-theorem perfect_has_activating_tree [Fintype V] (r : V) (T : Finset (Term V))
+theorem perfect_birth_tree [Fintype V] (r : V) (T : Finset (Term V))
     (connected : ∀ v, ConnectedTo T r v) (simple : SimpleEdges T)
     (gs : List (Gate V)) (net : Network T gs)
     (tight : gs.length=T.card+(Fintype.card V-1)) :
-    ∃ B : Finset (Term V), B ⊆ T ∧ B.card=Fintype.card V-1 ∧
+    let B := (births initial gs).toFinset
+    B ⊆ T ∧ B.card=Fintype.card V-1 ∧
       (∀ v, ConnectedTo B r v) ∧ ∀ e∈T, TriangleClosure T B e := by
   classical
   let B := (births initial gs).toFinset
+  change B ⊆ T ∧ B.card=Fintype.card V-1 ∧
+    (∀ v, ConnectedTo B r v) ∧ ∀ e∈T, TriangleClosure T B e
   have even (w : Term V) (hw : w∈T) : w.card%2=0 := by rw [simple w hw]
   have sat := even_output_saturation r T gs connected even net tight.le
   have sub : B⊆T := by
@@ -787,7 +790,16 @@ theorem perfect_has_activating_tree [Fintype V] (r : V) (T : Finset (Term V))
   have odd := deaths_le_odd initial gs
   have split := counts_split initial gs
   have needed := (card_le_card (requested_subset T gs even net)).trans (List.toFinset_card_le _)
-  exact ⟨B,sub,by omega,con,make⟩
+  exact ⟨sub,by omega,con,make⟩
+
+theorem perfect_has_activating_tree [Fintype V] (r : V) (T : Finset (Term V))
+    (connected : ∀ v, ConnectedTo T r v) (simple : SimpleEdges T)
+    (gs : List (Gate V)) (net : Network T gs)
+    (tight : gs.length=T.card+(Fintype.card V-1)) :
+    ∃ B : Finset (Term V), B ⊆ T ∧ B.card=Fintype.card V-1 ∧
+      (∀ v, ConnectedTo B r v) ∧ ∀ e∈T, TriangleClosure T B e := by
+  exact ⟨(births initial gs).toFinset,
+    perfect_birth_tree r T connected simple gs net tight⟩
 
 #print axioms perfect_has_activating_tree
 
@@ -992,5 +1004,71 @@ theorem exceptional_even_budget [Fintype V] (r : V) (T : Finset (Term V)) (gs : 
   change Fintype.card V-1 ≤ oddOutputs initial gs at o
   have l := counts_split initial gs
   omega
+
+/-- In an optimal-length network attaining the connected lower bound, each
+even output is generated just once. -/
+theorem perfect_even_nodup [Fintype V] (r : V) (T : Finset (Term V)) (gs : List (Gate V))
+    (connected : ∀ v, ConnectedTo T r v) (simple : SimpleEdges T) (net : Network T gs)
+    (tight : gs.length=T.card+(Fintype.card V-1)) : (evens initial gs).Nodup := by
+  have even (w : Term V) (hw : w∈T) : w.card%2=0 := by rw [simple w hw]
+  have cover := card_le_card (requested_subset T gs even net)
+  have odd := odd_output_lower_bound r T gs connected even net.2 net.1
+  change Fintype.card V-1 ≤ oddOutputs initial gs at odd
+  have count := counts_split initial gs
+  have ub := List.toFinset_card_le (evens initial gs)
+  have eq : (evens initial gs).toFinset.card=(evens initial gs).length := by omega
+  exact (Multiset.toFinset_card_eq_card_iff_nodup (m := (⟦evens initial gs⟧ : Multiset (Term V)))).mp eq
+
+/-- A local property of every updated target and the term written there. -/
+def AllGates (P : V → Term V → Prop) (s : State V) : List (Gate V) → Prop
+  | [] => True
+  | g::gs => P g.target (output s g) ∧ AllGates P (applyGate s g) gs
+
+theorem allGates_append (P : V → Term V → Prop) (s : State V) (a b : List (Gate V)) :
+    AllGates P s (a++b) ↔ AllGates P s a ∧ AllGates P (run s a) b := by
+  induction a generalizing s with
+  | nil => simp [AllGates,run]
+  | cons g a ih => simp [AllGates,run,ih,and_assoc]
+
+/-- Apply a fixed control once to each member of a set of distinct targets.
+The local assertion records which value is written to each updated target. -/
+theorem fanout_condition (P : V → Term V → Prop) (c : V) (B : Finset V) (hc : c∉B) (s : State V)
+    (valid : ∀ x∈B,P x (s x ∆ s c)) :
+    ∃ gs : List (Gate V), gs.length=B.card ∧
+      run s gs=(fun x => if x∈B then s x ∆ s c else s x) ∧
+      (∀ x∈B,s x ∆ s c ∈ outputs s gs) ∧ AllGates P s gs := by
+  induction B using Finset.induction_on generalizing s with
+  | empty => exact ⟨[],rfl,by simp [run],by simp,trivial⟩
+  | @insert b B fresh ih =>
+    have cb : c≠b := fun e => hc (e ▸ mem_insert_self b B)
+    let g : Gate V := ⟨c,b,cb⟩
+    let u := applyGate s g
+    have uc : u c=s c := by simp [u,applyGate,g,cb]
+    have ub : u b=s b ∆ s c := by simp [u,applyGate,g,output]
+    have same (x : V) (h : x≠b) : u x=s x := by simp [u,applyGate,g,h]
+    have ok (x : V) (hx : x∈B) : P x (u x ∆ u c) := by
+      have xb : x≠b := fun eq => fresh (eq ▸ hx)
+      rw [same x xb,uc]; exact valid x (mem_insert_of_mem hx)
+    obtain ⟨gs,sz,endState,out,checked⟩ := ih (fun h => hc (mem_insert_of_mem h)) u ok
+    refine ⟨g::gs,by simp [sz,card_insert_of_notMem fresh],?_,?_,
+      valid b (mem_insert_self ..),checked⟩
+    · change run u gs=_
+      rw [endState]
+      funext x
+      by_cases xb : x=b
+      · subst x; simp [fresh,ub]
+      · simp [xb,same x xb,uc]
+    · intro x hx
+      rcases mem_insert.mp hx with rfl | later
+      · exact List.mem_cons_self
+      · have xb : x≠b := fun eq => fresh (eq ▸ later)
+        exact List.mem_cons_of_mem _ (by simpa [same x xb,uc] using out x later)
+
+theorem fanout_exists (c : V) (B : Finset V) (hc : c∉B) (s : State V) :
+    ∃ gs : List (Gate V), gs.length=B.card ∧
+      run s gs=(fun x => if x∈B then s x ∆ s c else s x) ∧
+      ∀ x∈B,s x ∆ s c ∈ outputs s gs := by
+  obtain ⟨gs,size,finish,seen,_⟩ := fanout_condition (fun _ _ => True) c B hc s (by simp)
+  exact ⟨gs,size,finish,seen⟩
 
 end GraphicParity

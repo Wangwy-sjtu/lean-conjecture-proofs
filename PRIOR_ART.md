@@ -47,6 +47,8 @@
 
 **Levin 的全部牌型数与阈值。** 对任意 $m,s$ 和 $0\le\ell\le u\le s$，一旦首次因 bump 停下，其联合概率随时间对数凹。证明的关键是 $F^h-G^h$ 的系数除以 $\binom{hs}{k}$ 后仍对数凹。OpenAlex 在此次查询列出一篇引用该预印本的文章，即前述 Levin 矩形定理。按旧游戏名 Book or Band、论文编号、likelihood ratio、hypergeometric stopping time、两矩形作差等继续检索，GitHub 代码的相关命中为原摘要镜像，专门搜索的公开 AI 项目未检得这个普适证明。完整说明列出可查的范围及标准牌例。[原文 Remark 2](https://arxiv.org/pdf/2407.08062#page=7) · [OpenAlex 引文记录](https://openalex.org/W4400611359) · [先前矩形定理](https://doi.org/10.1080/07474946.2024.2379901) · [一般证明](problems/BandOrBump/README-all.md)
 
+**无三角形底图的锥与两森林分解。** 检索覆盖原作者两个版本、引用记录、arXiv、GitHub 代码和 issues，以及可索引的公开 AI 记录。查询组合包括论文名和编号、perpane、cone、universal vertex、arboricity、two forests、complete tripartite、$K_{1,3,4}$、问题 (C1)/(C3)。Nash-Williams 已刻画图可分成若干森林的条件，Cao 等人已从消去序构造具有 (C1)/(C3) 的电路；此前所列 AI 记录给出一般奇偶张成计数。此次检索未找到把底图的两森林分解与锥图完美电路等价起来的证明。新结论的必要性还用到了逐门追踪某条被覆盖的顶点星边，正向构造则给出每一时刻的线路支持。[经典森林分解定理](https://doi.org/10.1112/jlms/s1-39.1.12) · [原作者算法与开放问题](https://yiren.lu/assets/pdf/parity-network.pdf#page=13) · [已知公开 AI 引理](https://github.com/the-omega-institute/trureturing/issues/24527) · [逐门形式证明](problems/GraphicParity/ConeForests.lean)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)

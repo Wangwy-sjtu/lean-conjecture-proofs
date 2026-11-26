@@ -221,6 +221,79 @@ def check_counterexample():
     print("K(1,3,3): 15 edges visited in 21 gates, identity restored, 0 of 5040 orders valid.")
 
 
+def forest_half(vertices, edges):
+    """Orient a forest, then build a path from identity to the full apex star."""
+    neighbors = [[] for _ in range(vertices)]
+    for u, v in edges:
+        neighbors[u].append(v)
+        neighbors[v].append(u)
+    roots, oriented, visited = [], [], set()
+    for root in range(vertices):
+        if root in visited:
+            continue
+        roots.append(root)
+        queue = [root]
+        visited.add(root)
+        for u in queue:
+            for v in neighbors[u]:
+                if v not in visited:
+                    visited.add(v)
+                    queue.append(v)
+                    oriented.append((u, v))
+    if len(oriented) != len(edges):
+        return None
+    return list(reversed(oriented)) + [(vertices, v) for v in roots] + oriented
+
+
+def check_cone_program(vertices, first, second):
+    assert set(first).isdisjoint(second)
+    outward = forest_half(vertices, first)
+    inward = forest_half(vertices, second)
+    assert outward is not None and inward is not None
+    gates = outward + list(reversed(inward))
+    start = [1 << x for x in range(vertices + 1)]
+    state = start.copy()
+    required = {start[u] | start[v] for u, v in first + second}
+    required.update(start[-1] | start[u] for u in range(vertices))
+    seen = set()
+    for c, t in gates:
+        state[t] ^= state[c]
+        assert state[t] & start[t] and state[t].bit_count() in (1, 2)
+        seen.add(state[t])
+    assert state == start and required <= seen and len(gates) == len(required) + vertices
+    return len(gates)
+
+
+def check_cone_forests():
+    count = 0
+    for n in range(7):
+        pairs = list(combinations(range(n), 2))
+        for mask in range(1 << len(pairs)):
+            edges = [edge for i, edge in enumerate(pairs) if mask & (1 << i)]
+            if any((a, b) in edges and (a, c) in edges and (b, c) in edges
+                   for a, b, c in combinations(range(n), 3)):
+                continue
+            for partition in range(1 << len(edges)):
+                left = [e for i, e in enumerate(edges) if partition & (1 << i)]
+                right = [e for i, e in enumerate(edges) if not partition & (1 << i)]
+                if forest_half(n, left) is not None and forest_half(n, right) is not None:
+                    check_cone_program(n, left, right)
+                    count += 1
+                    break
+            else:
+                raise AssertionError(("unexpected obstruction on six or fewer vertices", n, edges))
+    # All 12 edges of K(3,4) split into the following two Hamiltonian paths.
+    def path(vertices):
+        return [tuple(sorted(e)) for e in zip(vertices, vertices[1:])]
+    first = path([3, 0, 4, 1, 5, 2, 6])
+    second = path([5, 0, 6, 1, 3, 2, 4])
+    assert set(first + second) == {(a, b) for a in range(3) for b in range(3, 7)}
+    assert check_cone_program(7, first, second) == 26
+    print(f"{count} labeled triangle-free bases on at most six vertices: every constructed cone "
+          "circuit covers its edges, attains the lower bound and satisfies C1 and C3 at every gate. "
+          "The explicit K(1,3,4) circuit uses 26 gates.")
+
+
 if __name__ == "__main__":
     check_counterexample()
     check_four_wires()
@@ -237,3 +310,4 @@ if __name__ == "__main__":
     print("With auxiliary wires: exact search gives 4 for a two-edge star with both kinds, "
           "and 8 for a four-cycle with a clean or borrowed wire.")
     check_girth_bound()
+    check_cone_forests()
