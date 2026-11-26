@@ -77,3 +77,49 @@ $$
 lake build GreedyBarrycade
 lake env lean -DwarningAsError=true GreedyBarrycadeStructure.lean
 ```
+
+## 任意有限组贪心行共享一个最终周期
+
+沿用 Dębski 等论文第 3.1 节的贪心表。$a_i(n)$ 表示第 $i$ 行从 1 数起的第 $n$ 项，$S_i(n)$ 是前 $n$ 项之和，$d_i$ 是该行永久遗漏的正整数个数。它们都由原始贪心构造决定。[原论文](https://arxiv.org/html/2609.18476v2#S3.SS1)
+
+**定理。** 对任意给定的有限行数 $R$，存在同一正整数 $P$ 和起点 $N$，使得前 $R$ 行在所有 $n\ge N$ 处都满足
+
+$$
+a_i(n+P)=a_i(n)+P,\qquad S_i(n+P)-S_i(n)=P(n+d_i)+\frac{P(P+1)}2.
+$$
+
+因此各行的位移 $a_i(n)-n$ 最终周期化。每一个完整晚期周期内的位移平均值恰好是实际遗漏数 $d_i$。这是一般猜想的部分进展。周期 $P$ 和起点 $N$ 可以依赖 $R$，定理没有给出 $P=1$ 或 $d_i=1$。
+
+### 有限历史怎样决定无限构造的下一步
+
+把各行的前缀按三角数对齐。在第 $i$ 行，前 $n$ 项对应第 $k=n+d_i$ 层，记 $D_i(k)=T_k-S_i(n)$。此前证明了对足够大的 $k$，$D_i(k)$ 是非负有界整数。固定有限条行后可以选取同一个上界 $W$。相邻层的差给出下一项
+
+$$
+a_i(n+1)=k+1+D_i(k)-D_i(k+1).
+$$
+
+因而实际被选的候选 $x$ 必在 $[k+1-W,k+1+W]$ 内。若 $x$ 已在本行出现，它在充分晚时只能出现在紧邻的前 $2W$ 层。比此更老的层产生的项都比 $x$ 小，各行中有限个早期例外也可以由同一个起点排除。知道这段历史的各层差额，即可由相邻两层的公式恢复已用过的候选。
+
+若候选使新前缀和落入某条前行 $j$，该前行里的撞击只能发生在第 $k+1$ 层。因为所有差额都有统一数值界，而足够晚的相邻三角数之间的距离已远大于此界。碰撞的精确条件是
+
+$$
+x+D_j(k+1)=k+1+D_i(k).
+$$
+
+现在比较两处具有相同最近 $2W+1$ 层差额的历史。假设它们相距 $p$ 层，将候选 $x$ 平移为 $x+p$。根据以上两条判断，本行已用情况相同。先处理最低行，再逐行向上，每条前行已经确定的下一层差额也相同，因此前行碰撞条件相同。两处贪心选择都取最小合法值，这强迫所选值恰差 $p$，下一层所有差额再次相同。
+
+最近 $2W+1$ 层的 $R$ 行差额向量只有有限种取值，因而其中一个向量必在两个足够晚的层重复。逐层应用上一段，重复从此持续，得到共同周期 $P$。此时在相距 $P$ 层的两个前缀和中差额抵消，三角数恒等式 $T_{k+P}-T_k=Pk+T_P$ 即给出定理的第二个等式。
+
+### 形式核验与公开先例
+
+`GreedyBarrycadePeriod.lean` 依次导入前两份 Lean 成果中的定义与定理。`common_period_and_block_sum` 同时证明周期和周期求和公式，`eventual_common_period` 单独给出项值周期。Lean 和 mathlib 4.24.0 以 `-DwarningAsError=true` 成功编译，公理审计仅为 `propext`、`Classical.choice`、`Quot.sound`。
+
+公开的有限尾部证书已对前 200 行报告周期为 1 的特例，第五行另有公开 Lean 证明。按原论文题名、`eventually periodic`、`finite-state`、`common period`、`greedy quasi-barrycade` 检索原论文、OEIS、GitHub 讨论及公开 AI 记录，未定位到关于任意有限行组最终共同周期的先前证明。[前 200 行核查](https://github.com/the-omega-institute/trureturing/issues/8494) · [第五行独立证书](https://github.com/thatnealpatel/proofs/issues/96)
+
+在本目录复验周期定理。
+
+```sh
+lake exe cache get Mathlib.Data.Fintype.Pigeonhole Mathlib.Data.Fintype.Pi
+lake build GreedyBarrycadeStructure
+lake env lean -DwarningAsError=true GreedyBarrycadePeriod.lean
+```

@@ -1,0 +1,7 @@
+'ThreeSandpile.compatible_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ThreeSandpile.mem_recurrentConfigs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ThreeSandpile.recurrentConfigs_nodup' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ThreeSandpile.length_recurrentConfigs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ThreeSandpile.alofi_dukes_log_concave' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ThreeSandpile.alofi_dukes_unimodal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ThreeSandpile.alofi_dukes_configurations' depends on axioms: [propext, Classical.choice, Quot.sound]
