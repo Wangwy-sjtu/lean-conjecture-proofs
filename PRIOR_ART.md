@@ -96,3 +96,5 @@ Inoue–Inazu 的字串减法游戏问题 2.1 问能否以最长步长或词典�
 **两比特稳定子范数与半阶稳定子 Rényi 熵。** Liabøtrø 2017 年对两比特有符号 Pauli 和给出了数值上界和一个严格可达见证。Liu、Low、Yin 又以半阶熵提出具体态。TrureTuring 的三比特反例已形式化，但其两比特结论明确使用 NumPy。另一条公开 AI 工作研究的是混态纯度中的另一端谱值。本包严格封闭全部两比特纯态的上界、原文见证和 640 个极值符号的计数；Python 的整数 Clifford 轨道检查单列。[量子随机访问码原论文](https://doi.org/10.1103/PhysRevA.95.052315) · [半阶数值猜想](https://arxiv.org/abs/2502.17550) · [AI 三比特结果与两比特数值说明](https://www.trureturing.org/research/liabotro-2017-signed-pauli-sum-norm/) · [完整证明和查重](problems/StabilizerHalf/)
 
 **八维方盘为何不能合用普通多项式。** 作者已有关于两个尺寸族的经验拟合，分别预示两个二次项。本包用各自的实际活跃格数 80、256 以及两个无穷族的保维性，证明八维方盘不存在适用于所有充分大边长的单个实多项式。两个经验式的具体常数仍未由这项证明确定。[两条经验猜想](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/conjectures/conjectures.tex#L432-L457) · [两族严格分离的证明](problems/GridScaling/EightFamilies.md)
+
+**单比特量子门的零支撑边界。** Savadatti 和 Zhang 的命题 13 给出九个 Pauli 系数全非零时的判据，原文明确留下有零元的情况。本文形式化显式次梯度及半负定性，再引用原文定理 3 推出一阶认证收益为零。公开 GitHub 检索命中论文元数据，作者列出的仓库返回 404，其中的分支与 PR 无法核实。[命题 13](https://arxiv.org/html/2611.27724v1#S7.SS5) · [矩阵证明、查重范围及外部定理依赖](problems/DeficientQubit/)
