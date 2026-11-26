@@ -43,6 +43,8 @@
 
 **无三角形和四环时的门数下界。** Cao 等人引理 9 取每条边的一个生成门，再考察同一线路的后继门，利用三角形和四环的排除证明 $m+\Omega(m)$。这里精确计数可重叠的门对，以不存在四环保证每个非目标偶控制只对应一对不同目标边，再结合奇输出下界得到 $2L\ge3m+n-1$。用题名、论文编号、girth、four-cycle、Sidon、$3m/2$ 及 equivalent gate savings 检索公开论文、GitHub 代码与 AI 讨论，未定位到这个带 $n$ 项的界。此前公开的奇输出计数论证仍依照上文注明来源。[作者稿引理 9](https://yiren.lu/assets/pdf/parity-network.pdf#page=6) · [TrureTuring 在先计数](https://github.com/the-omega-institute/trureturing/issues/24527)
 
+**词减法游戏问题 4.1 与可见下推语言。** 原文证明正则语言的封闭性，也给出某些上下文无关规则的反例。Fraenkel 的无环博弈核、Courcelle–Engelfriet 的 MSO 反向翻译以及 Alur–Madhusudan 对嵌套词的逻辑刻画提供经典基础。本题给出在原词上解释每个切点及其合法后缀删除的公式，并从实际游戏推导出相同可见字母分类下的胜负语言。已检查题号、题名、作者、公开 GitHub 代码和讨论、MathDB 的相近原页与相关下推博弈文献。此前在问题 2.1 找到的公开 AI 证明处理 DFA 状态复杂度，所查资料中未找到这项 VPL 封闭性对该游戏的直接表述。[原问题 4.1](https://arxiv.org/html/2611.09157v1#S4) · [嵌套词的 MSO 定理](https://www.cis.upenn.edu/~alur/Jacm09.pdf) · [逐项先例与定理范围](problems/VisiblyPushdownSubtraction/README.md)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)

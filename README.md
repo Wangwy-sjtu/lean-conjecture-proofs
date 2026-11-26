@@ -27,6 +27,7 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
 | --- | --- | --- |
+| [Inoue–Inazu · 后缀减法游戏的语言类别](problems/VisiblyPushdownSubtraction/) | 对问题 4.1，若允许删除的后缀构成可见下推语言，则必胜词与必败词也都是同一可见字母分类下的可见下推语言。Lean 从实际游戏构造识别这两个语言的 MSO 句子 | [独立 ZIP](packages/VisiblyPushdownSubtraction.zip?raw=1) |
 | [Sierant · 非局域稳定子 Rényi-2 熵](problems/SierantGap/) | 计算基与任意局部酉最优值的差距上界由 4 比特降至 2 比特。Lean 从任意整数秩证明新组合界，并以原论文已证的矩阵迹关系推出熵界 | [独立 ZIP](packages/SierantGap.zip?raw=1) |
 | [Levin · Band or Bump 的停止概率](problems/BandOrBump/) | 三种和四种牌型、任意每类张数及阈值下，首次因 bump 停止的概率对时间对数凹。正支集分别为 $[u+1,2u+\ell]$ 和 $[u+1,3u+\ell]$，包含标准 52 张牌 | [独立 ZIP](packages/BandOrBump.zip?raw=1) |
 | [Alofi–Dukes · 随机沙堆的缺额多项式](problems/SandpileK3n/) | 对所有 $K_{3,n}$ 和任意吸收点，证明常返配置按总缺额计数的系数对数凹且单峰，并给出两种吸收点位置各自的计数公式 | [独立 ZIP](packages/SandpileK3n.zip?raw=1) |
