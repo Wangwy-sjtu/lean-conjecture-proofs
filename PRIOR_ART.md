@@ -4,6 +4,7 @@
 
 | 命题 | 已有公开材料 | 本仓库验证的范围 |
 | --- | --- | --- |
+| A005558–A005562 的象限格路递推 | Guy 已给出任意高度的闭式，更早的计数不再作为猜想。TrureTuring 题名相似的一项证明处理一维半直线的三阶递推。[Guy 原文](https://cs.uwaterloo.ca/journals/JIS/VOL3/GUY/catwalks.html) · [AI 项目的已解题](https://www.trureturing.org/knowledge/node/98f5aa0db65faf6c355712db98a3067d217771be6fd8069e97d0e59aec17f9b1/) | 从二维四方向步词证明对任意高度都成立的二阶式。五个特例合计一个结果。 |
 | A245690 的首次出现位置及其整除性 | TrureTuring 在 2026 年 9 月明确记录了余数 4 的筛选条件在十万以内通过，仍将其标作待解，并提到关于首次出现位置的更强猜想。[先前 AI 笔记，第 420 行](https://github.com/the-omega-institute/trureturing/blob/7f4bfeee6e1af4507b6ed80a664dcd213969c82b/Library/Words/oeis2026triage0910.md#L420) | 求出余数 6 的精确首次出现位置，证明其后的整除性有无穷反例，并反驳余数 4 的筛选条件。 |
 | A113572 的零项 | 作者报告检验至一万，jOEIS 已给出逐输入搜索。已有工作还包括固定数字集在与 10 互素模数下的渐近分布定理。[原猜想](https://oeis.org/A113572) · [Saavedra-Araya 推论 5.5](https://doi.org/10.1017/etds.2025.10256) | 证明奇偶模数下的有限位数覆盖，继而从数位位置规则证明零项恰为大于 5 的 5 的倍数。等价商序列 A113573 合并计入本题。 |
 | A086004 的五次旋转加法 | Wu 给出了四次成功的例子和排除六次的证明。2023 年的计算记录仍将五次描述为待解决。[吴的原注释](https://oeis.org/A261458) · [计算记录](https://voodooguru23.blogspot.com/2023/01/rotate-and-add.html) | 对任意实际十进制位宽证明连续五次不可能。 |
