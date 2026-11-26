@@ -19,6 +19,7 @@
 
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
 | --- | --- | --- |
+| [Cao 等 · 图奇偶网络的完美消去序](problems/Multipartite/) | 对任意完全多部图精确求出需要补多少个全邻接顶点。任意图的最小补点问题仍开放 | [独立 ZIP](packages/Multipartite.zip?raw=1) |
 | [Dębski 等 · 无限贪心 Barrycade 的遗漏数](problems/GreedyBarrycade/) | 第 $r$ 行永久遗漏的正整数至多有 $r-1$ 个。作者猜想从第二行起每行恰遗漏一个，该等式仍开放 | [独立 ZIP](packages/GreedyBarrycade.zip?raw=1) |
 
 打开题目目录或解压相应 ZIP，在其中按 README 的命令运行。文件末尾的 `#print axioms` 输出可核对主定理的公理依赖。各题说明记录了检索日期和范围，公开优先权仍可能受未索引材料影响。
