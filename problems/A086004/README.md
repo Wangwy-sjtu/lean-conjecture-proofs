@@ -10,15 +10,17 @@ Chuck Seggelin 于 2003 年提出猜想。若十进制表示有偶数位，交�
 
 ## 在先结果与核验
 
-2015 年，Chai Wah Wu 列出能保持四次的素数，并证明连续六次保持素性不可能。他给出的起点 10,010,905,789 在第四步得到 126,399,526,399。上述证明把此前公开的上界收紧到四次。源文件另外核对了该例每一步得到的整数。例子的五个数为素数这一事实出自 Wu 的记录。[四次实例和六次上界](https://oeis.org/A261458)
+2015 年，Chai Wah Wu 列出能保持四次的素数，并证明连续六次保持素性不可能。他给出的起点 10,010,905,789 依次到达 15,800,815,799、31,600,631,599、63,200,263,199 和 126,399,526,399。形式证明核对了四次变换，并用 Lucas 证书验证这五个整数各自为素数。结合上面的排除证明，能连续保持素性的变换次数最大值恰为 **4**。[四次实例和六次上界](https://oeis.org/A261458)
 
 截至 2026 年 11 月 27 日，以四个 OEIS 编号、作者和猜想原文、交换两半的同义表述检索公开网页、论坛、论文及形式化记录，未发现五次上界的在先证明。Epoch 的 444 个 OEIS 序列元数据和 DeepMind 的 358 个 OEIS 目录项均未列入这几个编号。2023 年的一篇独立计算记录也把五次列作未知。检索范围无法确定全球优先权。[Epoch 元数据](https://github.com/epoch-research/LeanOpenProblems-results/blob/main/metadata/oeis/sequences.json) · [DeepMind 目录](https://github.com/google-deepmind/formal-conjectures/tree/main/FormalConjectures/OEIS) · [2023 年的计算记录](https://voodooguru23.blogspot.com/2023/01/rotate-and-add.html)
 
-本目录锁定 Lean 与 mathlib 4.24.0。在本目录运行
+在固定到 v4.24.0 的 mathlib 项目环境中运行 `lake env lean -DwarningAsError=true A086004.lean`。`no_five_rotation_cycle_primes` 证明上界，`wu_attains_four` 验证达到上界的在先实例，`RotateAdd.attainable_iff_at_most_four` 给出可行次数的充要条件。三个 `#print axioms` 的输出均只含 `propext`、`Classical.choice`、`Quot.sound`。[Lean 源码](A086004.lean)
+
+## 在独立下载包中运行
+
+本目录已锁定版本。从该目录执行
 
 ```sh
-lake exe cache get Mathlib.Data.Nat.Log Mathlib.Data.Nat.Prime.Basic Mathlib.Tactic.Ring
+lake exe cache get Mathlib.Data.Nat.Log Mathlib.Data.Nat.Prime.Basic Mathlib.Data.List.Prime Mathlib.NumberTheory.LucasPrimality Mathlib.Tactic.NormNum.Prime Mathlib.Tactic.ReduceModChar Mathlib.Tactic.Ring
 lake env lean -DwarningAsError=true A086004.lean
 ```
-
-[Lean 源码](A086004.lean)。定理名为 `RotateAdd.no_five_rotation_cycle_primes`。`#print axioms` 列出 `propext`、`Classical.choice`、`Quot.sound`。

@@ -1,5 +1,9 @@
 import Mathlib.Data.Nat.Log
 import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.Data.List.Prime
+import Mathlib.NumberTheory.LucasPrimality
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.Ring
 
 /-!
@@ -44,7 +48,7 @@ example : rotate 12345 = 45312 := by check_rotation 12345 4
 example : rotate 12003 = 3012 := by check_rotation 12003 4
 
 -- The four iterates in Chai Wah Wu's published example (OEIS A261458).
-example : [step^[1] 10010905789, step^[2] 10010905789,
+theorem wu_iterations : [step^[1] 10010905789, step^[2] 10010905789,
     step^[3] 10010905789, step^[4] 10010905789] =
     [15800815799, 31600631599, 63200263199, 126399526399] := by
   have h₁ : step 10010905789 = 15800815799 := by check_rotation 10010905789 10
@@ -221,6 +225,62 @@ theorem no_five_rotation_cycle_primes (p : ℕ) :
   have h₀ := middle_lt p
   omega
 
+/-- A Lucas certificate with a supplied factorization of `p-1`. -/
+private theorem prime_from_list {p : ℕ} (g : ZMod p) (fs : List ℕ)
+    (prod : fs.prod = p-1) (primes : ∀ q ∈ fs, Nat.Prime q)
+    (hit : g ^ (p-1) = 1)
+    (miss : ∀ q ∈ fs, g ^ ((p-1)/q) ≠ 1) : Nat.Prime p := by
+  apply lucas_primality p g hit
+  intro q hq hd
+  rw [← prod] at hd
+  exact miss q (mem_list_primes_of_dvd_prod hq.prime (fun r hr => (primes r hr).prime) hd)
+
+-- Each exponentiation in ZMod uses binary modular exponentiation.
+local macro "pratt_cert " gen:num " with " fs:term : tactic =>
+  `(tactic| (apply prime_from_list (g := $gen) (fs := $fs) (by decide)
+             · simp [List.forall_mem_cons] <;> norm_num
+             · reduce_mod_char
+             · simp only [List.forall_mem_cons, List.not_mem_nil, false_implies, forall_true_left,
+                 and_true, forall_const]
+               repeat' apply And.intro
+               all_goals (reduce_mod_char <;> decide)))
+
+@[local simp] private theorem prime64172473 : Nat.Prime 64172473 := by
+  pratt_cert 11 with [2, 2, 2, 3, 7, 13, 29383]
+@[local simp] private theorem prime923833 : Nat.Prime 923833 := by
+  pratt_cert 19 with [2, 2, 2, 3, 3, 3, 7, 13, 47]
+@[local simp] private theorem prime558109 : Nat.Prime 558109 := by
+  pratt_cert 2 with [2, 2, 3, 3, 37, 419]
+@[local simp] private theorem prime1663164821 : Nat.Prime 1663164821 := by
+  pratt_cert 3 with [2, 2, 5, 149, 558109]
+
+/-- Wu's published example retains primality at its start and through four steps. -/
+theorem wu_attains_four (j : ℕ) (hj : j ≤ 4) : Nat.Prime (step^[j] 10010905789) := by
+  have primes : ∀ z ∈ 10010905789 :: [step^[1] 10010905789, step^[2] 10010905789,
+      step^[3] 10010905789, step^[4] 10010905789], Nat.Prime z := by
+    rw [wu_iterations]
+    simp only [List.forall_mem_cons, List.not_mem_nil, false_implies, and_true, forall_const]
+    refine ⟨?_, ?_, ?_, ?_, ?_⟩
+    · pratt_cert 6 with [2, 2, 3, 13, 64172473]
+    · pratt_cert 13 with [2, 367, 643, 33479]
+    · pratt_cert 6 with [2, 3, 5701, 923833]
+    · pratt_cert 13 with [2, 19, 1663164821]
+    · pratt_cert 11 with [2, 3, 3, 41, 4733, 36187]
+  apply primes
+  have cases : j = 0 ∨ j = 1 ∨ j = 2 ∨ j = 3 ∨ j = 4 := by omega
+  rcases cases with rfl | rfl | rfl | rfl | rfl <;> simp
+
+/-- The attainable run lengths, counting transformations, are exactly zero through four. -/
+theorem attainable_iff_at_most_four (k : ℕ) :
+    (∃ p : ℕ, ∀ j : ℕ, j ≤ k → Nat.Prime (step^[j] p)) ↔ k ≤ 4 := by
+  constructor
+  · rintro ⟨p, h⟩
+    by_contra! hgt
+    exact no_five_rotation_cycle_primes p (fun j hj => h j (by omega))
+  · exact fun hk => ⟨10010905789, fun j hj => wu_attains_four j (hj.trans hk)⟩
+
 #print axioms no_five_rotation_cycle_primes
+#print axioms wu_attains_four
+#print axioms attainable_iff_at_most_four
 
 end RotateAdd
