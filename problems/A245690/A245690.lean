@@ -123,22 +123,32 @@ five integers is forced by the prime prefix. Checked by Lean's kernel. -/
 private theorem small_gaps : ∀ p : Fin 239, 7 ≤ p.val → Nat.Prime p.val →
     ∃ i : Fin 5, (p.val + (i.val+1)) ∣ before p.val := by decide
 
-theorem first_six : HasValue firstSix 6 ∧ ∀ n, HasValue n 6 → firstSix ≤ n := by
-  refine ⟨⟨239,245,first_witness,by decide⟩, ?_⟩
-  rintro n ⟨p,d,⟨hn,hp,_,primes,hpd,hd,least⟩,hmod⟩
+/-- Every occurrence of six is divisible by each prime strictly below 239. -/
+private theorem six_requires_large_prime {n p d : ℕ} (w : Witness n p d) (hmod : d % p = 6) :
+    239 ≤ p := by
+  obtain ⟨_,hp,_,primes,hpd,_,least⟩ := w
   have p7 : 7 ≤ p := by
     have := Nat.mod_lt d hp.pos
     omega
   have pre : before p ∣ n := prefix_dvd n p primes
+  by_contra! small
+  obtain ⟨i,hi⟩ := small_gaps ⟨p,small⟩ p7 hp
+  have hd' : d ≤ p+(i.val+1) := by
+    by_contra! h
+    exact least ⟨p+(i.val+1),h⟩ (show p < p+(i.val+1) by omega) (hi.trans pre)
+  have im := i.isLt
+  rw [Nat.mod_eq_sub_mod hpd.le, Nat.mod_eq_of_lt (by omega)] at hmod
+  omega
+
+theorem first_six : HasValue firstSix 6 ∧ ∀ n, HasValue n 6 → firstSix ≤ n := by
+  refine ⟨⟨239,245,first_witness,by decide⟩, ?_⟩
+  rintro n ⟨p,d,w,hmod⟩
+  have lb := six_requires_large_prime w hmod
+  obtain ⟨hn,hp,_,primes,hpd,hd,least⟩ := w
+  have pre : before p ∣ n := prefix_dvd n p primes
   have bound (e : ℕ) (he : p < e) (hed : e ∣ n) : d ≤ e := by
     by_contra! h
     exact least ⟨e,h⟩ he hed
-  by_cases small : p < 239
-  · obtain ⟨i,hi⟩ := small_gaps ⟨p,small⟩ p7 hp
-    have hd' := bound (p+(i.val+1)) (by omega) (hi.trans pre)
-    have im := i.isLt
-    rw [Nat.mod_eq_sub_mod hpd.le, Nat.mod_eq_of_lt (by omega)] at hmod
-    omega
   by_cases same : p=239
   · subst p
     have de := bound 246 (by decide) ((show 246 ∣ before 239 by decide).trans pre)
@@ -164,6 +174,19 @@ theorem first_six_not_primorial (k : ℕ) : firstSix ≠ before k := by
 /-- A later base index 353 times the product of the primes below 347. -/
 def laterBase : ℕ := before 347 * 353
 private theorem other_witness : Witness laterBase 347 353 := by unfold Witness; decide
+
+/-- The greatest common divisor of all indices with residue six is exactly 233#,
+one seventh of the first occurrence. The equivalence characterizes every common divisor. -/
+theorem common_divisors_of_six (g : ℕ) : (∀ n, HasValue n 6 → g ∣ n) ↔ g ∣ before 239 := by
+  constructor
+  · intro h
+    have h₁ := h firstSix first_six.1
+    have h₂ := h laterBase ⟨347,353,other_witness,by decide⟩
+    have both := Nat.dvd_gcd h₁ h₂
+    rwa [show Nat.gcd firstSix laterBase = before 239 by decide] at both
+  · rintro h n ⟨p,d,w,hmod⟩
+    have lb := six_requires_large_prime w hmod
+    exact h.trans (prefix_dvd n 239 fun q hq => w.2.2.2.1 ⟨q,q.isLt.trans_le lb⟩ hq)
 
 /-- Multiplying by a power of any prime above the tested divisor preserves both minima. -/
 theorem multiply_large_prime {n p d r : ℕ} (h : Witness n p d) (hr : Nat.Prime r)
@@ -214,5 +237,6 @@ end A245690
 #print axioms A245690.minimal_index_for_pair
 #print axioms A245690.first_six
 #print axioms A245690.first_six_not_primorial
+#print axioms A245690.common_divisors_of_six
 #print axioms A245690.later_sixes
 #print axioms A245690.four_filter_counterexample
