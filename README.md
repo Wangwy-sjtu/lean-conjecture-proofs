@@ -1,2 +1,12 @@
-# lean-conjecture-proofs
-Lean 4 proofs and counterexamples for small published mathematical conjectures, with sources and reproducible checks.
+# 小猜想的 Lean 证明与反例
+
+本仓库收录数学文献和整数数列条目中的附带猜想。每道题提供原始出处、已有结果、数学推导和可独立复验的 Lean 文件。证明探索和形式化使用了 AI 辅助。
+
+| 问题 | 已经 Lean 验证的结论 | 下载 |
+| --- | --- | --- |
+| [A086004 · 十进制旋转加法](problems/A086004/) | 对所有起点证明连续五次保持素性不可能，已有四次成功的实例 | [独立 ZIP](packages/A086004.zip?raw=1) |
+| [A024399 · 基本对称函数之比](problems/A024399/) | 对所有下标证明七阶递推和生成函数的系数恒等式 | [独立 ZIP](packages/A024399.zip?raw=1) |
+| [A347225 · 孪生素数的循环节](problems/A347225/) | 三对孪生素数具有相同的正周期增量，证伪“至多两对”的猜想 | [独立 ZIP](packages/A347225.zip?raw=1) |
+| [A004613 · 平方三元组的解数](problems/A004613/) | 固定一坐标后恰有一个允许的解，证伪注释的两种读法 | [独立 ZIP](packages/A004613.zip?raw=1) |
+
+打开题目目录或解压相应 ZIP，在其中按 README 的命令运行。文件末尾的 `#print axioms` 输出可核对主定理的公理依赖。各题说明记录了检索日期和范围，公开优先权仍可能受未索引材料影响。
