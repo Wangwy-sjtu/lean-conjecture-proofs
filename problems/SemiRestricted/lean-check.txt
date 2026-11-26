@@ -1,0 +1,3 @@
+'SemiRestricted.uniformly_shuffled_score_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SemiRestricted.matrix_game_sandwich' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SemiRestricted.question22' depends on axioms: [propext, Classical.choice, Quot.sound]
