@@ -35,6 +35,8 @@
 
 **任意完全二部图的最优 CNOT 门数。** Cao 等人给出 $K_{2,p}$ 的 $3p+2$ 门构造。Amy、Azimzadeh 和 Mosca 研究较一般的奇偶网络综合以及两个受限模型中的计算复杂性。TrureTuring 第 24527 题第 4 步已有奇加奇张成偶输出并以复原计数的证明。这里另将非目标偶输出消去，在未删除的顶点间取得互异的投影，给出与构造吻合的全参数下界。检索论文题名、arXiv 编号、complete bipartite、all cross pairs、CNOT parity network、optimality、pivot 和 bipartite phase polynomial 的组合，并查公开 GitHub 源码、议题与 MathDB 的可索引页面。未定位到任意 $1\le a\le b$ 时精确值 $ab+b+2a-2$ 的同一证明。[原论文](https://yiren.lu/assets/pdf/parity-network.pdf#page=6) · [一般奇偶综合模型](https://arxiv.org/abs/1712.01859) · [在先 AI 计数论证](https://github.com/the-omega-institute/trureturing/issues/24527)
 
+**非局域稳定子 Rényi-2 熵的两比特界。** Sierant 定理 3 已有四比特界，附录给出八个交叉、十二个删一副本的矩阵迹上界，并将计算基参考迹化为异或计数。Liu 与 Cui 给出有序 Schmidt 代表的局部极小性。Chain.Ren 的公开证明覆盖任意幅度置换和相位，对应单项局部酉。该较窄问题已从候选剔除。本题处理的是所有局部酉，新增结论为任意整数秩上的四倍计数界，并将相应的熵差控制在两比特。按论文编号、谱、酉优化、two-bit gap、factor four、dyadic rounding 等检索 arXiv、GitHub 代码及讨论、MathDB 和 EulerSolve 的可见索引，未找到同一普适常数。E27 的公开中间目标仍为改进常数四。[原文及附录 A](https://arxiv.org/html/2609.13106v2) · [E27](https://open-quantum-problems.vercel.app/p/E27) · [Liu 与 Cui](https://arxiv.org/html/2609.01993v2) · [在先单项酉证明](https://github.com/Asakitan/monomial-stabilizer-renyi-rearrangement/blob/proof-v1.0.0/PROOF.md)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)
@@ -46,3 +48,5 @@
 还有两例说明了检索讨论区及核对具体定理的必要性。EulerSolve 对 A394576 的证明还包含分块端点与间隙词。关于 Lin–Ma 的实根猜想，另一个公开 GitHub issue 已给出重数均为 1 的情形及其扩展，故该特例也未计入。[EulerSolve 第 1017 题](https://eulersolve.org/problem/1017/) · [公开 GitHub 证明讨论](https://github.com/1337isnot1337/solved-conjectures/issues/102)
 
 Permutation Wordle 的三次项曾完成独立 Lean 推导。进一步核对后，Shivam Patel 已在 MathDB 给出双向循环位移的取等分类、二循环的损失界及其计数论证，Kutin、Smithline 与 Vatter 也已给出一般非严格最优性。整题仅作本地核查，未收入成果。[MathDB 公开解答](https://mathdb.com/p/369086/cyclic-shift-s-cubic-coefficient-conjecture-for-deranged-str) · [后续论文](https://arxiv.org/abs/2609.01874)
+
+Inoue–Inazu 的字串减法游戏问题 2.1 问能否以最长步长或词典总长度的某个多项式限制 DFA 状态数。TrureTuring 的公开 issue 已针对两种参数给出反例构造、可达状态和后缀区分论证。本次筛选虽得到不同的二元词典，仍将原问题剔除。[原问题](https://arxiv.org/abs/2611.09157) · [GitHub 在先论证](https://github.com/the-omega-institute/trureturing/issues/30286)
