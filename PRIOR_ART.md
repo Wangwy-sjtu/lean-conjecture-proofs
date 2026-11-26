@@ -51,6 +51,10 @@
 
 **大 Nim 堆与固定公平局面。** 原文 Theorem 2 证明多个普通 Nim 堆的情形，也提供大堆时用后继覆盖连续 Grundy 值的归纳思路。这里由真实合法走法推到所有有限局面，并另证整套有界分支规则何时具有共用阈值。核对了原作者主页、OpenAlex 的两篇施引论文、超图选择复合定理，以及 GitHub 代码和讨论。MathDB 中两道同文 Kayles 周期问题对应第 3.2 节，本次只能检查其目录。所查公开记录中未找到第 3.1 节问题 3 的这个一般结论。[期刊原文](https://math.colgate.edu/~integers/ug4/ug4.pdf#page=18) · [相关超图定理](https://doi.org/10.1007/s00182-023-00850-7) · [核查说明](problems/SelectiveCompound/README.md)
 
+**Lights Out 无穷多个二维零空间方盘。** Boyles 的论文定理 4.2 已经解决摘要中写作猜想的同余必要条件。此处处理的是第 5 节仍列出的无穷性和具体三次幂族。Muñoz 已给一般最大公因式模型和因子重数，Zaidenberg 已有谱曲线，作者 GitHub 笔记也写明从奇数下标的互素性可推出所要结论。此次逐层排除新的三次幂阶坐标，并在实际方盘上给出首行头两格的线性同构。检索了公开 GitHub 代码与讨论、Hexagon、可索引的 MathDB 及引用记录。公开数学项目中命中的一份 Lights Out 程序处理一般线性消去，另有作者自己的猜想原稿。[猜想 5.1](https://arxiv.org/pdf/2201.03452#page=8) · [作者 GitHub 笔记](https://github.com/wmboyles/LightsOut-Math/blob/c730dfafc50c1e745d643654938d37851de8c06d/tex/conjectures/summary/conjectures.tex#L239) · [公开消去程序](https://github.com/CylicAmp/CylicAmp/blob/2a955686cf4ee4fbd83567fae0c6af2af7a49237/math/theorems/lights_out_gf2_gf37.py) · [数学证据与核查边界](problems/LightsGrid/)
+
+**十二元和积问题的最佳几何级数交点数。** Antis 等给出十二元集的上界构造，Clevenger 等已有有理级数的两项和唯一性和若干碰撞分类。此处给出包含任意级数外点时的总和集下界，它把任意有理几何级数与候选十二元集的交点数限制为六。已核查作者代码、O’Bryant 数据集、MathDB 365769/365772，以及公开 AI 项目的七元结果、黄金比例与塑料常数幂结果。原作的全局和积猜想仍待证明。[先前论文](https://arxiv.org/abs/2307.06874) · [原题](https://arxiv.org/abs/2601.21828) · [TrureTuring 七元结果](https://github.com/the-omega-institute/trureturing/pull/14759) · [逐题查重和完整定理](problems/TwelveIntegerSets/)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)

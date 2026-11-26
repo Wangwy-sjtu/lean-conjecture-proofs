@@ -29,10 +29,13 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 
 **大 Nim 堆与公平博弈。** Beideman、Bowen、Müyesser 的问题 3 问，哪些固定局面与足够大的 Nim 堆作选择复合后会达到最长对局给出的 Grundy 上界。答案是每个有限局面。若其最长对局长为 $d$，堆大小 $k\ge\binom d2$ 已足够。对分支数有统一上界的一整套规则，存在对全部局面通用的堆阈值，恰当所有局面的深度也有统一上界。[证明与原文量词](problems/SelectiveCompound/) · [独立 ZIP](packages/SelectiveCompound.zip?raw=1) · [期刊问题 3](https://math.colgate.edu/~integers/ug4/ug4.pdf#page=18)
 
+**Lights Out 方盘的二维零空间。** 对 Boyles 点名的每个边长 $n=2\cdot3^k-1$（$k\ge1$），恰有四个按键图案会保持原灯态不变，完整证明猜想 5.1 要求的无穷性。首行头两个按键与这四种图案一一对应。[数学证明与复现](problems/LightsGrid/) · [独立 ZIP](packages/LightsGrid.zip?raw=1) · [原猜想，第 8 页](https://arxiv.org/pdf/2201.03452#page=8)
+
 ## 论文开放问题的部分进展
 
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
 | --- | --- | --- |
+| [Antis 等 · 十二元和积问题](problems/TwelveIntegerSets/) | 十二元正有理数集若至多产生 41 个两两和，任意正有理几何级数最多包含其中 6 点，且能取等。原猜想 $SP(12)=41$ 的整体下界仍待证明 | [独立 ZIP](packages/TwelveIntegerSets.zip?raw=1) |
 | [Inoue–Inazu · 后缀减法游戏的语言类别](problems/VisiblyPushdownSubtraction/) | 对问题 4.1，若允许删除的后缀构成可见下推语言，则必胜词与必败词也都是同一可见字母分类下的可见下推语言。Lean 从实际游戏构造识别这两个语言的 MSO 句子 | [独立 ZIP](packages/VisiblyPushdownSubtraction.zip?raw=1) |
 | [Sierant · 非局域稳定子 Rényi-2 熵](problems/SierantGap/) | 计算基与任意局部酉最优值的差距上界由 4 比特降至 2 比特。Lean 从任意整数秩证明新组合界，并以原论文已证的矩阵迹关系推出熵界 | [独立 ZIP](packages/SierantGap.zip?raw=1) |
 | [Alofi–Dukes · 随机沙堆的缺额多项式](problems/SandpileK3n/) | 对所有 $K_{3,n}$ 和任意吸收点，证明常返配置按总缺额计数的系数对数凹且单峰，并给出两种吸收点位置各自的计数公式 | [独立 ZIP](packages/SandpileK3n.zip?raw=1) |
