@@ -40,6 +40,18 @@ name = "OddStabilization"
 [[lean_lib]]
 name = "OddTorsion"
 
+[[lean_lib]]
+name = "EightSeeds"
+
+[[lean_lib]]
+name = "EightSeparation"
+
+[[lean_lib]]
+name = "GridFactors"
+
+[[lean_lib]]
+name = "OddGridExamples"
+
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"

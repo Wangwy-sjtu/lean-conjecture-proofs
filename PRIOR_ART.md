@@ -94,3 +94,5 @@ Inoue–Inazu 的字串减法游戏问题 2.1 问能否以最长步长或词典�
 **所有有界维数方盘的统一准多项式。** Boyles 的公开 AI 稿已给出零空间维数的有限见证与整除压缩，Sloane 已研究固定维数重复列码的覆盖半径。本次用同一个模数根据边长选取基准盘，证明所有符合维数界的方盘共用一个最终的按键数准多项式，适用于任意指定上界。[AI 有限见证先例](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/ai_gen/finite_witness_bounds/finite_witness_bounds.tex) · [按键数全称定理和检索范围](problems/GridScaling/AllNullities.md)
 
 **两比特稳定子范数与半阶稳定子 Rényi 熵。** Liabøtrø 2017 年对两比特有符号 Pauli 和给出了数值上界和一个严格可达见证。Liu、Low、Yin 又以半阶熵提出具体态。TrureTuring 的三比特反例已形式化，但其两比特结论明确使用 NumPy。另一条公开 AI 工作研究的是混态纯度中的另一端谱值。本包严格封闭全部两比特纯态的上界、原文见证和 640 个极值符号的计数；Python 的整数 Clifford 轨道检查单列。[量子随机访问码原论文](https://doi.org/10.1103/PhysRevA.95.052315) · [半阶数值猜想](https://arxiv.org/abs/2502.17550) · [AI 三比特结果与两比特数值说明](https://www.trureturing.org/research/liabotro-2017-signed-pauli-sum-norm/) · [完整证明和查重](problems/StabilizerHalf/)
+
+**八维方盘为何不能合用普通多项式。** 作者已有关于两个尺寸族的经验拟合，分别预示两个二次项。本包用各自的实际活跃格数 80、256 以及两个无穷族的保维性，证明八维方盘不存在适用于所有充分大边长的单个实多项式。两个经验式的具体常数仍未由这项证明确定。[两条经验猜想](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/conjectures/conjectures.tex#L432-L457) · [两族严格分离的证明](problems/GridScaling/EightFamilies.md)
