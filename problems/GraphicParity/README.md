@@ -1,8 +1,18 @@
-# 无三角形图的最优 CNOT 奇偶网络
+# 完美图奇偶网络的七顶点反例与无三角形图的分类
 
 设有限连通简单图有 $n$ 个顶点、$m$ 条边。每个顶点对应一根线路，初始携带独立输入 $x_i$。一个 CNOT 门把控制线路的值异或进目标线路。网络须使每条边 $ij$ 所对应的 $x_i\oplus x_j$ 至少出现一次，最后让每根线路回到各自的输入。门可以作用于任意两根不同的线路，总共只有这 $n$ 根线路。Cao、Lu、Nie、Sun、Tian 称恰用 $m+n-1$ 个门的网络为完美网络，并猜想能达到此下界的图恰好是具有完美消去序的图。[原论文 §1 和 §4](https://arxiv.org/html/2509.10070v1#S4)
 
-## 结论
+## 主猜想的反例
+
+**完全三部图 $K_{1,3,3}$ 有完美图奇偶网络，而且任何顶点排列都不满足完美消去序条件。** 这直接证伪作者稿第 18 猜想的逆向蕴涵。原文证明的充分方向是「有完美消去序就有完美电路」。[作者稿第 13 页](https://yiren.lu/assets/pdf/parity-network.pdf#page=13) · [完整 21 道门的表与英文短证明](COUNTEREXAMPLE.md)
+
+取顶点 0 为中心，两组三顶点分别为 $\{1,2,3\}$、$\{4,5,6\}$。图有 7 点、15 边，完美门数为 $15+7-1=21$。证书前 15 道门恰好生成全部 15 种目标边，后 6 道门依次恢复各根改动过的线路。
+
+任取一种顶点排列，在两组三顶点中找到最先出现的 $v$。另一组三个点均为 $v$ 的后继邻居，而且两两不相邻。删除 $v$ 后原图仍连通，所以三个点必须出现在同一条按顺序连接的邻居路径上。要把三个互不相邻的点隔开至少需要两个其他邻居，而唯一可能的其他邻居是 0。由此排除所有排列。
+
+`CaoCounterexample.counterexample` 在同一组七个顶点上把逐门证书和无消去序定理连成一个命题。`edge_iff` 对照了两种图表示的邻接关系。Python 另行穷举全部 5040 个排列，通过者为零。[反例的 Lean 代码](CaoCounterexample.lean) · [独立复核代码](check_small.py)
+
+## 无三角形图的精确结果
 
 1. **连通无三角形图有完美网络，当且仅当它是一棵树。** 有环时，任意网络至少用 $m+n$ 个门。树是弦图，已知有完美消去序。结合原论文定理 1.4，这就验证了作者的核心猜想在全部连通无三角形图上的情形。[原文定理 1.4](https://arxiv.org/html/2509.10070v1#S1)
 2. **连通无三角形单环图恰需 $2m$ 个门。** 例如，一个长度 $\ell\ge4$ 的环，附上任意多棵树，所得图的最优门数始终是其边数的两倍。
@@ -18,11 +28,19 @@
 
 在 $K_{2,p}$ 上，$m=2p$，$n=p+2$，有环，故下界为 $m+n=3p+2$。设两中心为 $a,b$。先把 $a$ 异或进 $b$；依次对每个叶 $x$ 把 $a$ 和当前的 $b$ 异或进 $x$，依次得到 $a\oplus x$ 和 $b\oplus x$。把中心 $b$ 恢复后，再对每个叶执行一次由 $b$ 控制的门，恢复全部输入。一共 $1+2p+1+p$ 道门。
 
+## 完美电路的一项必要条件
+
+对任意连通简单图，若其电路达到 $m+n-1$，则图中存在一棵生成树，可以仅靠反复补全三角形的第三条边生成原图全部边。形式定理 `perfect_has_activating_tree` 给出恰有 $n-1$ 条边的连通生成子图，以及每条边的有限构造。奇线路与奇线路相加得到的那批边就是初始树边。其余偶输出都只能在两个已经存在的偶支持上做异或，并由门数取等强制得到一条目标边，因此每一步都补全原图的一个三角形。
+
+这在极值图论中称为树对三角形的弱饱和。已有的 Cohen Antonir 等人引理 1.4 进一步推出，此类图将每个三角形填成面所得到的二维复形必须单连通。逻辑联系由此处的电路定理和已发表的拓扑引理组成，Lean 文件验证的是前者。[树激活定理及其拓扑引理](https://arxiv.org/html/2507.05697v1#S1.SS2) · [弱饱和的计算复杂性](https://arxiv.org/abs/2501.12096)
+
 ## 形式化与复核
 
-`GraphicParity.lean` 实现每道 CNOT 的状态变化、整段电路的运行、全部曾输出的支持集，以及最终恢复每根线路的条件。`triangle_free_perfect_iff` 对应第一条，其中树用连通简单图上等价的 $m=n-1$ 表达。`triangle_free_unicyclic_optimum` 与 `two_hub_optimum` 都以 `IsLeast` 同时证明最优下界和可达性。图类与完美消去序之间用到的文献定理在上面单独注明。六项核心定理的公理清单均为 `propext`、`Classical.choice`、`Quot.sound`。
+`GraphicParity.lean` 实现每道 CNOT 的状态变化、整段电路的运行、全部曾输出的支持集，以及最终恢复每根线路的条件。`triangle_free_perfect_iff` 对应第一条，其中树用连通简单图上等价的 $m=n-1$ 表达。`triangle_free_unicyclic_optimum` 与 `two_hub_optimum` 都以 `IsLeast` 同时证明最优下界和可达性。图类与完美消去序之间用到的文献定理在上面单独注明。七项一般电路定理的公理清单均为 `propext`、`Classical.choice`、`Quot.sound`。
 
 独立 Python 程序把每根线路编码为位掩码，枚举四根线路上长度至多 8 的闭合 CNOT 程序。四点的 16 棵有标号树各需 6 道门，三个有标号四环各需 8 道门。它还逐门核查了 $2\le p\le30$ 的 $K_{2,p}$ 构造。可用 `python3 check_small.py` 重现。
+
+TrureTuring 在研究另一类对角酉电路时，已经公开了「奇＋奇产生的偶向量张成全部偶输出，加上初末偶线路数平衡」的同一计数论证。这里使用该论证处理图边，并由门数取等推导无三角形图的分类和生成树条件。七顶点反例本身仅需逐门证书及邻居排列论证。[在先 AI 证明第 4 步](https://github.com/the-omega-institute/trureturing/issues/24527)
 
 2026 年 11 月 27 日，以论文题名、arXiv 编号、perpane、triangle-free、unicyclic、odd outputs、complete bipartite 与 CNOT 的组合检索公开论文、GitHub 代码和问题，以及可索引的公开 AI 数学记录。已知结果包括论文的一般门数下界、四环例子、围长至少 5 的渐近下界和 $K_{2,p}$ 的构造。以上检索未定位到连通无三角形图的这个充要条件，或任意 $p$ 的配套精确下界。机器验证证明数学命题，公开文献优先权仍随新发现的来源更新。[arXiv 原文](https://arxiv.org/abs/2509.10070) · [作者稿](https://yiren.lu/assets/pdf/parity-network.pdf)
 
@@ -31,6 +49,9 @@
 本目录已锁定版本。从该目录执行
 
 ```sh
-lake exe cache get Mathlib.Data.Finset.SymmDiff Mathlib.Data.Finset.Powerset Mathlib.Data.Finset.Card Mathlib.Data.Fintype.Card
+lake exe cache get Mathlib.Data.Finset.SymmDiff Mathlib.Data.Finset.Powerset Mathlib.Data.Finset.Card Mathlib.Data.Fintype.Card Mathlib.Order.Bounds.Defs Mathlib.Data.List.Chain Mathlib.Data.List.Nodup
+lake build GraphicParity Multipartite
 lake env lean -DwarningAsError=true GraphicParity.lean
+lake env lean -DwarningAsError=true CaoCounterexample.lean
+python3 check_small.py
 ```

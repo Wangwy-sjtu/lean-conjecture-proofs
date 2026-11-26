@@ -75,7 +75,43 @@ def check_two_hubs(p):
     assert required <= seen and state == start and len(gates) == 3 * p + 2
 
 
+
+def check_counterexample():
+    color = (2, 0, 0, 0, 1, 1, 1)
+    edges = {(u, v) for u, v in combinations(range(7), 2) if color[u] != color[v]}
+    program = ((4,3), (2,6), (1,5), (1,4), (0,2), (0,1), (1,4),
+               (4,3), (2,4), (1,5), (2,6), (6,1), (5,2), (3,5),
+               (6,3), (0,6), (6,1), (6,3), (3,5), (5,2), (2,4))
+    state = [1 << i for i in range(7)]
+    seen = []
+    for control, target in program:
+        state[target] ^= state[control]
+        seen.append(state[target])
+    required = {(1 << u) | (1 << v) for u, v in edges}
+    assert len(program) == len(edges) + 7 - 1
+    assert set(seen[:15]) == required and state == [1 << i for i in range(7)]
+
+    # Deleting any one vertex leaves a connected graph.
+    for missing in range(7):
+        reached = {next(i for i in range(7) if i != missing)}
+        for _ in range(6):
+            reached.update(i for i in range(7) if i != missing
+                           and any(color[j] != color[i] for j in tuple(reached)))
+        assert len(reached) == 6
+
+    def valid_order(order):
+        for k, pivot in enumerate(order):
+            later = [j for j in order[k+1:] if color[j] != color[pivot]]
+            if any(color[x] == color[y] for x, y in zip(later, later[1:])):
+                return False
+        return True
+
+    assert sum(valid_order(order) for order in permutations(range(7))) == 0
+    print("K(1,3,3): 15 edges visited in 21 gates, identity restored, 0 of 5040 orders valid.")
+
+
 if __name__ == "__main__":
+    check_counterexample()
     check_four_wires()
     for leaves in range(2, 31):
         check_two_hubs(leaves)

@@ -1,6 +1,12 @@
 name = "graphicparity"
 version = "1.0.0"
 
+[[lean_lib]]
+name = "GraphicParity"
+
+[[lean_lib]]
+name = "Multipartite"
+
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"

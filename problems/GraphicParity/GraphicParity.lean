@@ -167,13 +167,8 @@ private theorem erase_flip {w : Term V} {r v : V} (different : v ≠ r) (fresh :
     · subst z; simp [pair,mem_symmDiff,different,hw]
     · simp [pair,mem_symmDiff,hr,hv]
 
-private theorem birth_lower [Fintype V] (r : V) (T : Finset (Term V)) (gs : List (Gate V))
-    (connected : ∀ v, ConnectedTo T r v) (even : ∀ w∈T,w.card%2=0)
-    (covered : ∀ w∈T,w ∈ outputs initial gs) :
-    Fintype.card V - 1 ≤ (births initial gs).length := by
-  let B := births initial gs
-  have gen (v : V) : pair r v ∈ span B :=
-    pair_in_span B T (fun w hw => all_even gs (covered w hw) (even w hw)) r v (connected v)
+private theorem spanning_count [Fintype V] (r : V) (B : List (Term V))
+    (gen : ∀ v : V, pair r v ∈ span B) : Fintype.card V - 1 ≤ B.length := by
   have projected (U : Finset V) (hU : r ∉ U) : ∃ w ∈ span B, w.erase r = U := by
     induction U using Finset.induction_on with
     | empty => exact ⟨∅,span_zero _,by simp⟩
@@ -188,6 +183,13 @@ private theorem birth_lower [Fintype V] (r : V) (T : Finset (Term V)) (gs : List
   have hs := (card_le_card sub).trans (card_image_le.trans (span_size B))
   rw [card_powerset,card_erase_of_mem (mem_univ r), card_univ] at hs
   exact (Nat.pow_le_pow_iff_right (by decide : 1<2)).mp hs
+
+private theorem birth_lower [Fintype V] (r : V) (T : Finset (Term V)) (gs : List (Gate V))
+    (connected : ∀ v, ConnectedTo T r v) (even : ∀ w∈T,w.card%2=0)
+    (covered : ∀ w∈T,w ∈ outputs initial gs) :
+    Fintype.card V - 1 ≤ (births initial gs).length :=
+  spanning_count r _ fun v => pair_in_span _ T
+    (fun w hw => all_even gs (covered w hw) (even w hw)) r v (connected v)
 
 private def oddPop [Fintype V] (s : State V) := (univ.filter (fun v => (s v).card%2=1)).card
 
@@ -653,5 +655,136 @@ theorem two_hub_optimum [Fintype V] (a b : V) (X : Finset V) (ab : a≠b)
     omega
 
 #print axioms two_hub_optimum
+
+/-- Start from B and complete a triangle of T whenever its other two edges
+are available. For two-element supports, completing a triangle is XOR. -/
+inductive TriangleClosure (T B : Finset (Term V)) : Term V → Prop where
+  | seed {e} : e ∈ B → TriangleClosure T B e
+  | complete {e f} : TriangleClosure T B e → TriangleClosure T B f →
+      e ∆ f ∈ T → TriangleClosure T B (e ∆ f)
+
+private theorem birth_is_output (s : State V) (gs : List (Gate V)) {w : Term V}
+    (hw : w ∈ births s gs) : w ∈ outputs s gs ∧ w.card % 2 = 0 := by
+  induction gs generalizing s with
+  | nil => simp [births] at hw
+  | cons g gs ih =>
+    simp only [births] at hw
+    split at hw
+    · rename_i ho
+      rcases List.mem_cons.mp hw with eq | hw
+      · subst w
+        refine ⟨by simp [outputs], ?_⟩
+        have h := card_xor (s g.target) (s g.control)
+        change (output s g).card%2 = _ at h
+        omega
+      · obtain ⟨h,p⟩ := ih _ hw
+        exact ⟨List.mem_cons_of_mem _ h,p⟩
+    · obtain ⟨h,p⟩ := ih _ hw
+      exact ⟨List.mem_cons_of_mem _ h,p⟩
+
+private theorem activation_from_births (T B : Finset (Term V)) (s : State V)
+    (gs : List (Gate V)) (prior : ∀ v, (s v).card%2=0 → TriangleClosure T B (s v))
+    (seeds : ∀ e∈births s gs, e∈B)
+    (sat : ∀ e∈outputs s gs, e.card%2=0 → e∈T) :
+    ∀ e∈outputs s gs, e.card%2=0 → TriangleClosure T B e := by
+  induction gs generalizing s with
+  | nil => simp [outputs]
+  | cons g gs ih =>
+    let u := applyGate s g
+    have new (he : (output s g).card%2=0) : TriangleClosure T B (output s g) := by
+      have p := card_xor (s g.target) (s g.control)
+      change (output s g).card%2 = _ at p
+      by_cases ht : (s g.target).card%2=0
+      · exact .complete (prior _ ht) (prior _ (by omega))
+          (sat (output s g) (List.mem_cons_self) he)
+      · have both : (s g.target).card%2=1 ∧ (s g.control).card%2=1 := by omega
+        exact .seed (seeds _ (by simp [births,both]))
+    have pre' : ∀ v, (u v).card%2=0 → TriangleClosure T B (u v) := by
+      intro v
+      by_cases hv : v=g.target
+      · subst v; simpa [u,applyGate] using new
+      · simpa [u,applyGate,hv] using prior v
+    have seeds' : ∀ e∈births u gs,e∈B := by
+      intro e he
+      apply seeds
+      simp only [births]
+      split <;> simp_all [u]
+    intro e he hp
+    rcases List.mem_cons.mp he with rfl | he
+    · exact new hp
+    · exact ih u pre' seeds' (fun z hz => sat z (List.mem_cons_of_mem _ hz)) e he hp
+
+private theorem inter_xor (e f U : Term V) :
+    (e ∆ f) ∩ U = (e ∩ U) ∆ (f ∩ U) := by
+  ext z
+  simp only [mem_inter,mem_symmDiff]
+  tauto
+
+private theorem pair_cut (U : Term V) (x y : V) :
+    ((pair x y) ∩ U).card%2=0 ↔ (x∈U ↔ y∈U) := by
+  have singleton_cut (z : V) : ({z} : Finset V) ∩ U = if z∈U then {z} else ∅ := by
+    split
+    · rename_i hz; exact inter_eq_left.mpr (singleton_subset_iff.mpr hz)
+    · rename_i hz; ext w; simp only [mem_inter,mem_singleton,notMem_empty,iff_false]
+      rintro ⟨rfl,hw⟩; exact hz hw
+  rw [pair,inter_xor,card_xor,singleton_cut,singleton_cut]
+  by_cases hx : x∈U <;> by_cases hy : y∈U <;> simp [hx,hy]
+
+private theorem activating_edges_connected [Fintype V] (r : V) (T B : Finset (Term V))
+    (simple : SimpleEdges T) (sub : B⊆T) (con : ∀ v, ConnectedTo T r v)
+    (activation : ∀ e∈T, TriangleClosure T B e) : ∀ v, ConnectedTo B r v := by
+  classical
+  let U := univ.filter (ConnectedTo B r)
+  have side (v : V) : v∈U ↔ ConnectedTo B r v := by simp [U]
+  have cuts {w : Term V} (derived : TriangleClosure T B w) : (w∩U).card%2=0 := by
+    induction derived with
+    | @seed e he =>
+      obtain ⟨x,y,ne,eq⟩ := card_eq_two.mp (simple e (sub he))
+      have edge : pair x y ∈ B := by rwa [pair_of_ne ne,← eq]
+      rw [eq,← pair_of_ne ne,pair_cut,side,side]
+      exact ⟨fun h => .edge h edge, fun h => .edge h (by
+        simpa only [pair,symmDiff_comm ({x} : Finset V) {y}] using edge)⟩
+    | @complete e f _ _ _ h₁ h₂ =>
+      rw [inter_xor,card_xor]
+      omega
+  intro v
+  induction con v with
+  | root => exact .root
+  | @edge v w _ he prev =>
+    have h := (pair_cut U v w).mp (cuts (activation _ he))
+    exact (side w).mp (h.mp ((side v).mpr prev))
+
+/-- Every connected simple graph attaining the ideal CNOT count has a spanning
+tree whose edges generate every required edge by successive triangle completions. -/
+theorem perfect_has_activating_tree [Fintype V] (r : V) (T : Finset (Term V))
+    (connected : ∀ v, ConnectedTo T r v) (simple : SimpleEdges T)
+    (gs : List (Gate V)) (net : Network T gs)
+    (tight : gs.length=T.card+(Fintype.card V-1)) :
+    ∃ B : Finset (Term V), B ⊆ T ∧ B.card=Fintype.card V-1 ∧
+      (∀ v, ConnectedTo B r v) ∧ ∀ e∈T, TriangleClosure T B e := by
+  classical
+  let B := (births initial gs).toFinset
+  have even (w : Term V) (hw : w∈T) : w.card%2=0 := by rw [simple w hw]
+  have sat := even_output_saturation r T gs connected even net tight.le
+  have sub : B⊆T := by
+    intro e he
+    obtain ⟨out,hp⟩ := birth_is_output initial gs (List.mem_toFinset.mp he)
+    exact sat e out hp
+  have make (e : Term V) (he : e∈T) : TriangleClosure T B e :=
+    activation_from_births T B initial gs (by simp [initial])
+      (fun _ h => List.mem_toFinset.mpr h) sat e (net.2 e he) (even e he)
+  have con := activating_edges_connected r T B simple sub connected make
+  have low := spanning_count r B.toList (fun v => pair_in_span B.toList B
+    (fun e he => span_contains _ (by simpa using he)) r v (con v))
+  simp only [Finset.length_toList] at low
+  have upper : B.card ≤ (births initial gs).length := List.toFinset_card_le _
+  have balanced := balance initial gs
+  rw [net.1] at balanced
+  have odd := deaths_le_odd initial gs
+  have split := counts_split initial gs
+  have needed := (card_le_card (requested_subset T gs even net)).trans (List.toFinset_card_le _)
+  exact ⟨B,sub,by omega,con,make⟩
+
+#print axioms perfect_has_activating_tree
 
 end GraphicParity
