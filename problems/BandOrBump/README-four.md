@@ -4,7 +4,7 @@
 
 $$p_n p_{n+2}\le p_{n+1}^2,\qquad p_n>0\ \Longleftrightarrow\ u+1\le n\le3u+\ell.$$
 
-这是 Bruce Levin 对 bump 概率提出的猜想的四牌型情形，包含作者 Table 1 用标准 52 张牌、四花色、$\ell=5,u=8$ 的例子。任意牌型数仍是进一步的问题。 [原论文，Remark 2 与 Table 1](https://arxiv.org/pdf/2407.08062) · [作者的技术报告](https://www.columbia.edu/~bl6/appendices/Tech%20Report%20B-256%20The%20Game%20of%20Band%20or%20Bump.pdf)
+这是 Bruce Levin 对 bump 概率提出的猜想的四牌型情形，包含作者 Table 1 用标准 52 张牌、四花色、$\ell=5,u=8$ 的例子。同包另有覆盖任意牌型数的证明。[全部牌型数](README-all.md) [原论文，Remark 2 与 Table 1](https://arxiv.org/pdf/2407.08062) · [作者的技术报告](https://www.columbia.edu/~bl6/appendices/Tech%20Report%20B-256%20The%20Game%20of%20Band%20or%20Bump.pdf)
 
 ## 证明
 

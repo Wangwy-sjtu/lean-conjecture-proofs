@@ -45,6 +45,8 @@
 
 **词减法游戏问题 4.1 与可见下推语言。** 原文证明正则语言的封闭性，也给出某些上下文无关规则的反例。Fraenkel 的无环博弈核、Courcelle–Engelfriet 的 MSO 反向翻译以及 Alur–Madhusudan 对嵌套词的逻辑刻画提供经典基础。本题给出在原词上解释每个切点及其合法后缀删除的公式，并从实际游戏推导出相同可见字母分类下的胜负语言。已检查题号、题名、作者、公开 GitHub 代码和讨论、MathDB 的相近原页与相关下推博弈文献。此前在问题 2.1 找到的公开 AI 证明处理 DFA 状态复杂度，所查资料中未找到这项 VPL 封闭性对该游戏的直接表述。[原问题 4.1](https://arxiv.org/html/2611.09157v1#S4) · [嵌套词的 MSO 定理](https://www.cis.upenn.edu/~alur/Jacm09.pdf) · [逐项先例与定理范围](problems/VisiblyPushdownSubtraction/README.md)
 
+**Levin 的全部牌型数与阈值。** 对任意 $m,s$ 和 $0\le\ell\le u\le s$，一旦首次因 bump 停下，其联合概率随时间对数凹。证明的关键是 $F^h-G^h$ 的系数除以 $\binom{hs}{k}$ 后仍对数凹。OpenAlex 在此次查询列出一篇引用该预印本的文章，即前述 Levin 矩形定理。按旧游戏名 Book or Band、论文编号、likelihood ratio、hypergeometric stopping time、两矩形作差等继续检索，GitHub 代码的相关命中为原摘要镜像，专门搜索的公开 AI 项目未检得这个普适证明。完整说明列出可查的范围及标准牌例。[原文 Remark 2](https://arxiv.org/pdf/2407.08062#page=7) · [OpenAlex 引文记录](https://openalex.org/W4400611359) · [先前矩形定理](https://doi.org/10.1080/07474946.2024.2379901) · [一般证明](problems/BandOrBump/README-all.md)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)

@@ -1,0 +1,8 @@
+'BandAll.all_legal_thresholds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BandAll.all_ranks_bump_log_concave' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BandAll.all_ranks_support' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BandAll.missing_log_concave' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BandAll.probability_is_card_ratio' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BandAll.bump_hand_iff_first_bump' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BandAll.all_final_cards_ratio' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BandAll.remainingDeckEquiv' depends on axioms: [propext, Classical.choice, Quot.sound]

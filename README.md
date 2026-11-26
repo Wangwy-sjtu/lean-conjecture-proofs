@@ -19,9 +19,11 @@
 
 Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现全部边奇偶并恢复输入，当且仅当它有完美消去序。**七顶点图 $K_{1,3,3}$ 直接反驳逆向蕴涵。** 其 15 条边用 21 道门依次实现，全部线路恢复，而 5040 种顶点排列均不满足消去条件。同一张图的每一个完美网络还都必须使用全部七根线路作控制，回答了作者的问题 (C2)。证明包也给出无三角形图的完整分类、单环图的最优门数以及一般的生成树必要条件。对围长至少五的图，任何电路门数 $L$ 均满足 $2L\ge3m+n-1$。对任意完全二部图 $K_{a,b}$（$1\le a\le b$），最优门数恰为 $ab+b+2a-2$，任意增加最终复原的零初值或借用辅助线也保持此值。[逐门反例与数学证明](problems/GraphicParity/COUNTEREXAMPLE.md) · [Lean 与运行方法](problems/GraphicParity/) · [独立 ZIP](packages/GraphicParity.zip?raw=1) · [原作者稿猜想 18](https://yiren.lu/assets/pdf/parity-network.pdf#page=13)
 
-## 论文点名的极值问题
+## 论文明确提出的完整问题
 
 对斐波那契砖长 $1,2,3,5,\ldots$，前 $n$ 项能排成多少行，使不同行的非空真前缀和互异？对所有正整数 $n$，最大高度恰为 $n$，仅在 $n=3,4,5$ 时为 $n-1$。当 $n\ge9$，同一个圆排列模板的所有轮换都可同时取用。这完整给出 Dębski 等人第 4 节所问的斐波那契情形。[数学说明与 Lean 文件](problems/FibonacciBarrycadeHeight/) · [独立 ZIP](packages/FibonacciBarrycadeHeight.zip?raw=1) · [原论文](https://arxiv.org/html/2609.18476v2#S4)
+
+**Levin 的 Band or Bump 猜想。** 对任意牌型数、每类张数和全部合法阈值，第一次因超上限而停止的概率随抽牌时刻对数凹。在非退化情形、至少两类牌时，正支集精确为 $[u+1,(m-1)u+\ell]$。证明还给出相应牌手计数的超对数凹性。[一般数学证明](problems/BandOrBump/README-all.md) · [Lean 代码](problems/BandOrBump/BandOrBumpAll.lean) · [独立 ZIP](packages/BandOrBump.zip?raw=1) · [原猜想](https://arxiv.org/pdf/2407.08062#page=7)
 
 ## 论文开放问题的部分进展
 
@@ -29,7 +31,6 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 | --- | --- | --- |
 | [Inoue–Inazu · 后缀减法游戏的语言类别](problems/VisiblyPushdownSubtraction/) | 对问题 4.1，若允许删除的后缀构成可见下推语言，则必胜词与必败词也都是同一可见字母分类下的可见下推语言。Lean 从实际游戏构造识别这两个语言的 MSO 句子 | [独立 ZIP](packages/VisiblyPushdownSubtraction.zip?raw=1) |
 | [Sierant · 非局域稳定子 Rényi-2 熵](problems/SierantGap/) | 计算基与任意局部酉最优值的差距上界由 4 比特降至 2 比特。Lean 从任意整数秩证明新组合界，并以原论文已证的矩阵迹关系推出熵界 | [独立 ZIP](packages/SierantGap.zip?raw=1) |
-| [Levin · Band or Bump 的停止概率](problems/BandOrBump/) | 三种和四种牌型、任意每类张数及阈值下，首次因 bump 停止的概率对时间对数凹。正支集分别为 $[u+1,2u+\ell]$ 和 $[u+1,3u+\ell]$，包含标准 52 张牌 | [独立 ZIP](packages/BandOrBump.zip?raw=1) |
 | [Alofi–Dukes · 随机沙堆的缺额多项式](problems/SandpileK3n/) | 对所有 $K_{3,n}$ 和任意吸收点，证明常返配置按总缺额计数的系数对数凹且单峰，并给出两种吸收点位置各自的计数公式 | [独立 ZIP](packages/SandpileK3n.zip?raw=1) |
 | [Fazekas 等 · 二元词中的 Abel 平方](problems/FMMSFourLetterMinimum/) | 含四个 $a$ 和 $B\ge4$ 个 $b$ 时，不同 Abel 平方因子的最小数恰是 $1+\lfloor(B+2)/4\rfloor$。取等构造来自原文，此处证明任意排列的下界 | [独立 ZIP](packages/FMMSFourLetterMinimum.zip?raw=1) |
 | [Cao 等 · 图奇偶网络的完美消去序](problems/Multipartite/) | 对所有完全多部图，精确求出最少补多少个全邻接顶点，以及在原顶点之间最少补多少条边。两个最优值相等 | [独立 ZIP](packages/Multipartite.zip?raw=1) |
