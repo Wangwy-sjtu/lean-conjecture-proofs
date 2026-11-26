@@ -102,6 +102,37 @@ def check_complete_bipartite(a, b):
     assert lower == optimum
 
 
+def minimum_with_ancillas(a, b, clean, borrowed):
+    """Meet-in-the-middle search on concrete forms including every auxiliary wire."""
+    data = a + b
+    start = tuple([1 << i for i in range(data + borrowed)] + [0] * clean)
+    moves = list(permutations(range(len(start)), 2))
+    terms = [(1 << i) | (1 << j) for i in range(a) for j in range(a, data)]
+    flag = {term: 1 << i for i, term in enumerate(terms)}
+    all_terms = (1 << len(terms)) - 1
+    upper = a * b + b + 2 * a - 2
+    # A path from the initial state followed by a reversed path from the
+    # same endpoint visits exactly the union of the two sets of edge terms.
+    depths = {(start, 0): 0}
+    frontier = [(start, 0)]
+    for k in range(1, (upper + 1) // 2 + 1):
+        next_layer = []
+        for state, seen in frontier:
+            for c, t in moves:
+                new = list(state)
+                new[t] ^= new[c]
+                key = (tuple(new), seen | flag.get(new[t], 0))
+                if key not in depths:
+                    depths[key] = k
+                    next_layer.append(key)
+        frontier = next_layer
+    endpoints = defaultdict(list)
+    for (state, seen), k in depths.items():
+        endpoints[state].append((seen, k))
+    return min(k + j for entries in endpoints.values()
+               for mask, k in entries for other, j in entries if mask | other == all_terms)
+
+
 def check_counterexample():
     color = (2, 0, 0, 0, 1, 1, 1)
     edges = {(u, v) for u, v in combinations(range(7), 2) if color[u] != color[v]}
@@ -146,3 +177,8 @@ if __name__ == "__main__":
         for b in range(a, 25):
             check_complete_bipartite(a, b)
     print("K(a,b): circuits and minima of the pivot bound agree for 1 ≤ a ≤ 12 and a ≤ b ≤ 24.")
+    assert minimum_with_ancillas(1, 2, clean=1, borrowed=1) == 4
+    assert minimum_with_ancillas(2, 2, clean=1, borrowed=0) == 8
+    assert minimum_with_ancillas(2, 2, clean=0, borrowed=1) == 8
+    print("With auxiliary wires: exact search gives 4 for a two-edge star with both kinds, "
+          "and 8 for a four-cycle with a clean or borrowed wire.")

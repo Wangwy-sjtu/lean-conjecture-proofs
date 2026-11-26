@@ -114,29 +114,33 @@ private theorem vertex_bound (A B P : Finset V) (dis : Disjoint A B)
   dsimp [d] at h mul
   omega
 
-theorem complete_bipartite_lower [Fintype V] (A B : Finset V) (dis : Disjoint A B)
-    (all : A∪B=univ) (apos : 0<A.card) (ab : A.card≤B.card)
-    (gs : List (Gate V)) (net : Network (edgeSet A B) gs) :
+theorem bipartite_lower_from [Fintype V] (A B : Finset V) (dis : Disjoint A B)
+    (apos : 0<A.card) (ab : A.card≤B.card)
+    (s : State V) (gs : List (Gate V)) (initialEven : ∀ v, (s v).card%2=0 → s v=∅)
+    (restored : run s gs = s) (covered : ∀ w∈edgeSet A B,w∈outputs s gs) :
     A.card*B.card+B.card+2*A.card-2 ≤ gs.length := by
   obtain ⟨r,hr⟩ := card_pos.mp apos
   obtain ⟨t,ht⟩ := card_pos.mp (apos.trans_le ab)
-  have con (v : V) : ConnectedTo (edgeSet A B) r v := by
-    have h : v∈A∪B := all ▸ mem_univ v
+  have con (v : V) (h : v∈A∪B) : ConnectedTo (edgeSet A B) r v := by
     rcases mem_union.mp h with ha | hb
     · have edge : pair t v∈edgeSet A B := by
         simpa only [pair,symmDiff_comm ({v}:Finset V) {t}] using member ha ht
       exact .edge (.edge .root (member hr ht)) edge
     · exact .edge .root (member hr hb)
-  obtain ⟨P,bound⟩ := sumfree_pivot_bound r (edgeSet A B) gs con (edge_simple A B dis)
-    (edge_free A B dis) net
-  have total : Fintype.card V = A.card+B.card := by
-    rw [← card_union_of_disjoint dis,all,card_univ]
-  rw [edge_count A B dis,total] at bound
+  obtain ⟨P,bound⟩ := sumfree_pivot_bound_from (A∪B) r (mem_union_left _ hr)
+    (edgeSet A B) s gs con (edge_simple A B dis) (edge_free A B dis) initialEven restored covered
+  rw [edge_count A B dis,card_union_of_disjoint dis] at bound
   by_cases qsmall : P.card+2≤A.card
   · have byP := vertex_bound A B P dis ab qsmall
     have intact := surviving A B P dis
     omega
   · omega
+
+theorem complete_bipartite_lower [Fintype V] (A B : Finset V) (dis : Disjoint A B)
+    (_all : A∪B=univ) (apos : 0<A.card) (ab : A.card≤B.card)
+    (gs : List (Gate V)) (net : Network (edgeSet A B) gs) :
+    A.card*B.card+B.card+2*A.card-2 ≤ gs.length := by
+  apply bipartite_lower_from A B dis apos ab initial gs (by simp [initial]) net.1 net.2
 
 #print axioms complete_bipartite_lower
 
@@ -287,5 +291,61 @@ theorem complete_bipartite_optimum [Fintype V] (A B : Finset V) (ds : Disjoint A
   exact complete_bipartite_lower A B ds all apos ab gs net
 
 #print axioms complete_bipartite_optimum
+
+/-- Wires in I initially hold separate inputs. All other wires start at zero. -/
+def inputState (I : Finset V) (x : V) : Term V := ({x} : Finset V) ∩ I
+
+private def restrictState (I : Finset V) (s : State V) (x : V) : Term V := s x ∩ I
+
+private theorem restrict_gate (I : Finset V) (s : State V) (g : Gate V) :
+    applyGate (restrictState I s) g = restrictState I (applyGate s g) := by
+  funext x
+  by_cases h : x = g.target
+  · subst x
+    simpa [applyGate,restrictState,output] using (inter_xor (s g.target) (s g.control) I).symm
+  · simp [applyGate,restrictState,h]
+
+private theorem run_restrict (I : Finset V) (s : State V) (gs : List (Gate V)) :
+    run (restrictState I s) gs = restrictState I (run s gs) := by
+  induction gs generalizing s with
+  | nil => rfl
+  | cons g gs ih => simp only [run,restrict_gate,ih]
+
+private theorem outputs_restrict (I : Finset V) (s : State V) (gs : List (Gate V)) :
+    outputs (restrictState I s) gs = (outputs s gs).map (fun t => t∩I) := by
+  induction gs generalizing s with
+  | nil => rfl
+  | cons g gs ih =>
+    simp only [outputs,List.map_cons,restrict_gate,ih,output,restrictState,inter_xor]
+
+/-- Exact gate count allowing arbitrarily many clean and borrowed auxiliaries.
+Members of A and B are data wires. Other members of I are borrowed inputs.
+Every wire outside I starts at zero. All wires return to their initial values. -/
+theorem complete_bipartite_ancilla_optimum [Fintype V] (A B I : Finset V)
+    (ds : Disjoint A B) (data : A∪B⊆I) (apos : 0<A.card) (ab : A.card≤B.card) :
+    IsLeast {k | ∃ gs : List (Gate V), run (inputState I) gs = inputState I ∧
+      (∀ w∈edgeSet A B, w∈outputs (inputState I) gs) ∧ gs.length=k}
+      (A.card*B.card+B.card+2*A.card-2) := by
+  constructor
+  · obtain ⟨gs,⟨restored,covered⟩,size⟩ := complete_bipartite_upper A B ds apos
+    refine ⟨gs,?_,?_,size⟩
+    · change run (restrictState I initial) gs = restrictState I initial
+      rw [run_restrict,restored]
+    · intro w hw
+      have subset : w⊆I := by
+        obtain ⟨⟨h,x⟩,hp,rfl⟩ := mem_image.mp hw
+        obtain ⟨ha,xb⟩ := mem_product.mp hp
+        rw [pair_of_ne (across ds ha xb)]
+        exact insert_subset (data (mem_union_left _ ha))
+          (singleton_subset_iff.mpr (data (mem_union_right _ xb)))
+      change w∈outputs (restrictState I initial) gs
+      rw [outputs_restrict]
+      exact List.mem_map.mpr ⟨w,covered w hw,inter_eq_left.mpr subset⟩
+  · rintro k ⟨gs,restored,covered,rfl⟩
+    apply bipartite_lower_from A B ds apos ab (inputState I) gs _ restored covered
+    intro v hv
+    by_cases mem : v∈I <;> simp [inputState,mem] at hv ⊢
+
+#print axioms complete_bipartite_ancilla_optimum
 
 end BipartiteOptimal

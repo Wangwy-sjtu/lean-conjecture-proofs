@@ -167,22 +167,26 @@ private theorem erase_flip {w : Term V} {r v : V} (different : v ≠ r) (fresh :
     · subst z; simp [pair,mem_symmDiff,different,hw]
     · simp [pair,mem_symmDiff,hr,hv]
 
-private theorem spanning_count [Fintype V] (r : V) (B : List (Term V))
-    (gen : ∀ v : V, pair r v ∈ span B) : Fintype.card V - 1 ≤ B.length := by
-  have projected (U : Finset V) (hU : r ∉ U) : ∃ w ∈ span B, w.erase r = U := by
+private theorem spanning_count_on (D : Finset V) (r : V) (hr : r ∈ D) (B : List (Term V))
+    (gen : ∀ v ∈ D, pair r v ∈ span B) : D.card - 1 ≤ B.length := by
+  have projected (U : Finset V) (within : U ⊆ D) (hU : r ∉ U) : ∃ w ∈ span B, w.erase r = U := by
     induction U using Finset.induction_on with
     | empty => exact ⟨∅,span_zero _,by simp⟩
     | @insert v U fresh ih =>
-      obtain ⟨w,hw,eq⟩ := ih (fun hm => hU (mem_insert_of_mem hm))
+      obtain ⟨w,hw,eq⟩ := ih (fun _ h => within (mem_insert_of_mem h)) (fun hm => hU (mem_insert_of_mem hm))
       have diff : v ≠ r := by rintro rfl; exact hU (by simp)
-      exact ⟨w ∆ pair r v,span_add _ hw (gen v),by rw [erase_flip diff (eq ▸ fresh),eq]⟩
-  have sub : (univ.erase r).powerset ⊆ (span B).image (fun w => w.erase r) := by
+      exact ⟨w ∆ pair r v,span_add _ hw (gen v (within (mem_insert_self ..))),by rw [erase_flip diff (eq ▸ fresh),eq]⟩
+  have sub : (D.erase r).powerset ⊆ (span B).image (fun w => w.erase r) := by
     intro U hU
     have subset := mem_powerset.mp hU
-    exact mem_image.mpr (projected U (fun hm => (notMem_erase r univ) (subset hm)))
+    exact mem_image.mpr (projected U (subset.trans (erase_subset ..)) (fun hm => (notMem_erase r D) (subset hm)))
   have hs := (card_le_card sub).trans (card_image_le.trans (span_size B))
-  rw [card_powerset,card_erase_of_mem (mem_univ r), card_univ] at hs
+  rw [card_powerset,card_erase_of_mem hr] at hs
   exact (Nat.pow_le_pow_iff_right (by decide : 1<2)).mp hs
+
+private theorem spanning_count [Fintype V] (r : V) (B : List (Term V))
+    (gen : ∀ v : V, pair r v ∈ span B) : Fintype.card V - 1 ≤ B.length := by
+  simpa only [card_univ] using spanning_count_on univ r (mem_univ _) B (fun v _ => gen v)
 
 private theorem birth_lower [Fintype V] (r : V) (T : Finset (Term V)) (gs : List (Gate V))
     (connected : ∀ v, ConnectedTo T r v) (even : ∀ w∈T,w.card%2=0)
@@ -906,25 +910,32 @@ private theorem projected_births (T : Finset (Term V)) (free : SumFree T)
 /-- Lower bound for a restored network of sum-free edge targets. There is a
 set of pivot vertices paying one excess even output per pivot. Every requested
 edge disjoint from the pivot set needs its own nonzero projected birth. -/
-theorem sumfree_pivot_bound [Fintype V] (r : V) (T : Finset (Term V)) (gs : List (Gate V))
-    (connected : ∀ v, ConnectedTo T r v) (simple : SimpleEdges T) (free : SumFree T)
-    (net : Network T gs) :
+theorem sumfree_pivot_bound_from [Fintype V] (D : Finset V) (r : V) (hr : r∈D)
+    (T : Finset (Term V)) (s : State V) (gs : List (Gate V))
+    (connected : ∀ v∈D, ConnectedTo T r v) (simple : SimpleEdges T) (free : SumFree T)
+    (initialEven : ∀ v, (s v).card%2=0 → s v=∅)
+    (restored : run s gs=s) (covered : ∀ w∈T,w∈outputs s gs) :
     ∃ P : Finset V, T.card + P.card +
-      max (Fintype.card V-1) (T.filter (fun e => Disjoint e P)).card ≤ gs.length := by
+      max (D.card-1) (T.filter (fun e => Disjoint e P)).card ≤ gs.length := by
   classical
-  let A := (evens initial gs).toFinset
+  let A := (evens s gs).toFinset
   let X := A \ T
   have even (w : Term V) (hw : w∈T) : w.card%2=0 := by rw [simple w hw]
-  have sub : T⊆A := requested_subset T gs even net
-  obtain ⟨P,f,piv,_zero,lin,kills,fixed⟩ := pivot_projection X.toList
+  have sub : T⊆A := by
+    intro w hw
+    simp [A,evens,covered w hw,even w hw]
+  obtain ⟨P,f,piv,zero,lin,kills,fixed⟩ := pivot_projection X.toList
   simp only [Finset.length_toList] at piv
-  let H := (births initial gs).toFinset.image f
-  have kill (w : Term V) (h : w∈outputs initial gs) (he : w.card%2=0) (nt : w∉T) :
+  let H := (births s gs).toFinset.image f
+  have kill (w : Term V) (h : w∈outputs s gs) (he : w.card%2=0) (nt : w∉T) :
       f w=∅ := by
     apply kills
     apply Finset.mem_toList.mpr
     exact mem_sdiff.mpr ⟨by simp [A,evens,h,he],nt⟩
-  have generated := projected_births T free f lin H initial gs (by simp [initial]) kill
+  have generated := projected_births T free f lin H s gs (by
+    intro v hv
+    rw [initialEven v hv,zero]
+    exact ⟨Or.inr rfl,fun h => (h rfl).elim⟩) kill
     (fun w hw => mem_image_of_mem _ (List.mem_toFinset.mpr hw))
   have roots : T.filter (fun e => Disjoint e P) ⊆ H := by
     intro e he
@@ -934,20 +945,31 @@ theorem sumfree_pivot_bound [Fintype V] (r : V) (T : Finset (Term V)) (gs : List
       have h := simple e ht
       simp [empty] at h
     have eq := fixed e dis
-    have h := generated e (net.2 e ht) (even e ht) (by rwa [eq])
+    have h := generated e (covered e ht) (even e ht) (by rwa [eq])
     rwa [eq] at h
   have count := (card_le_card roots).trans
-    ((card_image_le : H.card≤(births initial gs).toFinset.card).trans (List.toFinset_card_le _))
+    ((card_image_le : H.card≤(births s gs).toFinset.card).trans (List.toFinset_card_le _))
   have size := card_sdiff_add_card_eq_card sub
   change X.card+T.card=A.card at size
-  have evenLen : A.card≤(evens initial gs).length := List.toFinset_card_le _
-  have lower := odd_output_lower_bound r T gs connected even net.2 net.1
-  have balance' := balance initial gs
-  rw [net.1] at balance'
-  have deaths := deaths_le_odd initial gs
-  have split := counts_split initial gs
-  change Fintype.card V-1 ≤ oddOutputs initial gs at lower
+  have evenLen : A.card≤(evens s gs).length := List.toFinset_card_le _
+  have inspan := even_outputs_from_births (span (births s gs))
+    (fun _ ha _ hb => span_add _ ha hb) s gs (fun v hv => initialEven v hv ▸ span_zero _)
+    (fun _ hw => span_contains _ hw)
+  have lower := spanning_count_on D r hr (births s gs) fun v hv => pair_in_span _ T
+    (fun w hw => inspan w (covered w hw) (even w hw)) r v (connected v hv)
+  have balance' := balance s gs
+  rw [restored] at balance'
+  have deaths := deaths_le_odd s gs
+  have split := counts_split s gs
   exact ⟨P,by omega⟩
+
+theorem sumfree_pivot_bound [Fintype V] (r : V) (T : Finset (Term V)) (gs : List (Gate V))
+    (connected : ∀ v, ConnectedTo T r v) (simple : SimpleEdges T) (free : SumFree T)
+    (net : Network T gs) :
+    ∃ P : Finset V, T.card + P.card +
+      max (Fintype.card V-1) (T.filter (fun e => Disjoint e P)).card ≤ gs.length := by
+  simpa only [card_univ] using sumfree_pivot_bound_from univ r (mem_univ _) T initial gs
+    (fun v _ => connected v) simple free (by simp [initial]) net.1 net.2
 
 #print axioms sumfree_pivot_bound
 

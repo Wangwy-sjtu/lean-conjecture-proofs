@@ -37,6 +37,8 @@
 
 **非局域稳定子 Rényi-2 熵的两比特界。** Sierant 定理 3 已有四比特界，附录给出八个交叉、十二个删一副本的矩阵迹上界，并将计算基参考迹化为异或计数。Liu 与 Cui 给出有序 Schmidt 代表的局部极小性。Chain.Ren 的公开证明覆盖任意幅度置换和相位，对应单项局部酉。该较窄问题已从候选剔除。本题处理的是所有局部酉，新增结论为任意整数秩上的四倍计数界，并将相应的熵差控制在两比特。按论文编号、谱、酉优化、two-bit gap、factor four、dyadic rounding 等检索 arXiv、GitHub 代码及讨论、MathDB 和 EulerSolve 的可见索引，未找到同一普适常数。E27 的公开中间目标仍为改进常数四。[原文及附录 A](https://arxiv.org/html/2609.13106v2) · [E27](https://open-quantum-problems.vercel.app/p/E27) · [Liu 与 Cui](https://arxiv.org/html/2609.01993v2) · [在先单项酉证明](https://github.com/Asakitan/monomial-stabilizer-renyi-rearrangement/blob/proof-v1.0.0/PROOF.md)
 
+**完全二部图与辅助线。** 原作者在介绍部分讨论用辅助线降低深度。将题名、CNOT、clean/borrowed ancillas、additional qubits、parity synthesis 与 complete bipartite、计数下界组合检索后，未找到任意多条可复原零辅助线与独立借用线都保持同一精确门数的证明。该扩展允许两种线混用，并沿用相同的目标边定义。[作者稿](https://yiren.lu/assets/pdf/parity-network.pdf) · [奇偶网络综合模型](https://arxiv.org/abs/1712.01859)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)
