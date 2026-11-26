@@ -1,8 +1,8 @@
-# 贪心无限 Barrycade 每一行的遗漏数上界
+# 无限贪心 Barrycade 的每个非首行都有遗漏
 
 Michał Dębski 等在《Finite and infinite barrycades》第 3.1 节给出一个无限表。每次填入本行尚未用过的最小正整数，同时要求得到的新前缀和从未出现在任何前行的完整序列中。他们的猜想 2(1) 断言，除第一行外，每一行都恰好遗漏一个正整数。原文列出前四行的无限模式，第二、三、四行依次遗漏 1、2、10。[原论文，第 3.1 节](https://arxiv.org/html/2609.18476v2#S3.SS1) · [OEIS A399907](https://oeis.org/A399907)
 
-**本次证明的全行界。** 按论文从 1 数行，第 $r$ 行的永久遗漏集合 $H_r$ 有限，且 $|H_r|\le r-1$。同一个证明文件还给出，第 $r$ 行第 $n$ 个数 $a_r(n)$ 对所有足够大的 $n$ 满足 $a_r(n)\le n+2^r-2$。上述两个不等式都对任意行成立。猜想要求 $|H_r|=1$，这里仍缺少这一结论。
+**本次证明的全行界。** 按论文从 1 数行，每个 $r\ge2$ 的永久遗漏集合 $H_r$ 都满足 $1\le |H_r|\le r-1$。因此 A399907 所取的最小遗漏整数对每个适用索引确实存在。证明还给出，第 $r$ 行第 $n$ 个数 $a_r(n)$ 对足够大的 $n$ 满足 $a_r(n)\le n+2^r-2$，该行的每一个前缀和距离其上方最近的三角数都有只依赖于行的数值上界。一般行是否恰好遗漏一个仍待解决。
 
 ## 为何前面每一行最多解释一个遗漏
 
@@ -16,11 +16,21 @@ Michał Dębski 等在《Finite and infinite barrycades》第 3.1 节给出一�
 
 只研究足够大的 $n$ 时，这个界可以缩小。假设前面第 $i$ 行从某处起有位移上界 $b_i$。固定的早期例外在 $n$ 足够大后都已落入 $[1,n+b_i]$。此时要阻挡 $[1,n+1+b_r]$ 中的候选，前行第 $q$ 个前缀和应介于 $s$ 与 $s+n+1+b_r$ 之间。由三角数界得到 $j+1-b_i\le q\le j+2$，故该行至多阻挡 $b_i+2$ 个候选。取 $b_1=0$ 以及 $b_r=\sum_{i<r}(b_i+2)=2^r-2$ 即可归纳。这个上界控制的是每个足够晚的实际条目，前面的线性上界控制的是整行永久遗漏数。
 
+## 为何非首行至少遗漏一个数
+
+对行数归纳，证明所有前行的前缀和各自在某个三角数下方距离 $C$ 以内，其中 $C$ 可以对当前有限条前行统一选取。第一行恰是 $1,2,3,\ldots$，所以归纳从 $C=0$ 开始。以下称这些区间为 $[T_j-C,T_j]$。
+
+反设当前非首行最终用到了每个正整数。选到 $n$ 项时记 $s$ 为前缀和、$p$ 为已用最大数。由前述项值界，$n\le p\le n+B$。当 $n$ 足够大，所有不超过 $B+C+1$ 的数都已用过。如果下一步跳过 $p+1$，那么 $p+1$ 和所有 $h\le p$ 的未用正整数都遭拒，故 $s+p+1$ 和 $s+h$ 都落进前行的三角数区间。它们相差至多 $n-C$，又都超过 $T_n$，因而落在同一区间。于是 $p+1-h\le C$。这表明 $1,\ldots,n-C$ 已全部出现。把其余至多 $C$ 项分别用 $n+B$ 控制，得到 $s\le T_n+C(C+B)$。
+
+第一行已经占用所有正三角数，故 $s>T_n$。由刚得到的上界，当 $n$ 足够大，$s+p+1$ 严格落在 $T_{n+1}$ 与 $T_{n+2}-C$ 之间。因此它属于不了任何一个前行区间，与 $p+1$ 遭拒矛盾。可见晚期最大已用数每次至多增加 1，往后再也不能产生新的空位。反设全行用到每个正整数，则那时留下的有限个空位也终将全部填满，届时已用集正好为 $[1,p]$，前缀和便是第一行已占用的 $T_p$，再次矛盾。
+
+由此取得一个永久遗漏 $h$。该行以后选入的数都大于 $h$，故对每个足够晚的前缀和 $s$，$s+h$ 一定属于某条前行的禁区。这使得 $s$ 位于某个三角数下方距离 $C+h$ 以内。把有限个早期前缀并入常数，就得到本行也满足归纳条件。这里控制的是前缀和与三角数的数值差，强化了前面关于三角数索引的粗界。
+
 ## 核验和先例
 
-`GreedyBarrycade.lean` 直接递归构造每条行，把所有先前完整行的正长度前缀和纳入禁集，并验证每次均取合法最小值。`mem_entriesUsed`、`mass_eq_prefix_sum` 和 `mem_forbidden` 将程序状态连到通常的数列定义。核心定理为 `omissions_linear_bound` 和 `eventual_entry_upper_bound`。Lean 代码的行号和位置从 0 起，所以代码行号 `r` 对应上文第 $r+1$ 行。Lean 和 mathlib 4.24.0 以警告作为错误编译通过。审计公理只有 `propext`、`Classical.choice` 和 `Quot.sound`。
+`GreedyBarrycade.lean` 直接递归构造每条行，把所有先前完整行的正长度前缀和纳入禁集，并验证每次均取合法最小值。`mem_entriesUsed`、`mass_eq_prefix_sum` 和 `mem_forbidden` 将程序状态连到通常的数列定义。核心定理为 `nonfirst_has_omission`、`omissions_linear_bound`、`partial_sums_below_triangles` 和 `eventual_entry_upper_bound`。Lean 代码的行号和位置从 0 起，所以代码行号 `r` 对应上文第 $r+1$ 行。Lean 和 mathlib 4.24.0 以警告作为错误编译通过。审计公理只有 `propext`、`Classical.choice` 和 `Quot.sound`。
 
-2026-11-27 的检索发现了两个相关的公开 AI 项目。Patel 的项目已验证第五行完整无限尾部。trureturing 的技术记录给出一个从有限状态认证无限尾部的判据，并报告依次处理了前 200 行，同时明确标记一般猜想仍开放。另有仅针对同一论文猜想 2(2) 印刷起始下标的反驳。检索原论文、后续有限 Barrycade 论文、GitHub 代码与讨论、数学论坛和公开 AI 记录时，未查到本文对任意行的线性遗漏数界或最终项值界。检索无法保证全球首证。[第五行形式化及核查](https://github.com/thatnealpatel/proofs/issues/96) · [前 200 行及明确未解范围](https://github.com/the-omega-institute/trureturing/issues/8494) · [印刷下标问题](https://www.trureturing.org/research/debski-barrycade-omitted-element-refutation/) · [有限情形的后续论文](https://arxiv.org/abs/2609.24373)
+2026-11-27 的检索发现了两个相关的公开 AI 项目。Patel 的项目已验证第五行完整无限尾部。trureturing 的技术记录给出一个从有限状态认证无限尾部的判据，并报告依次处理了前 200 行，同时明确标记一般猜想仍开放。另有仅针对同一论文猜想 2(2) 印刷起始下标的反驳。检索原论文、后续有限 Barrycade 论文、GitHub 代码与讨论、数学论坛和公开 AI 记录时，未查到本文对每条非首行的遗漏存在性、对任意行的线性遗漏数界、最终项值界或三角数距离界。检索无法保证全球首证。[第五行形式化及核查](https://github.com/thatnealpatel/proofs/issues/96) · [前 200 行及明确未解范围](https://github.com/the-omega-institute/trureturing/issues/8494) · [印刷下标问题](https://www.trureturing.org/research/debski-barrycade-omitted-element-refutation/) · [有限情形的后续论文](https://arxiv.org/abs/2609.24373)
 
 ## 在独立下载包中运行
 

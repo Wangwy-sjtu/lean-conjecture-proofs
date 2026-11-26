@@ -530,9 +530,263 @@ theorem omissions_linear_bound (r : ℕ) : (finite_omissions r).toFinset.card �
   intro x hx
   exact (Set.Finite.mem_toFinset _).mp hx
 
+private theorem first_state (n : ℕ) : entriesUsed 0 n = Icc 1 n := by
+  induction n with
+  | zero => simp [entriesUsed, used]
+  | succ n ih =>
+    obtain ⟨hlegal, hleast⟩ := entry_is_least 0 n
+    have hf : legal (forbidden 0) (entriesUsed 0 n) (n+1) := by
+      simp [legal, ih, forbidden]
+    have hle := hleast _ hf
+    have hnot := hlegal.2.1
+    have hpos := hlegal.1
+    rw [ih] at hnot
+    have he : entry 0 n = n+1 := by simp only [mem_Icc] at hnot; omega
+    rw [prefix_succ, ih, he]
+    ext x
+    simp only [mem_insert, mem_Icc]
+    omega
+
+private theorem triangle_forbidden {r j : ℕ} (hr : 0 < r) (hj : 0 < j) : tri j ∈ forbidden r :=
+  (forbidden_iff r _).2 ⟨0,hr,j,hj,by rw [first_state, mass_icc]⟩
+
+private theorem sum_not_forbidden {r n : ℕ} (hn : 0 < n) : mass (entriesUsed r n) ∉ forbidden r := by
+  cases n with
+  | zero => omega
+  | succ n => rw [mass_next]; exact (entry_is_least r n).1.2.2
+
+private def NearTriangle (x c : ℕ) := ∃ j, x ≤ tri j ∧ tri j ≤ x+c
+
+private def Covered (r c : ℕ) := ∀ x ∈ forbidden r, NearTriangle x c
+
+/-- Two hit points above `tri n` that are closer than the separation of
+successive triangle bands must lie in a common band. -/
+private theorem same_band {a b n c : ℕ} (hleft : tri n < a) (hsep : b+c ≤ a+n)
+    (ha : NearTriangle a c) (hb : NearTriangle b c) : b ≤ a+c := by
+  obtain ⟨i,hai,hia⟩ := ha
+  obtain ⟨j,hbj,hjb⟩ := hb
+  by_cases hji : j ≤ i
+  · have := tri_mono.monotone hji
+    omega
+  · have hni : n < i := tri_mono.lt_iff_lt.mp (lt_of_lt_of_le hleft hai)
+    have hij : tri (i+1) ≤ tri j := tri_mono.monotone (by omega)
+    rw [tri] at hij
+    omega
+
+private theorem tri_add (a b : ℕ) : tri (a+b) = tri a + a*b + tri b := by
+  nlinarith [tri_double (a+b), tri_double a, tri_double b]
+
+private noncomputable def top (r n : ℕ) := (entriesUsed r n).sup id
+
+private theorem top_bounds (r n : ℕ) : n ≤ top r n ∧ top r n ≤ n+bound (r+1) := by
+  have hg := good_row r
+  have hsub : entriesUsed r n ⊆ Icc 1 (top r n) := fun x hx =>
+    mem_Icc.mpr ⟨(hg.bounds n x hx).1, Finset.le_sup (f := id) hx⟩
+  have hsize := card_le_card hsub
+  rw [hg.size, Nat.card_Icc] at hsize
+  exact ⟨by omega, Finset.sup_le (fun x hx => (hg.bounds n x hx).2)⟩
+
+private theorem blocked_of_passed {r n x : ℕ} (hp : 0 < x) (hnew : x ∉ entriesUsed r n)
+    (hsmall : x < entry r n) : mass (entriesUsed r n)+x ∈ forbidden r := by
+  by_contra h
+  have := (entry_is_least r n).2 x ⟨hp,hnew,h⟩
+  omega
+
+private theorem covered_initial_if_all_used (r : ℕ) (hall : ∀ x > 0, ∃ k, entry r k = x)
+    (D : ℕ) : ∃ N, ∀ n ≥ N, Icc 1 D ⊆ entriesUsed r n := by
+  induction D with
+  | zero => exact ⟨0, by simp⟩
+  | succ D ih =>
+    obtain ⟨N,hN⟩ := ih
+    obtain ⟨k,hk⟩ := hall (D+1) (by omega)
+    refine ⟨max N (k+1), ?_⟩
+    intro n hn x hx
+    obtain ⟨hl,hu⟩ := mem_Icc.mp hx
+    rcases Nat.lt_or_eq_of_le hu with h | h
+    · exact hN n (by omega) (mem_Icc.mpr ⟨hl,by omega⟩)
+    · exact (mem_entriesUsed r n x).2 ⟨k,by omega,by omega⟩
+
+private theorem sum_near_if_low_full {r n c : ℕ} (hcn : c ≤ n)
+    (hfull : Icc 1 (n-c) ⊆ entriesUsed r n) :
+    mass (entriesUsed r n) ≤ tri n + c*(c+bound (r+1)) := by
+  let u := entriesUsed r n
+  let low := Icc 1 (n-c)
+  have hcard : (u \ low).card = c := by
+    rw [card_sdiff_of_subset hfull, (good_row r).size, Nat.card_Icc]
+    omega
+  have hsum : mass (u \ low) ≤ c*(n+bound (r+1)) := by
+    calc
+      mass (u \ low) ≤ ∑ _x ∈ u \ low, (n+bound (r+1)) :=
+        sum_le_sum (fun x hx => ((good_row r).bounds n x (mem_sdiff.mp hx).1).2)
+      _ = _ := by simp [hcard]
+  have hpart : mass (u \ low) + mass low = mass u := Finset.sum_sdiff hfull
+  have hlow : mass low = tri (n-c) := mass_icc _
+  have hcon : n-c+c=n := by omega
+  have ht := tri_add (n-c) c
+  rw [hcon] at ht
+  have hm : c*(n+bound (r+1)) = (n-c)*c + c*(c+bound (r+1)) := by
+    calc
+      _ = c*((n-c+c)+bound (r+1)) := by rw [hcon]
+      _ = _ := by ring
+  change mass u ≤ _
+  omega
+
+private theorem no_late_jump (r c n : ℕ) (hr : 0 < r) (hcover : Covered r c)
+    (hfull : Icc 1 (bound (r+1)+c+1) ⊆ entriesUsed r n)
+    (hn : c*(c+bound (r+1))+bound (r+1)+c+1 ≤ n) : entry r n ≤ top r n+1 := by
+  let u := entriesUsed r n
+  let s := mass u
+  let p := top r n
+  have hb := top_bounds r n
+  change n ≤ p ∧ p ≤ n+bound (r+1) at hb
+  have hst : tri n < s := by
+    have hh := ((good_row r).band n).1
+    have hne : mass (entriesUsed r n) ≠ tri n :=
+      fun he => sum_not_forbidden (r:=r) (by omega : 0<n) (he ▸ triangle_forbidden hr (by omega))
+    exact lt_of_le_of_ne hh hne.symm
+  by_contra h
+  change ¬entry r n ≤ p+1 at h
+  have hnew : p+1 ∉ entriesUsed r n := by
+    intro hu
+    have hh : p+1 ≤ p := Finset.le_sup (f := id) hu
+    omega
+  have hfp : s+(p+1) ∈ forbidden r := blocked_of_passed (by omega) hnew (by omega)
+  have hsmall : Icc 1 (n-c) ⊆ entriesUsed r n := by
+    intro x hx
+    obtain ⟨hlo,hhi⟩ := mem_Icc.mp hx
+    by_contra hnewx
+    have hlarge : bound (r+1)+c+1 < x := by
+      by_contra hnle
+      exact hnewx (hfull (mem_Icc.mpr ⟨hlo,by omega⟩))
+    have hfx : s+x ∈ forbidden r := blocked_of_passed hlo hnewx (by omega)
+    have hclose := same_band (n:=n) (a:=s+x) (b:=s+(p+1)) (by omega) (by omega)
+      (hcover _ hfx) (hcover _ hfp)
+    omega
+  have hmass := sum_near_if_low_full (c:=c) (by omega) hsmall
+  change s ≤ tri n+c*(c+bound (r+1)) at hmass
+  obtain ⟨i,hil,hiu⟩ := hcover _ hfp
+  have ht1 : tri (n+1) < tri i := by rw [tri]; omega
+  have ht2 : tri i < tri (n+2) := by change tri i < (tri n+(n+1))+(n+2); omega
+  have := tri_mono.lt_iff_lt.mp ht1
+  have := tri_mono.lt_iff_lt.mp ht2
+  omega
+
+private noncomputable def holes (r n : ℕ) := Icc 1 (top r n) \ entriesUsed r n
+
+private theorem holes_decrease {r n : ℕ} (hstep : entry r n ≤ top r n+1) :
+    holes r (n+1) ⊆ holes r n := by
+  intro x hx
+  obtain ⟨hxI,hxf⟩ := mem_sdiff.mp hx
+  obtain ⟨hxp,hxt⟩ := mem_Icc.mp hxI
+  have he : x ≠ entry r n := by
+    intro heq; subst x; exact hxf (by rw [prefix_succ]; exact mem_insert_self _ _)
+  have htop : top r (n+1) = max (entry r n) (top r n) := by simp [top, prefix_succ]
+  rw [htop] at hxt
+  refine mem_sdiff.mpr ⟨mem_Icc.mpr ⟨hxp,by omega⟩, ?_⟩
+  intro hxold
+  exact hxf (by rw [prefix_succ]; exact mem_insert_of_mem hxold)
+
+private theorem some_omission_of_covered {r c : ℕ} (hr : 0 < r) (hcover : Covered r c) :
+    (omissions r).Nonempty := by
+  classical
+  by_contra hempty
+  have hall (x : ℕ) (hx : 0 < x) : ∃ k, entry r k = x := by
+    by_contra h
+    exact hempty ⟨x,hx,fun k hk => h ⟨k,hk⟩⟩
+  obtain ⟨N,hN⟩ := covered_initial_if_all_used r hall (bound (r+1)+c+1)
+  let start := N + c*(c+bound (r+1)) + bound (r+1) + c + 1
+  have hstep (k : ℕ) (hk : start ≤ k) : entry r k ≤ top r k+1 := by
+    apply no_late_jump r c k hr hcover
+    · exact hN k (by dsimp [start] at hk; omega)
+    · dsimp [start] at hk
+      omega
+  have hholes (k : ℕ) : holes r (start+k) ⊆ holes r start := by
+    induction k with
+    | zero => exact Subset.rfl
+    | succ k ih =>
+      exact (holes_decrease (hstep (start+k) (by omega))).trans ih
+  obtain ⟨M,hM⟩ := covered_initial_if_all_used r hall (top r start)
+  let n := start+M
+  have heq : entriesUsed r n = Icc 1 (top r n) := by
+    ext x
+    constructor
+    · intro hx
+      exact mem_Icc.mpr ⟨((good_row r).bounds n x hx).1,Finset.le_sup (f := id) hx⟩
+    · intro hx
+      by_contra hmiss
+      have hh : x ∈ holes r n := mem_sdiff.mpr ⟨hx,hmiss⟩
+      have hold := hholes M hh
+      exact hmiss (hM n (by dsimp [n]; omega) (mem_sdiff.mp hold).1)
+  have hn : 0 < n := by dsimp [n,start]; omega
+  have ht : 0 < top r n := lt_of_lt_of_le hn (top_bounds r n).1
+  apply sum_not_forbidden (r:=r) hn
+  rw [heq, mass_icc]
+  exact triangle_forbidden hr ht
+
+private theorem cover_next {r c : ℕ} (hcover : Covered r c) (H : (omissions r).Nonempty) :
+    ∃ C, Covered (r+1) C := by
+  obtain ⟨h,hpos,hmiss⟩ := H
+  obtain ⟨N,hN⟩ := eventually_large r h
+  let early := tri (N+bound (r+1))
+  refine ⟨early+c+h, ?_⟩
+  intro x hx
+  change x ∈ forbidden r ∨ ∃ k, mass (entriesUsed r (k+1)) = x at hx
+  rcases hx with hx | ⟨k,rfl⟩
+  · obtain ⟨j,hl,hu⟩ := hcover x hx
+    exact ⟨j,hl,by omega⟩
+  · by_cases hl : k+1 < N
+    · have hp := ((good_row r).band (k+1)).2
+      refine ⟨N+bound (r+1), hp.trans (tri_mono.monotone (by omega)), ?_⟩
+      change early ≤ _
+      omega
+    · have hnew : h ∉ entriesUsed r (k+1) := by
+        intro hu
+        obtain ⟨i,_,he⟩ := (mem_entriesUsed r (k+1) h).mp hu
+        exact hmiss i he
+      have hforb := blocked_of_passed hpos hnew (hN (k+1) (by omega))
+      obtain ⟨j,hj1,hj2⟩ := hcover _ hforb
+      exact ⟨j,by omega,by omega⟩
+
+private theorem cover_all (r : ℕ) : ∃ c, Covered r c := by
+  induction r with
+  | zero => exact ⟨0,by simp [Covered,forbidden]⟩
+  | succ r ih =>
+    obtain ⟨c,hc⟩ := ih
+    by_cases hr : r=0
+    · subst r
+      refine ⟨0, ?_⟩
+      intro x hx
+      obtain ⟨i,hi,j,_,he⟩ := (forbidden_iff 1 x).mp hx
+      have hi0 : i = 0 := by omega
+      subst i
+      rw [first_state, mass_icc] at he
+      exact ⟨j,by omega,by omega⟩
+    · exact cover_next hc (some_omission_of_covered (by omega) hc)
+
+/-- Every nonfirst row of the actual greedy infinite table omits a positive
+integer permanently. This establishes the existence part of Conjecture 2(1). -/
+theorem nonfirst_has_omission (r : ℕ) (hr : 0 < r) : (omissions r).Nonempty := by
+  obtain ⟨c,hc⟩ := cover_all r
+  exact some_omission_of_covered hr hc
+
+/-- Each fixed row has all its partial sums at bounded distance below the
+next triangular number, with a bound independent of the prefix length. -/
+theorem partial_sums_below_triangles (r : ℕ) : ∃ c, ∀ n,
+    ∃ k, (∑ j ∈ range n, entry r j) ≤ tri k ∧ tri k ≤ (∑ j ∈ range n, entry r j)+c := by
+  obtain ⟨c, hc⟩ := cover_all (r+1)
+  refine ⟨c, ?_⟩
+  intro n
+  cases n with
+  | zero => exact ⟨0,by simp [tri],by simp [tri]⟩
+  | succ n =>
+    have hx : mass (entriesUsed r (n+1)) ∈ forbidden (r+1) :=
+      (forbidden_iff _ _).2 ⟨r,by omega,n+1,by omega,rfl⟩
+    simpa only [← mass_eq_prefix_sum] using hc _ hx
+
 #print axioms entry_is_least
-#print axioms partial_sums_band
 #print axioms eventual_entry_upper_bound
 #print axioms omissions_linear_bound
+#print axioms nonfirst_has_omission
+#print axioms partial_sums_below_triangles
 
 end GreedyBarrycade
