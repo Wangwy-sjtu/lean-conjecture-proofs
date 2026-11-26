@@ -90,3 +90,5 @@ Inoue–Inazu 的字串减法游戏问题 2.1 问能否以最长步长或词典�
 **六维方盘的最坏按键数。** 原作者已知维数同余、三幂无穷族和六个最坏按键数。另逐项核对作者现有 Lean 的所有 MCP 定理，最新分支证明二维方盘的最坏按键数、一般路径镜像、四个解的均值界。六维公式仍列为猜想。本次给出 11 阶小盘精确见证、全体六维方盘的通式以及无条件三幂族。[作者猜想](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/conjectures/conjectures.tex#L432-L457) · [作者二维形式化](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/lean/LightsOut/GridClicks.lean#L411-L466) · [六维证书](problems/SixClicks/)
 
 **欧拉有向图博弈的平方根下界。** 同文第 23 问针对所有非空欧拉图，原文已得欧拉竞赛图与谱条件下的特例。Blackwell 与 Hodges 以及 Cover 已分析二元等额序列和预测。这里把每个欧拉有向定向图的收益行嵌入二元等额下注，允许零收益牌任意穿插，得到所有图的下界。另核对了公开 AI 分支中题名相近的 Blackwell–Dubins 合并定理。[原问题](https://doi.org/10.37236/11563) · [经典二元问题](https://doi.org/10.1214/aoms/1177706973) · [欧拉图归约与先例记录](problems/SemiRestricted/README-lower.md)
+
+**所有有界维数方盘的统一准多项式。** Boyles 的公开 AI 稿已给出零空间维数的有限见证与整除压缩，Sloane 已研究固定维数重复列码的覆盖半径。本次用同一个模数根据边长选取基准盘，证明所有符合维数界的方盘共用一个最终的按键数准多项式，适用于任意指定上界。[AI 有限见证先例](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/ai_gen/finite_witness_bounds/finite_witness_bounds.tex) · [按键数全称定理和检索范围](problems/GridScaling/AllNullities.md)

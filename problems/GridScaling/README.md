@@ -1,5 +1,7 @@
 # 固定零空间方盘的最坏按键次数为何会出现二次式
 
+对所有零空间维数不超过任意指定上界的方盘，还有一条统一的准多项式定理。它按边长的余数类取二次式，一次覆盖所有基准盘。[全体有界维数方盘的定理和证明](AllNullities.md)
+
 设 $M(n)$ 为标准 $n\times n$ Lights Out 方盘所有可解初始灯态中，最难者所需的最少按键次数。固定边长 $m$ 的小盘。设 $H$ 为小盘中能被至少一种零作用按键图案覆盖的格数。放大倍数为正整数 $Q$，大盘边长为 $n=(m+1)Q-1$。以下结论适用于大盘与小盘零空间维数相同的每个 $Q$。
 
 **定理。** 偶数 $Q$ 满足 $2M(n)=2n^2-HQ^2$。对每个小盘还存在两个只依赖于 $m$ 的非负整数 $D,K$，使所有 $Q\ge K$ 的奇数倍满足
@@ -27,7 +29,7 @@ $$M(n)=n^2-rH+R_r.$$
 独立 Python 程序从首行消元重建零空间，在 102 个放大算例上逐一验证零作用图案、每个格型的重复数和固定格数，其中 46 个满足零空间维数相等。主证明适用于任意边长。两个主定理的公理清单均只含 propext、Classical.choice 与 Quot.sound。[独立复核脚本](check_scaling.py)
 
 ```sh
-lake exe cache get Mathlib.Algebra.CharP.Two Mathlib.Algebra.Field.ZMod Mathlib.Algebra.Polynomial.FieldDivision Mathlib.Data.Finset.Max Mathlib.Data.Fintype.EquivFin Mathlib.Data.ZMod.Basic Mathlib.FieldTheory.Finiteness Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure Mathlib.LinearAlgebra.Dimension.Constructions Mathlib.Order.Preorder.Finite Mathlib.Tactic.LinearCombination Mathlib.Tactic.Ring
+lake exe cache get Mathlib.Algebra.BigOperators.Group.Finset.Piecewise Mathlib.Algebra.CharP.Two Mathlib.Algebra.Field.ZMod Mathlib.Algebra.Polynomial.FieldDivision Mathlib.Algebra.Ring.GeomSum Mathlib.Data.Finset.Max Mathlib.Data.Fintype.EquivFin Mathlib.Data.Nat.Choose.Basic Mathlib.Data.ZMod.Basic Mathlib.FieldTheory.Finite.Basic Mathlib.FieldTheory.Finiteness Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure Mathlib.LinearAlgebra.Dimension.Constructions Mathlib.LinearAlgebra.Dual.Lemmas Mathlib.Order.Preorder.Finite Mathlib.RingTheory.AdjoinRoot Mathlib.Tactic.LinearCombination Mathlib.Tactic.Ring
 lake build GridScaling
 lake env lean -DwarningAsError=true GridScaling.lean
 python3 check_scaling.py

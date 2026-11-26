@@ -25,6 +25,21 @@ name = "LightsPolynomial"
 [[lean_lib]]
 name = "LightsTorsion"
 
+[[lean_lib]]
+name = "FiniteSeeds"
+
+[[lean_lib]]
+name = "GridGcd"
+
+[[lean_lib]]
+name = "NullityQuasipolynomial"
+
+[[lean_lib]]
+name = "OddStabilization"
+
+[[lean_lib]]
+name = "OddTorsion"
+
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
