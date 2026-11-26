@@ -25,6 +25,8 @@
 
 **无限贪心 Barrycade 的遗漏数。** Dębski 等人猜想从第二行起每一行都恰好遗漏一个正整数。Patel 的项目已认证第五行，TrureTuring 给出从有限前缀推出完整尾部的判据，报告已逐行处理前 200 行。另一个形式反驳针对原文猜想 2(2) 的起始下标。此次证明每个非首行都至少遗漏一项，得到 A399907 的最小遗漏数对每个适用行均有定义。另证永久遗漏数的线性上界、晚期项值的上界及各行前缀和距其上方三角数的有界性。对任意一行还得到一个逆向结论：该行永久遗漏恰一个正整数，当且仅当其一基第 $n$ 项最终恒为 $n+1$。既有有限证书能确认具体行进入这样的尾部。进一步对原始贪心过程证明，任何有限组行的位移最终有共同周期，即使没有预先标定该周期或验证有限前缀。按作者名、题名、OEIS 编号、遗漏数与行号的同义词查找 arXiv、GitHub 和公开 AI 记录，未定位到相同的任意行定理。[原文 §3.1](https://arxiv.org/html/2609.18476v2#S3.SS1) · [第五行证明](https://github.com/thatnealpatel/proofs/issues/96) · [前 200 行的工作记录](https://github.com/the-omega-institute/trureturing/issues/8494) · [对猜想 2(2) 的在先反驳](https://www.trureturing.org/research/debski-barrycade-omitted-element-refutation/)
 
+**连通无三角形图的精确门数。** Cao 等人已经证明连通图的一般下界、围长至少五时的渐近下界，并给出了四环例子及完全二部图 $K_{2,p}$ 的 $3p+2$ 门上界。这里另证至少 $n-1$ 次门输出具有奇数个输入的支持集，推出连通无三角形图能达到完美门数当且仅当它是树，并得到所有无三角形单环图和所有 $K_{2,p}$ 的精确门数。检索论文后续引用及以题名、论文号、perpane、triangle-free、unicyclic、odd output、complete bipartite 表述的网页、GitHub、arXiv 与可索引 AI 记录，未定位到同一族的一般证明。作者的 $K_{2,p}$ 上界和四环例子均保留在先归属。[原论文 §4](https://arxiv.org/html/2509.10070v1#S4) · [作者稿，引理 8–9](https://yiren.lu/assets/pdf/parity-network.pdf#page=6)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)
@@ -34,3 +36,5 @@
 例如，筛选 A394576 时找到了同题的公开预印本和 Lean 工作，因此该题未收入成果。另一个被筛掉的方向是四元素 Sidon 集在 Singer 构造中的不可扩展性。作者的 arXiv 撤稿说明指向此前已在 MathOverflow 公开的更强结果。[A394576 的在先工作](https://github.com/dvgyl/oeis-proofs/tree/931b76616e14/preprints/A394576-A-greedy-sequence-avoiding-sums-of-three-consecutive-terms) · [arXiv 撤稿说明](https://arxiv.org/abs/2604.25214) · [MathOverflow 原证明](https://mathoverflow.net/a/503157)
 
 还有两例说明了检索讨论区及核对具体定理的必要性。EulerSolve 对 A394576 的证明还包含分块端点与间隙词。关于 Lin–Ma 的实根猜想，另一个公开 GitHub issue 已给出重数均为 1 的情形及其扩展，故该特例也未计入。[EulerSolve 第 1017 题](https://eulersolve.org/problem/1017/) · [公开 GitHub 证明讨论](https://github.com/1337isnot1337/solved-conjectures/issues/102)
+
+Permutation Wordle 的三次项曾完成独立 Lean 推导。进一步核对后，Shivam Patel 已在 MathDB 给出双向循环位移的取等分类、二循环的损失界及其计数论证，Kutin、Smithline 与 Vatter 也已给出一般非严格最优性。整题仅作本地核查，未收入成果。[MathDB 公开解答](https://mathdb.com/p/369086/cyclic-shift-s-cubic-coefficient-conjecture-for-deranged-str) · [后续论文](https://arxiv.org/abs/2609.01874)

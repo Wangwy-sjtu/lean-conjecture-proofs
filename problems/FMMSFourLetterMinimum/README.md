@@ -71,6 +71,8 @@ $$
 
 本次验证使用 Lean 4.24.0 和 Mathlib 提交 `f897ebcf72cd16f89ab4577d0c826cd14afaafc7`。`four_letter_lower_bound` 给出全称下界，`four_letter_minimum` 用 `IsLeast` 同时给出下界和取等见证。两项 `#print axioms` 输出均只含 `propext`、`Classical.choice` 和 `Quot.sound`。源码未使用 `sorry` 或 `native_decide`。[Mathlib 固定版本](https://github.com/leanprover-community/mathlib4/tree/f897ebcf72cd16f89ab4577d0c826cd14afaafc7)
 
+截至 2026 年 11 月 27 日，MathDB 收录该论文的有效分拆下界及一般取等条件。核对两页的解答区和 Abel 平方标签目录时，未找到四个 $a$ 的这项下界。[有效分拆问题](https://mathdb.com/p/374386/lower-bound-for-abelian-squares-from-effective-partitions) · [一般取等问题](https://mathdb.com/p/374385/fazekas-mammoliti-mercas-simpson-extension-of-the-fici-saare)
+
 ## 在独立下载包中运行
 
 本目录已锁定版本。从该目录执行
