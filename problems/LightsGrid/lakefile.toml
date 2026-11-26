@@ -10,6 +10,18 @@ name = "LightsTorsion"
 [[lean_lib]]
 name = "LightsPolynomial"
 
+[[lean_lib]]
+name = "GridGcd"
+
+[[lean_lib]]
+name = "OddTorsion"
+
+[[lean_lib]]
+name = "OddStabilization"
+
+[[lean_lib]]
+name = "OddGridExamples"
+
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"

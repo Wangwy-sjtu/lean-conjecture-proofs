@@ -68,3 +68,7 @@
 Permutation Wordle 的三次项曾完成独立 Lean 推导。进一步核对后，Shivam Patel 已在 MathDB 给出双向循环位移的取等分类、二循环的损失界及其计数论证，Kutin、Smithline 与 Vatter 也已给出一般非严格最优性。整题仅作本地核查，未收入成果。[MathDB 公开解答](https://mathdb.com/p/369086/cyclic-shift-s-cubic-coefficient-conjecture-for-deranged-str) · [后续论文](https://arxiv.org/abs/2609.01874)
 
 Inoue–Inazu 的字串减法游戏问题 2.1 问能否以最长步长或词典总长度的某个多项式限制 DFA 状态数。TrureTuring 的公开 issue 已针对两种参数给出反例构造、可达状态和后缀区分论证。本次筛选虽得到不同的二元词典，仍将原问题剔除。[原问题](https://arxiv.org/abs/2611.09157) · [GitHub 在先论证](https://github.com/the-omega-institute/trureturing/issues/30286)
+
+**奇数底数的幂次方盘。** Brouwer 的原始列表已经给出下标 171，Muñoz 记录了周期 513。这些先例解释了 57 底数的跳变线索。此次给出所有奇数底数的有限约化，并计算 57 的整个幂次列。另核对了 Zaidenberg–Zagier 的有限搭档分支定理、作者的 2022 年公开笔记和 GitHub 的 AI 研究讨论。检索覆盖限制逐项列于证明包。[作者笔记](https://github.com/wmboyles/LightsOut-Math/blob/c730dfafc50c1e745d643654938d37851de8c06d/tex/conjectures/summary/conjectures.tex#L222-L232) · [Brouwer 的下标表](https://aeb.win.tue.nl/ca/madness/mad1.html) · [实际比对记录](problems/LightsGrid/OddPowers.md)
+
+**固定一侧 Schmidt 基的整阶熵最小化。** 对照了 Busoni 等在两个素数维系统上的双侧假设、Liu–Cui 的同步局部酉约化、Sierant 的特定谱，以及 Asakitan 和 EDGE-Public 的单项局部酉证明。这里证明固定一侧后另一侧的任意酉、所有循环局部维数及所有整数阶的全局最优性。证明从双体 Weyl 期望值开始。[原假设](https://arxiv.org/html/2603.09155v2#S3) · [EDGE-Public 稿件](https://github.com/LUOLINGc325/EDGE-Public/blob/a8874a1f014734e48051e445d20ca7be741b552b/papers/haar-schmidt-magic/paper.zh.md) · [公式、证明和查重记录](problems/OneSidedSchmidt/)

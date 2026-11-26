@@ -31,10 +31,13 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 
 **Lights Out 方盘的二维零空间。** 对 Boyles 点名的每个边长 $n=2\cdot3^k-1$（$k\ge1$），恰有四个按键图案会保持原灯态不变，完整证明猜想 5.1 要求的无穷性。首行头两个按键与这四种图案一一对应。[数学证明与复现](problems/LightsGrid/) · [独立 ZIP](packages/LightsGrid.zip?raw=1) · [原猜想，第 8 页](https://arxiv.org/pdf/2201.03452#page=8)
 
+**奇数底数的方盘稳定性。** 对每个奇数 $a$，真实方盘零空间维数 $d(a^k-1)$ 最终保持常数。对 $a=57$，前三个指数的维数依次为 0、36、252，此后一直为 252。这同时否定了作者笔记中的两个固定起点猜测。[一般定理与完整反例](problems/LightsGrid/OddPowers.md) · [独立 ZIP](packages/LightsGrid.zip?raw=1)
+
 ## 论文开放问题的部分进展
 
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
 | --- | --- | --- |
+| [Busoni 等 · 稳定子 Rényi 熵的单侧优化](problems/OneSidedSchmidt/) | 固定一侧的 Schmidt 基及标号后，另一侧所有局部酉中的最小值由计算基对齐态达到。适用于循环 Weyl 算符、所有局部维数和每个整数阶 $m\ge2$。论文的双侧问题仍开放 | [独立 ZIP](packages/OneSidedSchmidt.zip?raw=1) |
 | [Antis 等 · 十二元和积问题](problems/TwelveIntegerSets/) | 十二元正有理数集若至多产生 41 个两两和，任意正有理几何级数最多包含其中 6 点，且能取等。十一元极值构型在两种基数均不超过 41 时的十二元扩展也唯一。原猜想 $SP(12)=41$ 的整体下界仍待证明 | [独立 ZIP](packages/TwelveIntegerSets.zip?raw=1) |
 | [Inoue–Inazu · 后缀减法游戏的语言类别](problems/VisiblyPushdownSubtraction/) | 对问题 4.1，若允许删除的后缀构成可见下推语言，则必胜词与必败词也都是同一可见字母分类下的可见下推语言。Lean 从实际游戏构造识别这两个语言的 MSO 句子 | [独立 ZIP](packages/VisiblyPushdownSubtraction.zip?raw=1) |
 | [Sierant · 非局域稳定子 Rényi-2 熵](problems/SierantGap/) | 计算基与任意局部酉最优值的差距上界由 4 比特降至 2 比特。Lean 从任意整数秩证明新组合界，并以原论文已证的矩阵迹关系推出熵界 | [独立 ZIP](packages/SierantGap.zip?raw=1) |

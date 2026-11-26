@@ -78,3 +78,26 @@ if __name__ == "__main__":
             assert n - rank_binary(bottom_row(n, 1 << i) for i in range(n)) == 2
     print("The exact gcd is X^2+X for k=1..9 (largest side 39,365). "
           "All four explicit quiet top rows were checked through side 1,457.")
+
+    from math import gcd as integer_gcd
+    reduction_checks = 0
+    for a in range(1, 48, 2):
+        e = 1
+        while pow(2, e, a) != (1 % a):
+            e += 1
+        for k in range(5):
+            index = a**k
+            if index > 4096:
+                break
+            small = integer_gcd(index, 2**e - 1)
+            assert poly_gcd(path_poly(index), path_poly(index, True)) == poly_gcd(
+                path_poly(small), path_poly(small, True))
+            reduction_checks += 1
+    for n, expected in [(56, 0), (170, 36), (512, 252)]:
+        assert n - rank_binary(bottom_row(n, 1 << i) for i in range(n)) == expected
+    for k, expected in [(1, 0), (2, 36), (3, 252)]:
+        index = 57**k
+        assert poly_gcd(path_poly(index), path_poly(index, True)).bit_length() - 1 == expected
+    print(f"{reduction_checks} odd-power reductions passed. Direct unreduced polynomial counts "
+          "on sides 56, 3,248, 185,192 agree with row chasing on sides 56, 170, 512.")
+

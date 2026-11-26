@@ -2,6 +2,8 @@
 
 对每个正整数 $k$，边长 $n=2\cdot3^k-1$ 的标准 *Lights Out* 方盘恰有四种按灯后保持原灯态的按键图案，包括完全不按。也就是说，其按键矩阵在二元域 $\mathbb F_2$ 上的零空间维数恰为 2。前四个边长是 $5,17,53,161$。这证明了 William Boyles 的猜想 5.1，也给出了他在同一段落提出的具体无穷子族。[原论文，第 8 页](https://arxiv.org/pdf/2201.03452#page=8) · [作者猜想笔记](https://github.com/wmboyles/LightsOut-Math/blob/c730dfafc50c1e745d643654938d37851de8c06d/tex/conjectures/summary/conjectures.tex#L239)
 
+作者另问，奇数底数的幂次方盘是否最终稳定。对每个奇数底数已证明最终稳定，在底数 57 上否定了两种提前稳定的推测。[一般定理、反例及既有周期记录](OddPowers.md)
+
 一次按键翻转本格及上、下、左、右存在的邻格。给定任意可解初态，只要找到一个解，就可以把它与四种零空间图案分别作异或，得到全部四个解。实际求解时，在这族方盘上指定首行最左两个按键的取值，就唯一指定了一种零空间图案。[实际五格翻转和首行两位的线性同构](LightsGrid.lean)
 
 ## 四种图案
@@ -29,12 +31,18 @@ Sutner 的工作及 Muñoz 的定理 1 已把一般方盘的零空间维数写�
 项目固定 Lean 4.24.0 和 mathlib 版本。从本目录运行
 
 ```sh
-lake exe cache get Mathlib.Algebra.CharP.Two Mathlib.Tactic.LinearCombination Mathlib.Tactic.Ring Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure Mathlib.Algebra.Polynomial.FieldDivision Mathlib.Data.ZMod.Basic Mathlib.Algebra.Field.ZMod Mathlib.LinearAlgebra.Dimension.Constructions Mathlib.Order.Preorder.Finite
-lake build LightsTorsion LightsPolynomial
+lake exe cache get Mathlib.Algebra.CharP.Two Mathlib.Tactic.LinearCombination Mathlib.Tactic.Ring Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure Mathlib.Algebra.Polynomial.FieldDivision Mathlib.Data.ZMod.Basic Mathlib.Algebra.Field.ZMod Mathlib.LinearAlgebra.Dimension.Constructions Mathlib.Order.Preorder.Finite Mathlib.RingTheory.AdjoinRoot Mathlib.LinearAlgebra.Dual.Lemmas Mathlib.Algebra.Ring.GeomSum Mathlib.Data.Nat.Choose.Basic Mathlib.FieldTheory.Finite.Basic Mathlib.Data.Nat.Bitwise Mathlib.Data.Nat.Size
+lake build LightsTorsion LightsPolynomial LightsGrid GridGcd OddTorsion OddStabilization OddGridExamples
 lake env lean -DwarningAsError=true LightsTorsion.lean
 lake env lean -DwarningAsError=true LightsPolynomial.lean
 lake env lean -DwarningAsError=true LightsGrid.lean
+lake env lean -DwarningAsError=true GridGcd.lean
+lake env lean -DwarningAsError=true OddTorsion.lean
+lake env lean -DwarningAsError=true OddStabilization.lean
+lake env lean -DwarningAsError=true OddGridExamples.lean
 python3 check_lights.py
 ```
 
 独立程序对边长 $1$ 到 $20$ 以及 $53$ 的真实翻转矩阵做二元高斯消元，并在 $1$ 到 $54$ 上对比逐行消去与多项式方法。另逐项验证了 $k=1,\ldots,9$ 的精确最大公因式，最大边长为 $39{,}365$。Lean 的无穷性定理为 `LightsGrid.infinitely_many_nullity_two`；其公理依赖仅有 `propext`、`Classical.choice` 和 `Quot.sound`。[独立复核程序](check_lights.py)
+
+对第二个问题，独立程序复核了 84 个有限约化，直接在原下标计算了底数 57 的前三个次数，并在约化后的三个棋盘从边界递推独立求秩。相应的全称定理为 `OddStabilization.eventually_constant` 和 `OddGridExamples.tower57`。[奇数底数完整说明](OddPowers.md)

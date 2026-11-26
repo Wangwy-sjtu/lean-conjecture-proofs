@@ -41,7 +41,7 @@ theorem double (t : R) (n : ℕ) :
       ring
 
 omit [CharP R 2] in
-private theorem fib_at_zero (r : ℕ) : fib (0 : R) (2*r+1)=1 := by
+theorem fib_at_zero (r : ℕ) : fib (0 : R) (2*r+1)=1 := by
   induction r with
   | zero => rfl
   | succ r ih => simpa [show 2*(r+1)+1=(2*r+1)+2 by omega,fib] using ih
@@ -64,7 +64,7 @@ end Algebra
 
 variable {K : Type*} [Field K] [CharP K 2]
 
-private theorem fib_wave (x : K) (nz : x≠0) (n : ℕ) :
+theorem fib_wave (x : K) (nz : x≠0) (n : ℕ) :
     wave x * fib (wave x) n = x^n+(x⁻¹)^n := by
   induction n using Nat.twoStepInduction with
   | zero => simp [fib]
@@ -75,7 +75,7 @@ private theorem fib_wave (x : K) (nz : x≠0) (n : ℕ) :
     have cancel : x*x⁻¹=1 := mul_inv_cancel₀ nz
     linear_combination (x^n+(x⁻¹)^n)*(cancel) + (CharTwo.add_self_eq_zero (x^n+(x⁻¹)^n))
 
-private theorem wave_parameter [IsAlgClosed K] (t : K) : ∃ x : K, x≠0 ∧ wave x=t := by
+theorem wave_parameter [IsAlgClosed K] (t : K) : ∃ x : K, x≠0 ∧ wave x=t := by
   let p : K[X] := X^2+C t*X+1
   have degree : p.natDegree=2 := by
     dsimp [p]
@@ -97,24 +97,23 @@ private theorem wave_parameter [IsAlgClosed K] (t : K) : ∃ x : K, x≠0 ∧ wa
   apply CharTwo.add_eq_zero.mp
   linear_combination hx
 
-private theorem root_coordinate [IsAlgClosed K] (t : K) (k : ℕ) (root : fib t (3^k)=0) :
-    ∃ x : K, wave x=t ∧ x≠1 ∧ x^(3^k)=1 := by
+theorem odd_root_coordinate [IsAlgClosed K] (t : K) (m : ℕ) (odd : Odd m) (root : fib t m=0) :
+    ∃ x : K, wave x=t ∧ x≠1 ∧ x^m=1 := by
   obtain ⟨x,nz,w⟩ := wave_parameter t
-  have odd : Odd (3^k) := (by decide : Odd 3).pow
   have t0 : t≠0 := by
     rintro rfl
     obtain ⟨u,hu⟩ := odd
     rw [hu,fib_at_zero] at root
     exact one_ne_zero root
-  have ident := fib_wave x nz (3^k)
+  have ident := fib_wave x nz m
   rw [w,root,mul_zero,eq_comm,CharTwo.add_eq_zero,inv_pow] at ident
-  have zn : x^(3^k)≠0 := pow_ne_zero _ nz
-  have sq : (x^(3^k))^2=1 := by
+  have zn : x^m≠0 := pow_ne_zero _ nz
+  have sq : (x^m)^2=1 := by
     calc
-      (x^(3^k))^2 = x^(3^k)*x^(3^k) := pow_two _
-      _ = x^(3^k)*(x^(3^k))⁻¹ := congrArg (x^(3^k)*·) ident
+      (x^m)^2 = x^m*x^m := pow_two _
+      _ = x^m*(x^m)⁻¹ := congrArg (x^m*·) ident
       _ = 1 := mul_inv_cancel₀ zn
-  have h : (x^(3^k)+1)^2=0 := by rw [CharTwo.add_sq,sq,one_pow]; simp
+  have h : (x^m+1)^2=0 := by rw [CharTwo.add_sq,sq,one_pow]; simp
   refine ⟨x,w,?_,CharTwo.add_eq_zero.mp ((pow_eq_zero_iff (by decide : 2≠0)).mp h)⟩
   rintro rfl
   exact t0 (by simpa [wave] using w.symm)
@@ -137,8 +136,8 @@ theorem ternary_coprime (k : ℕ) :
         have h := map_fib (aeval t).toRingHom (X+1 : P) (3^k)
         change aeval t (fib (X+1 : P) (3^k)) = fib (aeval t (X+1 : P)) (3^k) at h
         simpa only [map_add,aeval_X,map_one] using h] at b
-  obtain ⟨x,wx,x1,xt⟩ := root_coordinate t k a
-  obtain ⟨y,wy,y1,yt⟩ := root_coordinate (t+1) k b
+  obtain ⟨x,wx,x1,xt⟩ := odd_root_coordinate t _ ((by decide : Odd 3).pow) a
+  obtain ⟨y,wy,y1,yt⟩ := odd_root_coordinate (t+1) _ ((by decide : Odd 3).pow) b
   exact (three_power_curve k x y xt yt (by rw [wx,wy]; simp)).elim x1 y1
 
 #print axioms ternary_coprime

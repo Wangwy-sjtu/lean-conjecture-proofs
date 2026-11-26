@@ -8,7 +8,7 @@ namespace LightsTorsion
 open scoped CharTwo
 attribute [local instance] Classical.propDecidable
 
-private theorem fourth_power_residue (j : ℕ) :
+theorem fourth_power_residue (j : ℕ) :
     ∃ u : ℕ, 4^(3^j) = 1+3^(j+1)*(1+3*u) := by
   induction j with
   | zero => exact ⟨0,by decide⟩
@@ -55,7 +55,7 @@ private theorem trace_layer (d t : ℕ) (x : K) (hx : x^((3*d)*3)=1) :
     rw [if_neg one]
     linear_combination x*zero
 
-private theorem wave_zero {x : K} (nz : x≠0) (h : wave x=0) : x=1 := by
+theorem wave_zero {x : K} (nz : x≠0) (h : wave x=0) : x=1 := by
   have inv : x=x⁻¹ := CharTwo.add_eq_zero.mp h
   have sq : x^2=1 := by calc
     x^2=x*x := pow_two x

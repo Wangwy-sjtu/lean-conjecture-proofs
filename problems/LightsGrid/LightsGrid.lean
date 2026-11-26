@@ -17,10 +17,10 @@ def read {M : Type*} [Zero M] {n : ℕ} (v : Fin n → M) : ℕ → M
   | 0 => 0
   | j+1 => if h : j<n then v ⟨j,h⟩ else 0
 
-@[simp] private theorem read_cell {M : Type*} [Zero M] {n : ℕ} (v : Fin n → M)
+@[simp] theorem read_cell {M : Type*} [Zero M] {n : ℕ} (v : Fin n → M)
     (i : Fin n) : read v (i.val+1)=v i := by simp [read,i.isLt]
 
-@[simp] private theorem read_end {M : Type*} [Zero M] {n : ℕ} (v : Fin n → M) :
+@[simp] theorem read_end {M : Type*} [Zero M] {n : ℕ} (v : Fin n → M) :
     read v (n+1)=0 := by simp [read]
 
 @[simp] private theorem read_add {M : Type*} [AddMonoid M] {n : ℕ} (x y : Fin n → M) (j : ℕ) :
@@ -53,7 +53,7 @@ private theorem commutes {R : Type*} [Semiring R] {a t : R} (c : Commute a t) (j
 
 /-- Looking at the first cell after applying the j-th path polynomial reads
 the original j-th entry. This also gives zero at the far boundary. -/
-private theorem first_fib {n : ℕ} (positive : 0<n) (v : Row n) (j : ℕ) (bound : j≤n+1) :
+theorem first_fib {n : ℕ} (positive : 0<n) (v : Row n) (j : ℕ) (bound : j≤n+1) :
     (fib (path n) j v) ⟨0,positive⟩ = read v j := by
   induction j using Nat.twoStepInduction generalizing v with
   | zero => rfl
@@ -102,7 +102,7 @@ theorem quiet_iff_toggles {n : ℕ} (b : Board n) : b∈quietSpace n ↔
     change read b (i.val+2) j = ((read (b i) j.val+read (b i) (j.val+2))+b i j) + read b i.val j
     rw [← eq]; abel
 
-private theorem chase {n : ℕ} (b : Board n) (quiet : b∈quietSpace n) (j : ℕ)
+theorem chase {n : ℕ} (b : Board n) (quiet : b∈quietSpace n) (j : ℕ)
     (bound : j≤n+1) : read b j = (fib (path n+1) j) (read b 1) := by
   induction j using Nat.twoStepInduction with
   | zero => rfl
