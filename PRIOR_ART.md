@@ -41,6 +41,8 @@
 
 **Band or Bump 的四牌型情形。** Levin 原文 Table 1 已计算标准 52 张牌的一组分布。对所有 $1\le\ell\le u<s$，未指定的三类牌给出系数差 $F^3-G^3$。新证明分两段将其局部三项归约到超几何矩形，涵盖任意每类张数和两道阈值。已发表的矩形定理在此另作 Lean 形式化。沿题名、作者、四花色、三次多项式差和等价停时事件查 arXiv、GitHub、TrureTuring 与 MathDB 的公开索引，找到原文表格与摘要镜像，未找到相同的全参数证明。[原论文](https://arxiv.org/pdf/2407.08062) · [在先矩形定理](https://doi.org/10.1080/07474946.2024.2379901) · [四牌型证明与精确算例](problems/BandOrBump/README-four.md)
 
+**无三角形和四环时的门数下界。** Cao 等人引理 9 取每条边的一个生成门，再考察同一线路的后继门，利用三角形和四环的排除证明 $m+\Omega(m)$。这里精确计数可重叠的门对，以不存在四环保证每个非目标偶控制只对应一对不同目标边，再结合奇输出下界得到 $2L\ge3m+n-1$。用题名、论文编号、girth、four-cycle、Sidon、$3m/2$ 及 equivalent gate savings 检索公开论文、GitHub 代码与 AI 讨论，未定位到这个带 $n$ 项的界。此前公开的奇输出计数论证仍依照上文注明来源。[作者稿引理 9](https://yiren.lu/assets/pdf/parity-network.pdf#page=6) · [TrureTuring 在先计数](https://github.com/the-omega-institute/trureturing/issues/24527)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)

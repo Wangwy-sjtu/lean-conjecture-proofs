@@ -58,6 +58,20 @@ $$L\ge ab+|P|+\max\{a+b-1,\ |E(K_{a,b}-P)|\}.$$
 
 独立双向穷举也得到，四环增加一根零辅助线或独立借用线都仍需 8 门；两叶星同时增加两种线各一根仍需 4 门。作者讨论过利用辅助线降低电路深度。这里计算的是门总数。[作者稿第 4 页](https://yiren.lu/assets/pdf/parity-network.pdf#page=4) · [穷举程序](check_small.py)
 
+## 围长至少五时最多能省多少道门
+
+设 $G$ 是 $n$ 个顶点、$m$ 条边的连通简单图，没有三角形和四环。对任意门数为 $L$ 的图奇偶网络，
+
+$$2L\ \ge\ 3m+n-1.$$
+
+逐边计算再撤销需要 $2m$ 道门。记图的循环秩为 $\beta=m-n+1$，则任何改进最多能省 $\lfloor\beta/2\rfloor$ 道门。例如果图是 Petersen 图，$n=10,m=15$，至少需要 27 道门。原论文引理 9 给出 $m+\Omega(m)$ 的下界，其末步估计中的增量为 $m/6$。这里沿用作者在同一根线上跟踪相邻目标边的方法，同时计数非目标偶输出与必要的奇输出。[作者稿，引理 9](https://yiren.lu/assets/pdf/parity-network.pdf#page=6) · [完整 Lean 证明](GirthFive.lean)
+
+1. 每当某条目标边第一次出现，就标记产生它的门。在每个标记门之后，同一目标线必再被写入一次，因为这根线最终恢复单变量。把这 $m$ 个标记门与各自在同一线上紧接的后继门配对。后继门两两不同。若两者都是标记门，控制线当时携带的是两条首次出现的边的异或。
+2. 这样的控制值总是非目标偶向量。两条边的异或若仍是边，三条边就构成三角形。两对不同边的异或若相同，它们的四条边构成四环。因此每个控制值唯一确定原来的无序边对。两条边首次出现的时间又确定它们的先后次序。设全电路有 $q$ 种不同的非目标偶输出，至多 $q$ 对配对的两端都是标记门。初态全是单变量，所以出现过的每个这类控制值都由某道门产生。
+3. 剩余至少 $m-q$ 个后继门与所有标记门不同，故 $L\ge 2m-q$。另一方面，电路产生过 $m$ 条目标边、$q$ 种额外偶向量，并至少用 $n-1$ 道门输出奇向量，故 $L\ge m+q+n-1$。两式相加便得所求。
+
+Lean 逐门维护每根线最近一次写入是否首次生成一条边，并从“四环不存在”推出异或的唯一性。Python 在至多六点的全部 33,867 张有标号简单图上复核了唯一性等价，并在一条确实用到额外偶控制的 Petersen 图电路上逐门核对计数。[复核代码](check_small.py)
+
 ## 完美电路的一项必要条件
 
 对任意连通简单图，若其电路达到 $m+n-1$，则图中存在一棵生成树，可以仅靠反复补全三角形的第三条边生成原图全部边。形式定理 `perfect_has_activating_tree` 给出恰有 $n-1$ 条边的连通生成子图，以及每条边的有限构造。奇线路与奇线路相加得到的那批边就是初始树边。其余偶输出都只能在两个已经存在的偶支持上做异或，并由门数取等强制得到一条目标边，因此每一步都补全原图的一个三角形。
@@ -85,5 +99,6 @@ lake env lean -DwarningAsError=true GraphicParity.lean
 lake env lean -DwarningAsError=true CaoCounterexample.lean
 lake env lean -DwarningAsError=true CaoControlWire.lean
 lake env lean -DwarningAsError=true BipartiteOptimal.lean
+lake env lean -DwarningAsError=true GirthFive.lean
 python3 check_small.py
 ```

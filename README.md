@@ -17,7 +17,7 @@
 
 ## 论文核心猜想的反例
 
-Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现全部边奇偶并恢复输入，当且仅当它有完美消去序。**七顶点图 $K_{1,3,3}$ 直接反驳逆向蕴涵。** 其 15 条边用 21 道门依次实现，全部线路恢复，而 5040 种顶点排列均不满足消去条件。同一张图的每一个完美网络还都必须使用全部七根线路作控制，回答了作者的问题 (C2)。证明包也给出无三角形图的完整分类、单环图的最优门数以及一般的生成树必要条件。对任意完全二部图 $K_{a,b}$（$1\le a\le b$），最优门数恰为 $ab+b+2a-2$，任意增加最终复原的零初值或借用辅助线也保持此值。[逐门反例与数学证明](problems/GraphicParity/COUNTEREXAMPLE.md) · [Lean 与运行方法](problems/GraphicParity/) · [独立 ZIP](packages/GraphicParity.zip?raw=1) · [原作者稿猜想 18](https://yiren.lu/assets/pdf/parity-network.pdf#page=13)
+Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现全部边奇偶并恢复输入，当且仅当它有完美消去序。**七顶点图 $K_{1,3,3}$ 直接反驳逆向蕴涵。** 其 15 条边用 21 道门依次实现，全部线路恢复，而 5040 种顶点排列均不满足消去条件。同一张图的每一个完美网络还都必须使用全部七根线路作控制，回答了作者的问题 (C2)。证明包也给出无三角形图的完整分类、单环图的最优门数以及一般的生成树必要条件。对围长至少五的图，任何电路门数 $L$ 均满足 $2L\ge3m+n-1$。对任意完全二部图 $K_{a,b}$（$1\le a\le b$），最优门数恰为 $ab+b+2a-2$，任意增加最终复原的零初值或借用辅助线也保持此值。[逐门反例与数学证明](problems/GraphicParity/COUNTEREXAMPLE.md) · [Lean 与运行方法](problems/GraphicParity/) · [独立 ZIP](packages/GraphicParity.zip?raw=1) · [原作者稿猜想 18](https://yiren.lu/assets/pdf/parity-network.pdf#page=13)
 
 ## 论文点名的极值问题
 

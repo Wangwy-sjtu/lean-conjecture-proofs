@@ -133,6 +133,60 @@ def minimum_with_ancillas(a, b, clean, borrowed):
                for mask, k in entries for other, j in entries if mask | other == all_terms)
 
 
+def check_girth_bound():
+    """Compare XOR collisions with four-cycles, then audit a running circuit."""
+    tested = 0
+    for n in range(1, 7):
+        pairs = list(combinations(range(n), 2))
+        for subset in range(1 << len(pairs)):
+            adjacency = [set() for _ in range(n)]
+            terms = set()
+            for i, (v, w) in enumerate(pairs):
+                if subset & (1 << i):
+                    adjacency[v].add(w)
+                    adjacency[w].add(v)
+                    terms.add((1 << v) | (1 << w))
+            differences = [e ^ f for e, f in combinations(terms, 2)]
+            squares_absent = all(len(adjacency[v] & adjacency[w]) <= 1 for v, w in pairs)
+            triangles_absent = all(not (adjacency[v] & adjacency[w])
+                                   for v, w in pairs if w in adjacency[v])
+            assert squares_absent == (len(differences) == len(set(differences)))
+            assert triangles_absent == terms.isdisjoint(differences)
+            tested += 1
+
+    # Petersen graph, using an exceptional control to move directly between
+    # two newly visited edges. The remaining edges are computed then uncomputed.
+    edges = {tuple(sorted((i, (i + 1) % 5))) for i in range(5)}
+    edges |= {tuple(sorted((i + 5, (i + 2) % 5 + 5))) for i in range(5)}
+    edges |= {(i, i + 5) for i in range(5)}
+    required = {(1 << u) | (1 << v) for u, v in edges}
+    gates = [(1, 4), (1, 0), (4, 0), (1, 4), (4, 0)]
+    for u, v in sorted(edges - {(0, 1), (0, 4)}):
+        gates.extend(((u, v), (u, v)))
+    start = [1 << v for v in range(10)]
+    state = start.copy()
+    seen, hot, charged, exceptions = set(), set(), set(), set()
+    for k, (c, t) in enumerate(gates, 1):
+        control = state[c]
+        state[t] ^= control
+        term = state[t]
+        if term in required and term not in seen:
+            if t in hot:
+                assert control in exceptions and control not in charged
+                charged.add(control)
+            hot.add(t)
+            seen.add(term)
+        else:
+            hot.discard(t)
+        if term.bit_count() % 2 == 0 and term not in required:
+            exceptions.add(term)
+        assert 2 * len(seen) <= k + len(charged) + len(hot)
+    assert state == start and seen == required and not hot and len(charged) == 1
+    assert 3 * len(edges) + len(start) - 1 == 54
+    print(f"{tested} labeled graphs: XOR uniqueness agrees with four-cycle exclusion; "
+          "the Petersen circuit satisfies the counting invariant at every gate.")
+
+
 def check_counterexample():
     color = (2, 0, 0, 0, 1, 1, 1)
     edges = {(u, v) for u, v in combinations(range(7), 2) if color[u] != color[v]}
@@ -182,3 +236,4 @@ if __name__ == "__main__":
     assert minimum_with_ancillas(2, 2, clean=0, borrowed=1) == 8
     print("With auxiliary wires: exact search gives 4 for a two-edge star with both kinds, "
           "and 8 for a four-cycle with a clean or borrowed wire.")
+    check_girth_bound()

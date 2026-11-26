@@ -973,4 +973,24 @@ theorem sumfree_pivot_bound [Fintype V] (r : V) (T : Finset (Term V)) (gs : List
 
 #print axioms sumfree_pivot_bound
 
+/-- Distinct even outputs outside the set of requested terms. -/
+def exceptionalEven (T : Finset (Term V)) (gs : List (Gate V)) : Finset (Term V) :=
+  (evens initial gs).toFinset \ T
+
+theorem mem_exceptionalEven (T : Finset (Term V)) (gs : List (Gate V)) {e : Term V}
+    (out : e∈outputs initial gs) (even : e.card%2=0) (extra : e∉T) :
+    e∈exceptionalEven T gs := mem_sdiff.mpr ⟨by simp [evens,out,even],extra⟩
+
+theorem exceptional_even_budget [Fintype V] (r : V) (T : Finset (Term V)) (gs : List (Gate V))
+    (connected : ∀ v, ConnectedTo T r v) (simple : SimpleEdges T) (net : Network T gs) :
+    T.card + (exceptionalEven T gs).card + (Fintype.card V-1) ≤ gs.length := by
+  have even (e : Term V) (he : e∈T) : e.card%2=0 := by rw [simple e he]
+  have sum := card_sdiff_add_card_eq_card (requested_subset T gs even net)
+  change (exceptionalEven T gs).card+T.card=_ at sum
+  have c := List.toFinset_card_le (evens initial gs)
+  have o := odd_output_lower_bound r T gs connected even net.2 net.1
+  change Fintype.card V-1 ≤ oddOutputs initial gs at o
+  have l := counts_split initial gs
+  omega
+
 end GraphicParity
