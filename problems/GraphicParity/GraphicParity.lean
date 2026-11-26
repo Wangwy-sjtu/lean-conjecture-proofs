@@ -140,7 +140,7 @@ private theorem all_even (gs : List (Gate V)) {w : Term V} (hw : w∈outputs ini
 /-- The parity attached to the endpoints of an edge; it is empty at equal endpoints. -/
 def pair (x y : V) : Term V := ({x} : Finset V) ∆ {y}
 
-private theorem pair_comp (x y z : V) : pair x y ∆ pair y z = pair x z := by
+theorem pair_comp (x y z : V) : pair x y ∆ pair y z = pair x z := by
   simp only [pair, ← symmDiff_assoc, symmDiff_symmDiff_cancel_right]
 
 private theorem pair_even (x y : V) : (pair x y).card%2=0 := by
@@ -412,7 +412,7 @@ theorem triangle_free_gate_lower [Fintype V] (r : V) (T : Finset (Term V)) (gs :
 #print axioms triangle_free_gate_lower
 
 
-private theorem pair_of_ne {x y : V} (ne : x ≠ y) : pair x y = {x,y} := by
+theorem pair_of_ne {x y : V} (ne : x ≠ y) : pair x y = {x,y} := by
   ext z
   by_cases h : z=x
   · subst z; simp [pair,mem_symmDiff,ne]
@@ -475,13 +475,13 @@ theorem triangle_free_unicyclic_optimum [Fintype V] (r : V) (T : Finset (Term V)
 #print axioms triangle_free_unicyclic_optimum
 
 
-private theorem run_append (s : State V) (u v : List (Gate V)) :
+theorem run_append (s : State V) (u v : List (Gate V)) :
     run s (u++v) = run (run s u) v := by
   induction u generalizing s with
   | nil => rfl
   | cons g u ih => exact ih (applyGate s g)
 
-private theorem outputs_append (s : State V) (u v : List (Gate V)) :
+theorem outputs_append (s : State V) (u v : List (Gate V)) :
     outputs s (u++v) = outputs s u ++ outputs (run s u) v := by
   induction u generalizing s with
   | nil => rfl
@@ -491,7 +491,7 @@ private theorem outputs_append (s : State V) (u v : List (Gate V)) :
 def twoHubEdges (a b : V) (X : Finset V) : Finset (Term V) :=
   X.image (pair a) ∪ X.image (pair b)
 
-private theorem pair_same_root {a x y : V} (h : pair a x = pair a y) : x=y := by
+theorem pair_same_root {a x y : V} (h : pair a x = pair a y) : x=y := by
   have e := congrArg (fun z : Finset V => ({a}:Finset V) ∆ z) h
   simpa [pair] using e
 
@@ -714,7 +714,7 @@ private theorem activation_from_births (T B : Finset (Term V)) (s : State V)
     · exact new hp
     · exact ih u pre' seeds' (fun z hz => sat z (List.mem_cons_of_mem _ hz)) e he hp
 
-private theorem inter_xor (e f U : Term V) :
+theorem inter_xor (e f U : Term V) :
     (e ∆ f) ∩ U = (e ∩ U) ∆ (f ∩ U) := by
   ext z
   simp only [mem_inter,mem_symmDiff]
@@ -799,5 +799,156 @@ theorem insert_single_edge (T : Finset (Term V)) (u v : V) (diff : u≠v)
     rcases mem_insert.mp hw with rfl | old
     · exact eq ▸ List.mem_cons_self
     · exact List.mem_cons_of_mem _ (List.mem_cons_of_mem _ ((cancel_gate initial g).symm ▸ net.2 w old))
+
+/-- Eliminate a pivot bit by adding one fixed generator when necessary. -/
+private def clearBit (p : V) (g t : Term V) : Term V := if p∈t then t ∆ g else t
+
+private theorem clear_add (p : V) (g a b : Term V) :
+    clearBit p g (a ∆ b) = clearBit p g a ∆ clearBit p g b := by
+  by_cases ha : p∈a <;> by_cases hb : p∈b <;> simp [clearBit,mem_symmDiff,ha,hb] <;>
+    ext z <;> simp only [mem_symmDiff] <;> tauto
+
+/-- Elementary elimination on a list of binary generators. Outside the
+chosen pivot coordinates the quotient map fixes every supported vector. -/
+private theorem pivot_projection (xs : List (Term V)) :
+    ∃ P : Finset V, ∃ f : Term V → Term V,
+      P.card ≤ xs.length ∧ f ∅=∅ ∧ (∀ a b, f (a ∆ b)=f a ∆ f b) ∧
+      (∀ g∈xs, f g=∅) ∧ ∀ t, Disjoint t P → f t=t := by
+  generalize hlength : xs.length = k
+  induction k generalizing xs with
+  | zero =>
+    have eq := List.length_eq_zero_iff.mp hlength
+    subst xs
+    exact ⟨∅,id,by simp,rfl,fun _ _ => rfl,by simp,by simp⟩
+  | succ k ih =>
+    cases xs with
+    | nil => simp at hlength
+    | cons g ts =>
+      have rest : ts.length=k := Nat.succ.inj hlength
+      by_cases empty : g=∅
+      · obtain ⟨P,f,bound,zero,linear,kill,fixed⟩ := ih ts rest
+        refine ⟨P,f,by omega,zero,linear,?_,fixed⟩
+        intro u hu
+        rcases List.mem_cons.mp hu with rfl | hu
+        · simpa [empty] using zero
+        · exact kill u hu
+      · obtain ⟨p,hp⟩ := Finset.nonempty_iff_ne_empty.mpr empty
+        have next : (ts.map (clearBit p g)).length=k := by simpa using rest
+        obtain ⟨P,f,bound,zero,linear,kill,fixed⟩ := ih _ next
+        refine ⟨insert p P,f ∘ clearBit p g,?_,?_,?_,?_,?_⟩
+        · have h := card_insert_le p P
+          simp at bound ⊢
+          omega
+        · simpa [clearBit] using zero
+        · intro a b
+          simp only [Function.comp_apply,clear_add,linear]
+        · intro u hu
+          rcases List.mem_cons.mp hu with rfl | hu
+          · simpa [clearBit,hp] using zero
+          · exact kill _ (List.mem_map_of_mem hu)
+        · intro t dt
+          have np : p∉t := fun h => (Finset.disjoint_left.mp dt) h (mem_insert_self ..)
+          have d : Disjoint t P := dt.mono_right (subset_insert ..)
+          simpa [clearBit,np] using fixed t d
+
+private theorem projected_births (T : Finset (Term V)) (free : SumFree T)
+    (f : Term V → Term V) (lin : ∀ a b, f (a ∆ b)=f a ∆ f b)
+    (H : Finset (Term V)) (s : State V) (gs : List (Gate V))
+    (past : ∀ x, (s x).card%2=0 → (s x∈T ∨ f (s x)=∅) ∧ (f (s x)≠∅ → f (s x)∈H))
+    (kill : ∀ w∈outputs s gs, w.card%2=0 → w∉T → f w=∅)
+    (born : ∀ w∈births s gs, f w∈H) :
+    ∀ w∈outputs s gs, w.card%2=0 → f w≠∅ → f w∈H := by
+  induction gs generalizing s with
+  | nil => simp [outputs]
+  | cons g gs ih =>
+    let u := applyGate s g
+    have current (he : (output s g).card%2=0) :
+        (output s g∈T ∨ f (output s g)=∅) ∧
+        (f (output s g)≠∅ → f (output s g)∈H) := by
+      have lost := kill (output s g) List.mem_cons_self he
+      refine ⟨or_iff_not_imp_left.mpr lost,?_⟩
+      intro nonzero
+      have target : output s g∈T := by by_contra h; exact nonzero (lost h)
+      have parity := card_xor (s g.target) (s g.control)
+      change (output s g).card%2=_ at parity
+      by_cases ht : (s g.target).card%2=0
+      · obtain ⟨targetOrZero,bt⟩ := past g.target ht
+        obtain ⟨ac,bc⟩ := past g.control (by omega)
+        have one : f (s g.target)=∅ ∨ f (s g.control)=∅ := by
+          rcases targetOrZero with et | zt
+          · rcases ac with ec | zc
+            · exact (free _ et _ ec target).elim
+            · exact Or.inr zc
+          · exact Or.inl zt
+        rcases one with zero | zero
+        · have eq : f (output s g)=f (s g.control) := by simp [output,lin,zero]
+          rw [eq] at nonzero ⊢
+          exact bc nonzero
+        · have eq : f (output s g)=f (s g.target) := by simp [output,lin,zero]
+          rw [eq] at nonzero ⊢
+          exact bt nonzero
+      · have both : (s g.target).card%2=1 ∧ (s g.control).card%2=1 := by omega
+        exact born _ (by simp [births,both])
+    have next (x : V) : (u x).card%2=0 →
+        (u x∈T ∨ f (u x)=∅) ∧ (f (u x)≠∅ → f (u x)∈H) := by
+      by_cases eq : x=g.target
+      · subst x; simpa [u,applyGate] using current
+      · simpa [u,applyGate,eq] using past x
+    have born' : ∀ w∈births u gs, f w∈H := by
+      intro w hw; apply born
+      simp only [births]
+      split <;> simp_all [u]
+    intro w hw he nz
+    rcases List.mem_cons.mp hw with rfl | hw
+    · exact (current he).2 nz
+    · exact ih u next (fun t h => kill t (List.mem_cons_of_mem _ h)) born' w hw he nz
+
+/-- Lower bound for a restored network of sum-free edge targets. There is a
+set of pivot vertices paying one excess even output per pivot. Every requested
+edge disjoint from the pivot set needs its own nonzero projected birth. -/
+theorem sumfree_pivot_bound [Fintype V] (r : V) (T : Finset (Term V)) (gs : List (Gate V))
+    (connected : ∀ v, ConnectedTo T r v) (simple : SimpleEdges T) (free : SumFree T)
+    (net : Network T gs) :
+    ∃ P : Finset V, T.card + P.card +
+      max (Fintype.card V-1) (T.filter (fun e => Disjoint e P)).card ≤ gs.length := by
+  classical
+  let A := (evens initial gs).toFinset
+  let X := A \ T
+  have even (w : Term V) (hw : w∈T) : w.card%2=0 := by rw [simple w hw]
+  have sub : T⊆A := requested_subset T gs even net
+  obtain ⟨P,f,piv,_zero,lin,kills,fixed⟩ := pivot_projection X.toList
+  simp only [Finset.length_toList] at piv
+  let H := (births initial gs).toFinset.image f
+  have kill (w : Term V) (h : w∈outputs initial gs) (he : w.card%2=0) (nt : w∉T) :
+      f w=∅ := by
+    apply kills
+    apply Finset.mem_toList.mpr
+    exact mem_sdiff.mpr ⟨by simp [A,evens,h,he],nt⟩
+  have generated := projected_births T free f lin H initial gs (by simp [initial]) kill
+    (fun w hw => mem_image_of_mem _ (List.mem_toFinset.mpr hw))
+  have roots : T.filter (fun e => Disjoint e P) ⊆ H := by
+    intro e he
+    obtain ⟨ht,dis⟩ := mem_filter.mp he
+    have nonempty : e≠∅ := by
+      intro empty
+      have h := simple e ht
+      simp [empty] at h
+    have eq := fixed e dis
+    have h := generated e (net.2 e ht) (even e ht) (by rwa [eq])
+    rwa [eq] at h
+  have count := (card_le_card roots).trans
+    ((card_image_le : H.card≤(births initial gs).toFinset.card).trans (List.toFinset_card_le _))
+  have size := card_sdiff_add_card_eq_card sub
+  change X.card+T.card=A.card at size
+  have evenLen : A.card≤(evens initial gs).length := List.toFinset_card_le _
+  have lower := odd_output_lower_bound r T gs connected even net.2 net.1
+  have balance' := balance initial gs
+  rw [net.1] at balance'
+  have deaths := deaths_le_odd initial gs
+  have split := counts_split initial gs
+  change Fintype.card V-1 ≤ oddOutputs initial gs at lower
+  exact ⟨P,by omega⟩
+
+#print axioms sumfree_pivot_bound
 
 end GraphicParity

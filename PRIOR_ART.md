@@ -33,6 +33,8 @@
 
 **Band or Bump 的三牌型情形。** Levin 在 Remark 2 已给出 band 的对数凹性，并以数值结果提出 bump 概率的猜想。他之前另证多元超几何矩形截取概率的对数凹性。三牌型的 bump 区域是两个矩形的并；两个可重叠的计数上界在每个时刻至少一个取等。以题名、编号、旧游戏名、矩形与并集的等价计数检索公开期刊、arXiv、GitHub 及 AI 解题库，未定位到该全参数三牌型情形的在先证明。MathDB 公开索引未找到可核实的原题页。[原文 Remark 2](https://arxiv.org/pdf/2407.08062#page=7) · [在先矩形定理](https://doi.org/10.1080/07474946.2024.2379901)
 
+**任意完全二部图的最优 CNOT 门数。** Cao 等人给出 $K_{2,p}$ 的 $3p+2$ 门构造。Amy、Azimzadeh 和 Mosca 研究较一般的奇偶网络综合以及两个受限模型中的计算复杂性。TrureTuring 第 24527 题第 4 步已有奇加奇张成偶输出并以复原计数的证明。这里另将非目标偶输出消去，在未删除的顶点间取得互异的投影，给出与构造吻合的全参数下界。检索论文题名、arXiv 编号、complete bipartite、all cross pairs、CNOT parity network、optimality、pivot 和 bipartite phase polynomial 的组合，并查公开 GitHub 源码、议题与 MathDB 的可索引页面。未定位到任意 $1\le a\le b$ 时精确值 $ab+b+2a-2$ 的同一证明。[原论文](https://yiren.lu/assets/pdf/parity-network.pdf#page=6) · [一般奇偶综合模型](https://arxiv.org/abs/1712.01859) · [在先 AI 计数论证](https://github.com/the-omega-institute/trureturing/issues/24527)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)

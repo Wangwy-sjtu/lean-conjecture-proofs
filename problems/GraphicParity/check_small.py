@@ -1,4 +1,4 @@
-"""Enumerate closed CNOT programs of length at most eight on four wires."""
+"""Check the counterexample, enumerate four-wire networks, and simulate pair circuits."""
 from collections import defaultdict
 from itertools import combinations, permutations
 
@@ -76,6 +76,32 @@ def check_two_hubs(p):
 
 
 
+def check_complete_bipartite(a, b):
+    """Simulate the hub transitions and independently minimize the pivot bound."""
+    hubs = range(a)
+    leaves = range(a, a + b)
+    gates = [(0, x) for x in leaves]
+    for h in range(1, a):
+        gates.append((h - 1, h))
+        gates.extend((h, x) for x in leaves)
+        gates.append((h - 1, h))
+    gates.extend((a - 1, x) for x in leaves)
+
+    start = [1 << x for x in range(a + b)]
+    state = start.copy()
+    seen = set()
+    for control, target in gates:
+        state[target] ^= state[control]
+        seen.add(state[target])
+    edges = {start[h] | start[x] for h in hubs for x in leaves}
+    assert edges <= seen and state == start
+    optimum = a * b + b + 2 * a - 2
+    assert len(gates) == optimum
+    lower = min(a * b + x + y + max(a + b - 1, (a - x) * (b - y))
+                for x in range(a + 1) for y in range(b + 1))
+    assert lower == optimum
+
+
 def check_counterexample():
     color = (2, 0, 0, 0, 1, 1, 1)
     edges = {(u, v) for u, v in combinations(range(7), 2) if color[u] != color[v]}
@@ -116,3 +142,7 @@ if __name__ == "__main__":
     for leaves in range(2, 31):
         check_two_hubs(leaves)
     print("K(2,p): the 3p+2-gate construction covers every edge and restores every wire for 2 ≤ p ≤ 30.")
+    for a in range(1, 13):
+        for b in range(a, 25):
+            check_complete_bipartite(a, b)
+    print("K(a,b): circuits and minima of the pivot bound agree for 1 ≤ a ≤ 12 and a ≤ b ≤ 24.")

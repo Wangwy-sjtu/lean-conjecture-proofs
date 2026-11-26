@@ -34,6 +34,26 @@
 
 在 $K_{2,p}$ 上，$m=2p$，$n=p+2$，有环，故下界为 $m+n=3p+2$。设两中心为 $a,b$。先把 $a$ 异或进 $b$；依次对每个叶 $x$ 把 $a$ 和当前的 $b$ 异或进 $x$，依次得到 $a\oplus x$ 和 $b\oplus x$。把中心 $b$ 恢复后，再对每个叶执行一次由 $b$ 控制的门，恢复全部输入。一共 $1+2p+1+p$ 道门。
 
+## 任意完全二部图的精确门数
+
+设两侧分别有 $a,b$ 个顶点，$1\le a\le b$。在任意两根线路间允许 CNOT、最终恢复全部输入的模型下，
+
+$$\operatorname{OPT}(K_{a,b})=ab+b+2a-2.$$
+
+例如 $K_{3,3}$ 恰需 16 道门，$K_{4,4}$ 恰需 26 道门。作者已给出 $K_{2,p}$ 的 $3p+2$ 构造。下面的下界对任意大小的两侧都成立。[作者稿，第 6 页](https://yiren.lu/assets/pdf/parity-network.pdf#page=6) · [Lean 最优性定理](BipartiteOptimal.lean)
+
+**构造。** 依次访问较小侧的顶点。先把第一个顶点 $h$ 的值异或进较大侧的每根线 $x$，用 $b$ 道门得到第一行的全部边 $h\oplus x$。由 $h$ 切换到下一个顶点 $k$ 时，先用一道门在 $k$ 上得到 $h\oplus k$，再把它异或进每根 $x$，于是得到下一行的全部边 $k\oplus x$。用一道门恢复 $k$。最后把末行的顶点值异或进每根 $x$，所有输入复原。总计 $b+(a-1)(b+2)+b$ 道门。
+
+**下界。** 记 $E$ 为请求的边集，$X$ 为运行中出现的全部不同的非目标偶输出。至少有 $|E|+|X|$ 道门输出偶向量。对 $X$ 作二元高斯消元，可选出顶点集 $P$ 和线性映射 $f$，使 $|P|\le|X|$，$f(X)=0$，且支持集避开 $P$ 的向量都被 $f$ 固定。具体地，从非零向量 $g$ 中选主元 $p$，向一切含 $p$ 的向量加上 $g$，然后处理其余像向量。
+
+一个非零的目标边像首次出现在偶线路上时，必定由两个奇输入产生。否则两个偶输入的异或得到一条目标边。无三角形图中，两条目标边的异或无法得到第三条目标边，所以至少一个输入属于 $X$。它的像为零，另一输入便早已持有同一个像。每条完全避开 $P$ 的边都被 $f$ 固定，从而各需一次不同的奇加奇操作。又因连通性至少需要 $a+b-1$ 次这样的操作，且电路末尾必须恢复全部输入，输出奇向量的门数至少为两项中的较大者。因此任何此类电路均满足
+
+$$L\ge ab+|P|+\max\{a+b-1,\ |E(K_{a,b}-P)|\}.$$
+
+记 $q=|P|$。若 $q\ge a-1$，第一项下界立即给出 $L\ge ab+b+2a-2$。若 $q\le a-2$，每删一个点至多消去 $b$ 条边，故剩余至少 $(a-q)b$ 条边。此时 $q+(a-q)b$ 在 $q=a-2$ 时最小，等于 $a-2+2b\ge b+2a-2$。两个情形合上界取等。这个主元下界对任意连通无三角形图都成立，完整二部性只用于最后的计数。[一般下界的 Lean 证明](GraphicParity.lean)
+
+独立 Python 程序分别模拟电路并遍历两侧删点数，在 $1\le a\le12$、$a\le b\le24$ 的 222 对参数上复核全部边、复原和上下界数值。[复核程序](check_small.py)
+
 ## 完美电路的一项必要条件
 
 对任意连通简单图，若其电路达到 $m+n-1$，则图中存在一棵生成树，可以仅靠反复补全三角形的第三条边生成原图全部边。形式定理 `perfect_has_activating_tree` 给出恰有 $n-1$ 条边的连通生成子图，以及每条边的有限构造。奇线路与奇线路相加得到的那批边就是初始树边。其余偶输出都只能在两个已经存在的偶支持上做异或，并由门数取等强制得到一条目标边，因此每一步都补全原图的一个三角形。
@@ -42,23 +62,24 @@
 
 ## 形式化与复核
 
-`GraphicParity.lean` 实现每道 CNOT 的状态变化、整段电路的运行、全部曾输出的支持集，以及最终恢复每根线路的条件。`triangle_free_perfect_iff` 对应第一条，其中树用连通简单图上等价的 $m=n-1$ 表达。`triangle_free_unicyclic_optimum` 与 `two_hub_optimum` 都以 `IsLeast` 同时证明最优下界和可达性。图类与完美消去序之间用到的文献定理在上面单独注明。七项一般电路定理的公理清单均为 `propext`、`Classical.choice`、`Quot.sound`。
+`GraphicParity.lean` 实现每道 CNOT 的状态变化、整段电路的运行、全部曾输出的支持集，以及最终恢复每根线路的条件。`triangle_free_perfect_iff` 对应第一条，其中树用连通简单图上等价的 $m=n-1$ 表达。`triangle_free_unicyclic_optimum` 与 `two_hub_optimum` 都以 `IsLeast` 同时证明最优下界和可达性。图类与完美消去序之间用到的文献定理在上面单独注明。主定理的公理清单仅含 `propext`、`Classical.choice`、`Quot.sound`。
 
 独立 Python 程序把每根线路编码为位掩码，枚举四根线路上长度至多 8 的闭合 CNOT 程序。四点的 16 棵有标号树各需 6 道门，三个有标号四环各需 8 道门。它还逐门核查了 $2\le p\le30$ 的 $K_{2,p}$ 构造。可用 `python3 check_small.py` 重现。
 
 TrureTuring 在研究另一类对角酉电路时，已经公开了「奇＋奇产生的偶向量张成全部偶输出，加上初末偶线路数平衡」的同一计数论证。这里使用该论证处理图边，并由门数取等推导无三角形图的分类和生成树条件。七顶点反例本身仅需逐门证书及邻居排列论证。[在先 AI 证明第 4 步](https://github.com/the-omega-institute/trureturing/issues/24527)
 
-2026 年 11 月 27 日，以论文题名、arXiv 编号、perpane、triangle-free、unicyclic、odd outputs、complete bipartite 与 CNOT 的组合检索公开论文、GitHub 代码和问题，以及可索引的公开 AI 数学记录。已知结果包括论文的一般门数下界、四环例子、围长至少 5 的渐近下界和 $K_{2,p}$ 的构造。以上检索未定位到连通无三角形图的这个充要条件，或任意 $p$ 的配套精确下界。机器验证证明数学命题，公开文献优先权仍随新发现的来源更新。[arXiv 原文](https://arxiv.org/abs/2509.10070) · [作者稿](https://yiren.lu/assets/pdf/parity-network.pdf)
+2026 年 11 月 27 日，以论文题名、arXiv 编号、perpane、triangle-free、unicyclic、odd outputs、complete bipartite 与 CNOT 的组合检索公开论文、GitHub 代码和问题，以及可索引的公开 AI 数学记录。已知结果包括论文的一般门数下界、四环例子、围长至少 5 的渐近下界和 $K_{2,p}$ 的构造。以上检索未定位到连通无三角形图的这个充要条件，或任意 $a,b$ 的精确最优门数公式。机器验证证明数学命题，公开文献优先权仍随新发现的来源更新。[arXiv 原文](https://arxiv.org/abs/2509.10070) · [作者稿](https://yiren.lu/assets/pdf/parity-network.pdf)
 
 ## 在独立下载包中运行
 
 本目录已锁定版本。从该目录执行
 
 ```sh
-lake exe cache get Mathlib.Data.Finset.SymmDiff Mathlib.Data.Finset.Powerset Mathlib.Data.Finset.Card Mathlib.Data.Fintype.Card Mathlib.Order.Bounds.Defs Mathlib.Data.List.Chain Mathlib.Data.List.Nodup Mathlib.Data.List.Permutation
+lake exe cache get Mathlib.Data.Finset.SymmDiff Mathlib.Data.Finset.Powerset Mathlib.Data.Finset.Card Mathlib.Data.Finset.Prod Mathlib.Data.Fintype.Card Mathlib.Order.Bounds.Defs Mathlib.Data.List.Chain Mathlib.Data.List.Nodup Mathlib.Data.List.Permutation
 lake build CaoCounterexample
 lake env lean -DwarningAsError=true GraphicParity.lean
 lake env lean -DwarningAsError=true CaoCounterexample.lean
 lake env lean -DwarningAsError=true CaoControlWire.lean
+lake env lean -DwarningAsError=true BipartiteOptimal.lean
 python3 check_small.py
 ```
