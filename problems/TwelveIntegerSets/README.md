@@ -1,6 +1,6 @@
 # 十二元和积问题中的几何级数交点上界
 
-Antis、Britt、Chapman、Hawkins、Rice、Warren 在 2026 年论文第 6 节猜想，每个十二元正整数集至少给出 41 个不同的两两和或 41 个不同的两两积。两数可以相同。论文已经给出同时只有 41 个和、35 个积的例子。本次证明了一个对全部十二元集适用的必要条件，原猜想中的全局下界仍待证明。[原论文第 6 节](https://alexricemath.com/wp-content/uploads/2026/03/SP2025paperV3.pdf#page=12) · [arXiv 版本记录](https://arxiv.org/abs/2601.21828)
+Antis、Britt、Chapman、Hawkins、Rice、Warren 在 2026 年论文第 6 节猜想，每个十二元正整数集至少给出 41 个不同的两两和或 41 个不同的两两积。两数可以相同。论文已经给出同时只有 41 个和、35 个积的例子。本次证明了一个对全部十二元集适用的必要条件，同时刻画了原作者十一元极值构型的一点扩展。原猜想中的全局下界仍待证明。[原论文第 6 节](https://alexricemath.com/wp-content/uploads/2026/03/SP2025paperV3.pdf#page=12) · [arXiv 版本记录](https://arxiv.org/abs/2601.21828)
 
 **定理。** 设 $A$ 是十二元正有理数集，$|A+A|\le 41$。任取正有理数 $c$ 和大于 1 的有理数 $r$，则
 
@@ -9,6 +9,13 @@ $$
 $$
 
 这个界取得到。作者的例子 $\{1,2,3,4,6,8,9,12,16,18,24,32\}$ 包含 $1,2,4,8,16,32$ 六个不同的二的幂。Lean 重新数出了 12 个元素、41 个和与 35 个积。集合中落在级数上的指数允许任意跳跃，其余元素只需为正。原论文的推论 6.2 已将小积集归入一维或二维乘法结构。本定理补充了小和集沿任一有理几何级数的浓度限制。[原论文推论 6.2](https://alexricemath.com/wp-content/uploads/2026/03/SP2025paperV3.pdf#page=13)
+
+## 十一元极值例怎样增加一个元素
+
+令 $B=\{1,2,3,4,6,8,9,12,16,18,24\}$。任取正有理数 $c$ 和 $x\notin cB$，并设 $x>0$。十二元集 $cB\cup\{x\}$ 的和集与积集的大小同时不超过 41，当且仅当 $x=32c$。此时两种大小分别为 41 和 35。原作者已给出这两组具体数字。这里证明在包含整个 $cB$ 的条件下，添加元素只有这一种选择。[Antis 等的例子](https://arxiv.org/abs/2601.21828)
+
+缩放使 $c=1$。$B+B$ 有 34 个不同的和，$x+B$ 有 11 个。如果两集无交，它们的并已有 45 个和。故 $x$ 必可写成 $s-b$，其中 $s\in B+B$、$b\in B$。Lean 对这个穷尽正有理候选的有限集合计算两个基数，再利用缩放保持基数推出一般结论。主定理为 `SmallSumProduct.unique_extension_scaled`，见 `ElevenExtensions.lean`。
+
 
 ## 一般计数不等式
 
@@ -33,7 +40,7 @@ $$
 
 ## Lean 验证
 
-使用 Lean 和 mathlib 4.24.0，按 `RationalPowers`、`GeometricTranslate`、`SidonGrowth`、`GeometricConcentration`、`TwelveIntegerSets` 的次序编译。主命题为 `SmallSumProduct.twelve_geometric_cap_rat`；正整数原题域的版本为 `SmallSumProduct.twelve_integer_geometric_cap`；任意规模的不等式为 `SmallSumProduct.geometric_growth`；尖锐例子为 `SmallSumProduct.example_sharp`。所有结论通过 Lean 内核，只依赖 `propext`、`Classical.choice`、`Quot.sound`。
+使用 Lean 和 mathlib 4.24.0，按 `RationalPowers`、`GeometricTranslate`、`SidonGrowth`、`GeometricConcentration`、`TwelveIntegerSets`、`ElevenExtensions` 的次序编译。主命题为 `SmallSumProduct.twelve_geometric_cap_rat`；正整数原题域的版本为 `SmallSumProduct.twelve_integer_geometric_cap`；任意规模的不等式为 `SmallSumProduct.geometric_growth`；尖锐例子为 `SmallSumProduct.example_sharp`。所有结论通过 Lean 内核，只依赖 `propext`、`Classical.choice`、`Quot.sound`。
 
 ## 在独立下载包中运行
 
@@ -41,6 +48,7 @@ $$
 
 ```sh
 lake exe cache get Mathlib.Data.Nat.ModEq Mathlib.Data.List.Count Mathlib.Data.Rat.Cast.Order Mathlib.Algebra.BigOperators.Group.List.Basic Mathlib.Tactic.FieldSimp Mathlib.Tactic.Linarith Mathlib.Tactic.Positivity Mathlib.Tactic.Ring Mathlib.NumberTheory.Padics.PadicVal.Basic Mathlib.Data.Finset.Card Mathlib.Data.Finset.Union Mathlib.Tactic.IntervalCases
-lake build RationalPowers GeometricTranslate SidonGrowth GeometricConcentration
+lake build RationalPowers GeometricTranslate SidonGrowth GeometricConcentration TwelveIntegerSets
 lake env lean -DwarningAsError=true TwelveIntegerSets.lean
+lake env lean -DwarningAsError=true ElevenExtensions.lean
 ```

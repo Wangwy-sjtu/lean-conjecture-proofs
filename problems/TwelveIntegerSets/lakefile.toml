@@ -16,6 +16,9 @@ name = "SidonGrowth"
 [[lean_lib]]
 name = "GeometricConcentration"
 
+[[lean_lib]]
+name = "ElevenExtensions"
+
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"

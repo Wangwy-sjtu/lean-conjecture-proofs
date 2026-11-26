@@ -53,7 +53,7 @@
 
 **Lights Out 无穷多个二维零空间方盘。** Boyles 的论文定理 4.2 已经解决摘要中写作猜想的同余必要条件。此处处理的是第 5 节仍列出的无穷性和具体三次幂族。Muñoz 已给一般最大公因式模型和因子重数，Zaidenberg 已有谱曲线，作者 GitHub 笔记也写明从奇数下标的互素性可推出所要结论。此次逐层排除新的三次幂阶坐标，并在实际方盘上给出首行头两格的线性同构。检索了公开 GitHub 代码与讨论、Hexagon、可索引的 MathDB 及引用记录。公开数学项目中命中的一份 Lights Out 程序处理一般线性消去，另有作者自己的猜想原稿。[猜想 5.1](https://arxiv.org/pdf/2201.03452#page=8) · [作者 GitHub 笔记](https://github.com/wmboyles/LightsOut-Math/blob/c730dfafc50c1e745d643654938d37851de8c06d/tex/conjectures/summary/conjectures.tex#L239) · [公开消去程序](https://github.com/CylicAmp/CylicAmp/blob/2a955686cf4ee4fbd83567fae0c6af2af7a49237/math/theorems/lights_out_gf2_gf37.py) · [数学证据与核查边界](problems/LightsGrid/)
 
-**十二元和积问题的最佳几何级数交点数。** Antis 等给出十二元集的上界构造，Clevenger 等已有有理级数的两项和唯一性和若干碰撞分类。此处给出包含任意级数外点时的总和集下界，它把任意有理几何级数与候选十二元集的交点数限制为六。已核查作者代码、O’Bryant 数据集、MathDB 365769/365772，以及公开 AI 项目的七元结果、黄金比例与塑料常数幂结果。原作的全局和积猜想仍待证明。[先前论文](https://arxiv.org/abs/2307.06874) · [原题](https://arxiv.org/abs/2601.21828) · [TrureTuring 七元结果](https://github.com/the-omega-institute/trureturing/pull/14759) · [逐题查重和完整定理](problems/TwelveIntegerSets/)
+**十二元和积问题的最佳几何级数交点数。** Antis 等给出十二元集的上界构造，Clevenger 等已有有理级数的两项和唯一性和若干碰撞分类。此处给出包含任意级数外点时的总和集下界，它把任意有理几何级数与候选十二元集的交点数限制为六。已核查作者代码、O’Bryant 数据集、MathDB 365769/365772，以及公开 AI 项目的七元结果、黄金比例与塑料常数幂结果。Antis 等已列出十一元和十二元具体例子。这里还证明了在含有前一构型的所有正有理十二元集中，仅有其公布的扩展同时满足两个阈值。原作的全局和积猜想仍待证明。[先前论文](https://arxiv.org/abs/2307.06874) · [原题](https://arxiv.org/abs/2601.21828) · [TrureTuring 七元结果](https://github.com/the-omega-institute/trureturing/pull/14759) · [逐题查重和完整定理](problems/TwelveIntegerSets/)
 
 ## 核查过的公开 AI 记录
 
