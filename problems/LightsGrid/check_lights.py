@@ -101,3 +101,56 @@ if __name__ == "__main__":
     print(f"{reduction_checks} odd-power reductions passed. Direct unreduced polynomial counts "
           "on sides 56, 3,248, 185,192 agree with row chasing on sides 56, 170, 512.")
 
+
+    # A primitive 3^(s+1)-st root is represented by X modulo
+    # X^(2*3^s) + X^(3^s) + 1. All computations below are binary polynomial arithmetic.
+    def residue_check(s):
+        block = 3**s
+        order = 3*block
+        modulus = (1 << (2*block)) | (1 << block) | 1
+        degree = 2*block
+
+        def multiply(x, y):
+            result = 0
+            while y:
+                if y & 1:
+                    result ^= x
+                y >>= 1
+                x <<= 1
+                if x >> degree:
+                    x ^= modulus
+            return result
+
+        def power(x, n):
+            result = 1
+            while n:
+                if n & 1:
+                    result = multiply(result, x)
+                x = multiply(x, x)
+                n >>= 1
+            return result
+
+        def fib_at(t, n):
+            left, right = 0, 1
+            for digit in bin(n)[2:]:
+                square = multiply(left, left)
+                even = multiply(t, square)
+                odd = square ^ multiply(right, right)
+                if digit == '0':
+                    left, right = even, odd
+                else:
+                    left, right = odd, multiply(t, odd) ^ even
+            return left
+
+        q = 4**block
+        a = 3*((q-1)//order)*(q+1)
+        assert power(2, order) == 1 and power(2, block) != 1
+        t = 2 ^ power(2, order-1)
+        assert fib_at(t, a**s) != 0
+        assert fib_at(t, a**(s+1)) == fib_at(t ^ 1, a**(s+1)) == 0
+
+    for s in range(1, 5):
+        residue_check(s)
+    print("Explicit finite-field witnesses certify a new common root at the selected "
+          "transition s to s+1 for s=1,2,3,4.")
+

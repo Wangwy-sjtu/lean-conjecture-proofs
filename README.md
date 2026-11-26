@@ -31,7 +31,9 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 
 **Lights Out 方盘的二维零空间。** 对 Boyles 点名的每个边长 $n=2\cdot3^k-1$（$k\ge1$），恰有四个按键图案会保持原灯态不变，完整证明猜想 5.1 要求的无穷性。首行头两个按键与这四种图案一一对应。[数学证明与复现](problems/LightsGrid/) · [独立 ZIP](packages/LightsGrid.zip?raw=1) · [原猜想，第 8 页](https://arxiv.org/pdf/2201.03452#page=8)
 
-**奇数底数的方盘稳定性。** 对每个奇数 $a$，真实方盘零空间维数 $d(a^k-1)$ 最终保持常数。对 $a=57$，前三个指数的维数依次为 0、36、252，此后一直为 252。这同时否定了作者笔记中的两个固定起点猜测。[一般定理与完整反例](problems/LightsGrid/OddPowers.md) · [独立 ZIP](packages/LightsGrid.zip?raw=1)
+**奇数底数的方盘稳定性。** 对每个奇数 $a$，真实方盘零空间维数 $d(a^k-1)$ 最终保持常数。对 $a=57$，前三个指数的维数依次为 0、36、252，此后一直为 252。更一般地，任何正指数都能成为某个奇数底数出现严格跳变的位置。[一般定理与完整反例](problems/LightsGrid/OddPowers.md) · [独立 ZIP](packages/LightsGrid.zip?raw=1)
+
+**非回溯游走的顶点首次命中时间。** 对 Breen 等第 4 问，按平稳分布选择起点时，非回溯游走到达每个固定目标的平均步数都严格小于普通游走。领域为有限无向简单图、最小度至少二且相应期望有限。对目标再取平均得到原文的 Kemeny 常数严格不等式。[证明与精确差值](problems/NonbacktrackingKemeny/) · [独立 ZIP](packages/NonbacktrackingKemeny.zip?raw=1) · [作者第 4 问](https://arxiv.org/html/2510.06650v1#S5)
 
 ## 论文开放问题的部分进展
 

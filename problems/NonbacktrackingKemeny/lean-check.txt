@@ -1,0 +1,5 @@
+'VertexHitting.Network.capped_eq_survival_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
+'VertexHitting.Network.FirstStep.energy_gap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'VertexHitting.Network.FirstStep.degree_weighted_strict' depends on axioms: [propext, Classical.choice, Quot.sound]
+'VertexHitting.Network.stationary_target_strict' depends on axioms: [propext, Classical.choice, Quot.sound]
+'VertexHitting.Network.kemeny_nonbacktracking_lt_simple' depends on axioms: [propext, Classical.choice, Quot.sound]

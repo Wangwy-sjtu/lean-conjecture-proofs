@@ -22,6 +22,9 @@ name = "OddStabilization"
 [[lean_lib]]
 name = "OddGridExamples"
 
+[[lean_lib]]
+name = "LateJumps"
+
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
