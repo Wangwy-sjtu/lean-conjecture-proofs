@@ -1,0 +1,3 @@
+'BandOrBump.three_ranks_bump_log_concave' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BandOrBump.three_ranks_support' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BandOrBump.bump_hand_iff_first_bump' depends on axioms: [propext, Classical.choice, Quot.sound]

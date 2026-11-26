@@ -31,6 +31,8 @@
 
 **斐波那契砖长的极值高度。** 原文第 4 节明确提出对特定递增序列求最大行数，并点名素数、斐波那契数。此前论文主要处理连续整数砖长。公开 AI 证明涉及该文的无限贪心表以及具体行证书。按原题名、Fibonacci barrycade、cyclic interval sums、指定 Fibonacci 间距的 modular Golomb ruler、disjoint proper prefix sums 等检索论文与公开源码、议题及讨论，未定位到相同的全阶结果。斐波那契数制有限自动机是已有方法，特定圆排列及其全阶互异性证书详见独立目录。[原问题](https://arxiv.org/html/2609.18476v2#S4) · [连续整数砖长的后续工作](https://arxiv.org/abs/2609.24373) · [同论文的公开 AI 工作](https://github.com/the-omega-institute/trureturing/issues/8494)
 
+**Band or Bump 的三牌型情形。** Levin 在 Remark 2 已给出 band 的对数凹性，并以数值结果提出 bump 概率的猜想。他之前另证多元超几何矩形截取概率的对数凹性。三牌型的 bump 区域是两个矩形的并；两个可重叠的计数上界在每个时刻至少一个取等。以题名、编号、旧游戏名、矩形与并集的等价计数检索公开期刊、arXiv、GitHub 及 AI 解题库，未定位到该全参数三牌型情形的在先证明。MathDB 公开索引未找到可核实的原题页。[原文 Remark 2](https://arxiv.org/pdf/2407.08062#page=7) · [在先矩形定理](https://doi.org/10.1080/07474946.2024.2379901)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)
