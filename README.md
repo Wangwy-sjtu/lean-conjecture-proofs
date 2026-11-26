@@ -29,12 +29,15 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 
 **大 Nim 堆与公平博弈。** Beideman、Bowen、Müyesser 的问题 3 问，哪些固定局面与足够大的 Nim 堆作选择复合后会达到最长对局给出的 Grundy 上界。答案是每个有限局面。若其最长对局长为 $d$，适用于这个深度全部局面的最小堆阈值恰为 $\lfloor d^2/4\rfloor$。每个深度都有达到此界的游戏。对分支数有统一上界的一整套规则，存在对全部局面通用的堆阈值，恰当所有局面的深度也有统一上界。[证明与原文量词](problems/SelectiveCompound/) · [独立 ZIP](packages/SelectiveCompound.zip?raw=1) · [期刊问题 3](https://math.colgate.edu/~integers/ug4/ug4.pdf#page=18)
 
+**零空间维数为四的方盘，最坏要按多少次。** 对每个这样的真实方盘，边长必为 $n=5q-1$、$q$ 为奇数，最难的可解灯态恰需 $17q^2-10q$ 次按键。证明给出每个边长的最坏灯态，并无条件覆盖整个 $n=5^{k+1}-1$ 无穷族。这解决 Boyles 的一个高维数最坏按键问题。[精确上下界、构造与先例](problems/GridClicks/) · [独立 ZIP](packages/GridClicks.zip?raw=1) · [原猜想](https://oeis.org/A353071)
+
 **非回溯游走的顶点首次命中时间。** 对 Breen 等第 4 问，按平稳分布选择起点时，非回溯游走到达每个固定目标的平均步数都严格小于普通游走。领域为有限无向简单图、最小度至少二且相应期望有限。对目标再取平均得到原文的 Kemeny 常数严格不等式。[证明与精确差值](problems/NonbacktrackingKemeny/) · [独立 ZIP](packages/NonbacktrackingKemeny.zip?raw=1) · [作者第 4 问](https://arxiv.org/html/2510.06650v1#S5)
 
 ## 论文开放问题的部分进展
 
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
 | --- | --- | --- |
+| [Liu、Low 与 Yin · 两比特全部实数阶的最大魔性](problems/MUBRealOrder/) | 以 Shen 等已给出的二阶界为输入，推出所有实数 $\alpha\ge2$ 的精确最大熵和对应取等分布。Lean 明列二阶估计为前提，核验 Jensen 推导和实际振幅见证 | [独立 ZIP](packages/MUBRealOrder.zip?raw=1) |
 | [Devriendt 与 Garcia · 2-sparse 图的电阻曲率](problems/SparseResistance/) | 当每条边至少有一个度数至多 2 的端点时，允许全顶点非负电阻曲率的连通图恰为路径、环和 $K_{2,3}$。Lean 验证生成树刻画下的无桥分类，其余情形引用原文命题 3.7 | [独立 ZIP](packages/SparseResistance.zip?raw=1) |
 | [Busoni 等 · 稳定子 Rényi 熵的单侧优化](problems/OneSidedSchmidt/) | 固定一侧的 Schmidt 基及标号后，另一侧所有局部酉中的最小值由计算基对齐态达到。适用于循环 Weyl 算符、所有局部维数和每个整数阶 $m\ge2$。论文的双侧问题仍开放 | [独立 ZIP](packages/OneSidedSchmidt.zip?raw=1) |
 | [Antis 等 · 十二元和积问题](problems/TwelveIntegerSets/) | 十二元正有理数集若至多产生 41 个两两和，任意正有理几何级数最多包含其中 6 点，且能取等。十一元极值构型在两种基数均不超过 41 时的十二元扩展也唯一。原猜想 $SP(12)=41$ 的整体下界仍待证明 | [独立 ZIP](packages/TwelveIntegerSets.zip?raw=1) |
