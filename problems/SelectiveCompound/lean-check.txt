@@ -1,0 +1,5 @@
+'SelectiveCompound.Game.withHeap_depth' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SelectiveCompound.Game.large_heap_grundy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SelectiveCompound.Game.fixed_position_threshold' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SelectiveCompound.Game.uniform_cutoff_iff_bounded_depth' depends on axioms: [propext, Classical.choice, Quot.sound]
+'SelectiveCompound.no_uniform_cutoff_for_takeOne' depends on axioms: [propext, Classical.choice, Quot.sound]

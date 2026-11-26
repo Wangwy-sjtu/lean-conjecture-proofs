@@ -49,6 +49,8 @@
 
 **无三角形底图的锥与两森林分解。** 检索覆盖原作者两个版本、引用记录、arXiv、GitHub 代码和 issues，以及可索引的公开 AI 记录。查询组合包括论文名和编号、perpane、cone、universal vertex、arboricity、two forests、complete tripartite、$K_{1,3,4}$、问题 (C1)/(C3)。Nash-Williams 已刻画图可分成若干森林的条件，Cao 等人已从消去序构造具有 (C1)/(C3) 的电路；此前所列 AI 记录给出一般奇偶张成计数。此次检索未找到把底图的两森林分解与锥图完美电路等价起来的证明。新结论的必要性还用到了逐门追踪某条被覆盖的顶点星边，正向构造则给出每一时刻的线路支持。[经典森林分解定理](https://doi.org/10.1112/jlms/s1-39.1.12) · [原作者算法与开放问题](https://yiren.lu/assets/pdf/parity-network.pdf#page=13) · [已知公开 AI 引理](https://github.com/the-omega-institute/trureturing/issues/24527) · [逐门形式证明](problems/GraphicParity/ConeForests.lean)
 
+**大 Nim 堆与固定公平局面。** 原文 Theorem 2 证明多个普通 Nim 堆的情形，也提供大堆时用后继覆盖连续 Grundy 值的归纳思路。这里由真实合法走法推到所有有限局面，并另证整套有界分支规则何时具有共用阈值。核对了原作者主页、OpenAlex 的两篇施引论文、超图选择复合定理，以及 GitHub 代码和讨论。MathDB 中两道同文 Kayles 周期问题对应第 3.2 节，本次只能检查其目录。所查公开记录中未找到第 3.1 节问题 3 的这个一般结论。[期刊原文](https://math.colgate.edu/~integers/ug4/ug4.pdf#page=18) · [相关超图定理](https://doi.org/10.1007/s00182-023-00850-7) · [核查说明](problems/SelectiveCompound/README.md)
+
 ## 核查过的公开 AI 记录
 
 逐一核对了 Epoch AI 的 492 条正式猜想元数据及其运行结果索引，并搜索了 DeepMind Formal Conjectures 和 Epoch 求解框架的公开源码。上表各题号均未作为这 492 条中的主问题出现。不同编号的引用也会命中，例如表中所列的 A091669。[Epoch 的 492 条命题](https://github.com/epoch-research/LeanOpenProblems-results/blob/cbb7cb657f24157d9ebb7640ec50bd35bad78ad8/metadata/oeis/conjectures.json) · [Epoch 论文](https://arxiv.org/abs/2608.11941) · [DeepMind 论文](https://arxiv.org/abs/2605.22763)

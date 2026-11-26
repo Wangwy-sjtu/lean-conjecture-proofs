@@ -27,6 +27,8 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 
 **Levin 的 Band or Bump 猜想。** 对任意牌型数、每类张数和全部合法阈值，第一次因超上限而停止的概率随抽牌时刻对数凹。在非退化情形、至少两类牌时，正支集精确为 $[u+1,(m-1)u+\ell]$。证明还给出相应牌手计数的超对数凹性。[一般数学证明](problems/BandOrBump/README-all.md) · [Lean 代码](problems/BandOrBump/BandOrBumpAll.lean) · [独立 ZIP](packages/BandOrBump.zip?raw=1) · [原猜想](https://arxiv.org/pdf/2407.08062#page=7)
 
+**大 Nim 堆与公平博弈。** Beideman、Bowen、Müyesser 的问题 3 问，哪些固定局面与足够大的 Nim 堆作选择复合后会达到最长对局给出的 Grundy 上界。答案是每个有限局面。若其最长对局长为 $d$，堆大小 $k\ge\binom d2$ 已足够。对分支数有统一上界的一整套规则，存在对全部局面通用的堆阈值，恰当所有局面的深度也有统一上界。[证明与原文量词](problems/SelectiveCompound/) · [独立 ZIP](packages/SelectiveCompound.zip?raw=1) · [期刊问题 3](https://math.colgate.edu/~integers/ug4/ug4.pdf#page=18)
+
 ## 论文开放问题的部分进展
 
 | 论文问题 | 已经 Lean 验证的结论 | 下载 |
