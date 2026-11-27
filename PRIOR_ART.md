@@ -100,3 +100,5 @@ Inoue–Inazu 的字串减法游戏问题 2.1 问能否以最长步长或词典�
 **单比特量子门的零支撑边界。** Savadatti 和 Zhang 的命题 13 给出九个 Pauli 系数全非零时的判据，原文明确留下有零元的情况。本文形式化显式次梯度及半负定性，再引用原文定理 3 推出一阶认证收益为零。公开 GitHub 检索命中论文元数据，作者列出的仓库返回 404，其中的分支与 PR 无法核实。[命题 13](https://arxiv.org/html/2611.27724v1#S7.SS5) · [矩阵证明、查重范围及外部定理依赖](problems/DeficientQubit/)
 
 **两比特平均谱偏度。** Savadatti–Zhang 的引理 8 与定理 9 给出 Haar 二、三阶矩，第 VII.3 节留下与 Clifford 基准的比较。Li–Gupta–Ganesh 已证明十个 Peres–Mermin 方阵对每条直线恰覆盖四次，并处理了单个共同赋号。这里用六种着色处理三组相互独立的符号，证明归一化偏度的严格上界。公开说明列有相邻 GitHub 分支、PR 及检索局限。[偏度问题](https://arxiv.org/html/2611.27724v1#S7.SS3) · [已知覆盖引理](https://arxiv.org/html/2610.26465v1#S4) · [证书与查重范围](problems/PauliSkew/)
+
+**环图一步相遇的最优基线。** Tucker 等比较了指定的经典规则与 Bell 对策略。Mironowicz 已给小环最优值。Helton 等定理 5.3 给出加权奇环 XOR 游戏的最优量子值，精确对应步长 2 分解后的各个奇环。本包从实际落点还原该游戏，计算经典最优决策，严格确定原规则的适用环长，并把大环上与最优经典的渐近倍率改为 1。作者数据及其他 AI 的超立方体相遇题均列在目录中。[实验与原比较](https://arxiv.org/abs/2405.14951) · [加权 XOR 定理](https://arxiv.org/abs/2109.14741) · [相遇问题的严格比较与查重](problems/CycleRendezvous/)

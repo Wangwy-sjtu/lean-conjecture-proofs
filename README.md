@@ -40,6 +40,7 @@ Cao、Lu、Nie、Sun、Tian 提出，连通图能用 $m+n-1$ 个 CNOT 门实现�
 | [Spiro、Surya、Zeng · 半受限博弈，第 22 与 23 问](problems/SemiRestricted/) | 在任意有限有向图和任意配额下，适应历史的对手超过最佳固定动作的期望收益是 $O_D(\sqrt M)$。均匀洗牌给出上界。对每个至少含一条弧的欧拉有向定向图，等配额博弈的期望收益恰为平方根阶，含此前未覆盖的高维核情形 | [独立 ZIP](packages/SemiRestricted.zip?raw=1) |
 | [Boyles · 所有六维方盘的最坏按键数](problems/SixClicks/) | 若方盘零空间为六维，则 $n=12q-1$，最难灯态恰需 $88q^2-24q+1$ 次。构造的灯态全部 64 种解都有相同重量，覆盖整个 $n=12\cdot3^k-1$ 无穷族 | [独立 ZIP](packages/SixClicks.zip?raw=1) |
 | [Boyles · 有界零空间方盘的统一准多项式](problems/GridScaling/) | 对每个维数上界，一张有限的边长余数表同时描述全部符合条件的方盘。每个余数类从共同阈值起有精确二次式。已证明所有八维方盘甚至不能共用一个实多项式，两个无穷族的增长率是 $3/5$ 和 $161/289$ | [独立 ZIP](packages/GridScaling.zip?raw=1) |
+| [Tucker 等 · 环图的一步相遇概率](problems/CycleRendezvous/) | 对每个环长求得移动后同点相遇的经典与量子最优值，从 $N=7$ 起原文选取较小标签邻居的规则严格落后。量子相对最优经典的倍率趋于 1，且恰在 $4\nmid N$ 时有严格优势。量子上界与已知加权奇环 XOR 定理的关系见说明 | [独立 ZIP](packages/CycleRendezvous.zip?raw=1) |
 | [Savadatti–Zhang · 两比特满支撑符号的平均谱偏度](problems/PauliSkew/) | 对全部 $2^{225}$ 个 Pauli 符号图，平均谱偏度的绝对值至多 $58/(45\sqrt5)$，严格低于 Clifford 基准 $1/\sqrt3$。归一化使用原论文已证明的 Haar 矩公式 | [独立 ZIP](packages/PauliSkew.zip?raw=1) |
 | [Savadatti–Zhang · 单比特量子门的正性收益](problems/DeficientQubit/) | 若九个 Pauli 相关系数中任一项为零，则加入 Choi 正半定约束不会改善一阶认证斜率。Lean 从实际复酉门证明次梯度证书，结合原论文定理 3 补全单比特判据 | [独立 ZIP](packages/DeficientQubit.zip?raw=1) |
 | [Liu–Low–Yin 与 Liabøtrø · 两比特半阶精确极值](problems/StabilizerHalf/) | 对所有两比特纯态，稳定子范数的最大值为 $1+\sqrt{3}/2$，原论文给出的态达到上界。Lean 还精确计数得到 640 个极值符号 | [独立 ZIP](packages/StabilizerHalf.zip?raw=1) |
