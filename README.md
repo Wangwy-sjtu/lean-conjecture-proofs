@@ -10,7 +10,7 @@
 
 **我们证明了什么？** 答案是否定的。完全三部图 $K_{1,3,3}$ 的 15 条边用 21 个门就能全部实现，七根线路最终各自复原，但 5,040 种顶点排序都不满足消去条件。对任意无三角形图，加一个全邻接顶点后能达到门数下界，当且仅当原图的边可以分成两片森林。
 
-[21 道门的逐步证书](problems/GraphicParity/COUNTEREXAMPLE.md) · [两片森林判据](problems/GraphicParity/ConeForests.lean) · [证明与代码](problems/GraphicParity/) · [下载 ZIP](packages/GraphicParity.zip?raw=1)
+[21 道门的逐步证书](problems/GraphicParity/COUNTEREXAMPLE.md) · [两片森林判据](problems/GraphicParity/ConeForests.lean) · [证明与代码](problems/GraphicParity/) · [下载 ZIP](packages/GraphicParity.zip?raw=1) · [本仓库首个完整证明提交 1e07daa](https://github.com/Wangwy-sjtu/lean-conjecture-proofs/commit/1e07daad3142a46565380535e9ad5d5433ace4ba)
 
 ### 2. 非回溯随机游走：到达每个目标的平均时间都严格缩短
 
@@ -18,7 +18,7 @@
 
 **我们证明了什么？** 在有限无向简单图上，若最小度至少为 2 且相关命中时间的期望有限，则对每个固定目标，按平稳分布抽取起点时，非回溯游走的平均命中时间都严格更短。证明给出差值的平方和公式。再按平稳分布对目标取平均，即得原问题的严格不等式。
 
-[证明与代码](problems/NonbacktrackingKemeny/) · [下载 ZIP](packages/NonbacktrackingKemeny.zip?raw=1)
+[证明与代码](problems/NonbacktrackingKemeny/) · [下载 ZIP](packages/NonbacktrackingKemeny.zip?raw=1) · [本仓库首个完整证明提交 0d1a271](https://github.com/Wangwy-sjtu/lean-conjecture-proofs/commit/0d1a271e37702fd069d79281b891401453b2d9ab)
 
 ### 3. Nim 堆与公平博弈：统一阈值恰为 ⌊d²/4⌋
 
@@ -26,7 +26,9 @@
 
 **我们证明了什么？** 每个有限局面都能达到。设从该局面出发最长还可走 $d$ 步，则只要 $k\ge\lfloor d^2/4\rfloor$，复合局面的 Grundy 值就恰为 $k+d$。每个深度都有达到这个阈值的局面，所以对同一深度的全部游戏，阈值不能再降低。
 
-[证明与代码](problems/SelectiveCompound/) · [下载 ZIP](packages/SelectiveCompound.zip?raw=1)
+[证明与代码](problems/SelectiveCompound/) · [下载 ZIP](packages/SelectiveCompound.zip?raw=1) · [本仓库首个完整证明提交 69806bf](https://github.com/Wangwy-sjtu/lean-conjecture-proofs/commit/69806bf9838d94113f2665966f85174e314947ad)
+
+较早的版本已证明每个固定局面最终达到上界。上列提交首次同时给出统一阈值与各深度取等例。[定性结论的提交 c174c94](https://github.com/Wangwy-sjtu/lean-conjecture-proofs/commit/c174c9443a2fa2cba717b7a839fa0741040ebf65)
 
 ## 其他完整解答与精确极值
 
