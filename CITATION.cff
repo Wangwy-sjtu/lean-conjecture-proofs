@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "如使用本版本，请引用此仓库。引用单项证明时，请同时标注原问题出处、证明包和相应的提交。"
+type: software
+title: "数学与量子信息问题的 Lean 证明与反例"
+authors:
+  - family-names: "Wangwy-sjtu"
+    website: "https://github.com/Wangwy-sjtu"
+version: "v1.0"
+repository-code: "https://github.com/Wangwy-sjtu/lean-conjecture-proofs"
+url: "https://github.com/Wangwy-sjtu/lean-conjecture-proofs/releases/tag/v1.0"

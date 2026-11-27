@@ -2,6 +2,8 @@
 
 本仓库收录论文和整数数列条目中的公开问题。各条目提供原始出处、数学说明、Lean 源码和独立下载包。证明探索与形式化使用了 AI 辅助。[逐题查重与在先结果](PRIOR_ART.md)
 
+项目署名为 [Wangwy-sjtu](https://github.com/Wangwy-sjtu)。引用本版本及其中的证明包时，请参见[引用信息](CITATION.cff)与[贡献声明](CONTRIBUTIONS.md)。
+
 ## 代表成果
 
 ### 1. 图奇偶网络：七个顶点推翻猜想 18
