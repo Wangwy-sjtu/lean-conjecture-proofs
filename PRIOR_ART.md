@@ -98,3 +98,5 @@ Inoue–Inazu 的字串减法游戏问题 2.1 问能否以最长步长或词典�
 **八维方盘为何不能合用普通多项式。** 作者已有关于两个尺寸族的经验拟合，分别预示两个二次项。本包用各自的实际活跃格数 80、256 以及两个无穷族的保维性，证明八维方盘不存在适用于所有充分大边长的单个实多项式。两个经验式的具体常数仍未由这项证明确定。[两条经验猜想](https://github.com/wmboyles/LightsOut-Math/blob/e1b2f18988467dd552727fab8dbd039f1639f6a3/tex/conjectures/conjectures.tex#L432-L457) · [两族严格分离的证明](problems/GridScaling/EightFamilies.md)
 
 **单比特量子门的零支撑边界。** Savadatti 和 Zhang 的命题 13 给出九个 Pauli 系数全非零时的判据，原文明确留下有零元的情况。本文形式化显式次梯度及半负定性，再引用原文定理 3 推出一阶认证收益为零。公开 GitHub 检索命中论文元数据，作者列出的仓库返回 404，其中的分支与 PR 无法核实。[命题 13](https://arxiv.org/html/2611.27724v1#S7.SS5) · [矩阵证明、查重范围及外部定理依赖](problems/DeficientQubit/)
+
+**两比特平均谱偏度。** Savadatti–Zhang 的引理 8 与定理 9 给出 Haar 二、三阶矩，第 VII.3 节留下与 Clifford 基准的比较。Li–Gupta–Ganesh 已证明十个 Peres–Mermin 方阵对每条直线恰覆盖四次，并处理了单个共同赋号。这里用六种着色处理三组相互独立的符号，证明归一化偏度的严格上界。公开说明列有相邻 GitHub 分支、PR 及检索局限。[偏度问题](https://arxiv.org/html/2611.27724v1#S7.SS3) · [已知覆盖引理](https://arxiv.org/html/2610.26465v1#S4) · [证书与查重范围](problems/PauliSkew/)
